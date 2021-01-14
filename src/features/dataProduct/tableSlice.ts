@@ -4,11 +4,13 @@ import { Table, TableResult, getTable } from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
 
 interface TableState {
+  table: object
   isLoading: boolean
   error: string | null
 }
 
 const tableInitialState = {
+  table: {},
   isLoading: false,
   error: null
 } as TableState
@@ -31,6 +33,7 @@ const table = createSlice({
       const { table } = payload
       state.isLoading = false
       state.error = null
+      state.table = table
     },
     getTableFailure: loadingFailed
   }

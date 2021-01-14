@@ -5,7 +5,7 @@ import { RootState } from '../../app/rootReducer'
 
 import { fetchTable } from './tableSlice'
 
-export const DataTab = () => {
+export const DataProductPage = () => {
   const dispatch = useDispatch()
 
   const {
