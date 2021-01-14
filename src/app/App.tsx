@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import { RootState } from './rootReducer'
 
-import { TableListPage } from '../features/tableList/tableListPage'
+import { DataTab } from '../features/dataProduct/dataTab'
 
 import './App.css';
 
@@ -15,7 +15,7 @@ const App: React.FC = () => {
     <ThemeProvider theme={lightTheme}>
       <div className="App">
         <header className="App-header">
-        <TableListPage />
+        <DataTab />
           <p>
             Edit <code>src/App.tsx</code> and save to reload.
           </p>
