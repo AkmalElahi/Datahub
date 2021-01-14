@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 
-import { RootState } from './app/rootReducer'
+import { RootState } from './rootReducer'
 
-import { TableListPage } from './features/tableList/tableListPage'
+import { TableListPage } from '../features/tableList/tableListPage'
 
 import './App.css';
 
