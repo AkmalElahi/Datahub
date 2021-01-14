@@ -4,7 +4,7 @@ import { Table, TableResult, getTable } from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
 
 interface TableState {
-  table: object
+  table: Table
   isLoading: boolean
   error: string | null
 }
