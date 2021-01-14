@@ -1,14 +1,18 @@
 import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
+import { useSelector, useDispatch } from 'react-redux'
+
+import { RootState } from './app/rootReducer'
+
+import { TableListPage } from './features/tableList/tableListPage'
+
 import './App.css';
 
-function App() {
+const App: React.FC = () => {
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
+      <TableListPage />
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>

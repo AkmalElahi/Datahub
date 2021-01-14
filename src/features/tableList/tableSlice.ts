@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { Table, TableResult, getTable } from '../../api/swaggerAPI'
+import { AppThunk } from '../../app/store'
 
 interface TableState {
   isLoading: boolean
@@ -31,8 +32,24 @@ const table = createSlice({
       state.isLoading = false
       state.error = null
     },
-    getStatesFailure: loadingFailed
+    getTableFailure: loadingFailed
   }
 })
 
+export const {
+  getTableStart,
+  getTableSuccess,
+  getTableFailure
+} = table.actions
+
 export default table.reducer
+
+export const fetchTable = (): AppThunk => async dispatch => {
+  try {
+    dispatch(getTableStart())
+    const table = await getTable()
+    dispatch(getTableSuccess(table))
+  } catch (err) {
+    dispatch(getTableFailure(err.toString()))
+  }
+}
