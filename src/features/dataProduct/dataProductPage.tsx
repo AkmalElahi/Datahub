@@ -85,7 +85,10 @@ export const DataProductPage = () => {
   let renderedMetadata = isLoading || isEmpty(table) ? (
     <h3>Loading...</h3>
   ) : (
-    <DataProductMetadata metadata={table.table_metadata} />
+    <DataProductMetadata 
+      metadata={table.table_metadata}
+      columns={table.column_metadata_list}
+    />
   )
   return (
     <FlexRow>
