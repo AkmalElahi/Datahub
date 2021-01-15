@@ -1,23 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
-import isEmpty from 'lodash/isEmpty'
 
 import { Grid } from 'gridjs-react'
 import 'gridjs/dist/theme/mermaid.css'
 
-import { Table } from '../api/swaggerAPI'
-
 interface Props {
-  data: Table
+  columnHeaders: string[]
+  data: string[][]
 }
-
-const ContentBox = styled.div`
-  background: #ffffff;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
-  border-radius: 8px;
-  padding: 30px;
-  margin-bottom: 1rem;
-`
 
 const GridContainer = styled.div`
   .gridjs-wrapper {
@@ -40,24 +30,15 @@ const GridContainer = styled.div`
   }
 `
 
-export const TableView = ({ data }: Props) => {
-  let columnHeaders;
-
-  if (!isEmpty(data)) {
-    columnHeaders = data.column_metadata_list.map(
-      meta => meta.title)
-  }
-
+export const TableView = ({ columnHeaders, data }: Props) => {
   return (
-    <ContentBox>
-      <h1>Columns</h1>
-      {!isEmpty(data) && 
-        <GridContainer>
-          <Grid
-            data={data.value_list_list}
-            columns={columnHeaders}
-         />
-       </GridContainer>}
-    </ContentBox>
+    <div>
+      <GridContainer>
+        <Grid
+          data={data}
+          columns={columnHeaders}
+       />
+     </GridContainer>
+    </div>
    )
 }

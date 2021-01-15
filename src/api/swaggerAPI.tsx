@@ -8,14 +8,6 @@ export interface ViewFilter {
   description: string
 }
 
-export interface Value {
-  field: string
-}
-
-export interface ValueList {
-  fields: Value[]
-}
-
 export interface TableMetadata {
   name: string
   product_name: string
