@@ -43,6 +43,19 @@ const EntityBox = styled(ColumnBox)`
   background: rgba(77, 158, 246, 0.06);
   border: 1px solid ${props => props.theme.primaryColor};
   color: ${props => props.theme.primaryColor};
+  position: relative;
+`
+const Ellipses = styled.div`
+  :after {
+    content: '•••';
+    position: absolute;
+    top: 50%;
+    left: 90%;
+    transform: translate(-50%, -50%) rotate(90deg);
+    font-size: 20px; 
+    letter-spacing: 2px;
+    margin-top: 2px;
+  }
 `
 
 const EntityBoxHeader = styled(EntityBox)`
@@ -78,6 +91,7 @@ export const ColumnTypes = ({ metadata }: Props) => {
     <FlexColumn key={meta.column_num}>
       <EntityBox>
         {meta.entity_name ? meta.entity_name : 'null'}
+        <Ellipses />
       </EntityBox>
     </FlexColumn>
   ))
