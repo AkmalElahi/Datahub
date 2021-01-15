@@ -18,7 +18,7 @@ export const DataProductMetadata = ({ metadata }: Props) => {
   return (
     <ContentBox>
     <h1>Product Table</h1>
-    <div>Name { metadata.name }</div>
+    <div>Name</div>
     </ContentBox>
   )
 }

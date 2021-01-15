@@ -44,7 +44,7 @@ export interface Table {
   description: string
   table_metadata: TableMetadata
   column_metadata_list: ColumnMetadata[]
-  value_list_list: ValueList[]
+  value_list_list: string[][]
 }
 
 export interface TableResult {
