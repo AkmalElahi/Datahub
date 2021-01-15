@@ -86,6 +86,7 @@ const StyledPopup = styled(Popup)`
         font-weight: 600;
         border: none;
         background-color: transparent;
+        outline: none;
       }
       >.header {
         font-size: 2em;

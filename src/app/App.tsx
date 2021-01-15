@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import { RootState } from './rootReducer'
 
+import { Navbar } from '../components/Navbar'
 import { DataProductPage } from '../features/dataProduct/dataProductPage'
 
 const GlobalStyle = createGlobalStyle`
@@ -23,6 +24,7 @@ const App: React.FC = () => {
     <ThemeProvider theme={lightTheme}>
       <GlobalStyle />
       <AppContainer>
+        <Navbar />
         <DataProductPage />
       </AppContainer>
     </ThemeProvider>

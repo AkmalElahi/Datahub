@@ -7,6 +7,7 @@ import { RootState } from '../../app/rootReducer'
 
 import { DataProductHeader } from './dataProductHeader'
 import { DataProductMetadata } from './dataProductMetadata'
+import { DataProductSidebar } from './dataProductSidebar'
 import { TableView } from '../../components/TableView'
 import { fetchTable } from './tableSlice'
 import { ColumnTypes } from './columnTypes'
@@ -93,7 +94,7 @@ export const DataProductPage = () => {
   return (
     <FlexRow>
       <LeftColumn>
-        <div></div>
+        <DataProductSidebar />
       </LeftColumn>
       <RightColumn>
         <DataProductHeader />

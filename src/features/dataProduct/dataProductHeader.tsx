@@ -7,7 +7,7 @@ const FlexRow = styled.div`
   flex-wrap: wrap;
   width: 100%;
   align-items: center;
-  padding: 1rem 0;
+  padding: 2rem 0;
 `
 
 const FlexColumn = styled.div`
@@ -28,6 +28,7 @@ const Button = styled.button`
   padding: 0.8rem 1rem;
   border: none;
   cursor: pointer;
+  outline: none;
 `
 
 const ButtonGroup = styled.div`
@@ -56,7 +57,7 @@ export function DataProductHeader() {
   return (
     <FlexRow>
       <FlexColumn>
-        <h1>Source 1</h1>
+        <h1 style={{margin: '0'}}>Source 1</h1>
       </FlexColumn>
       <FlexColumn>
         <ButtonGroup>

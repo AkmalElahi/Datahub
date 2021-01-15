@@ -87,6 +87,7 @@ const DoneButton = styled.button`
   min-width: 110px;
   margin-left: 10px;
   cursor: pointer;
+  outline: none;
 `
 const CancelButton = styled.button`
   font-style: normal;
@@ -100,6 +101,7 @@ const CancelButton = styled.button`
   min-width: 110px;
   margin-left: 10px;
   cursor: pointer;
+  outline: none;
 `
 
 export const EntityPopup = ({close, entities}: Props) => {
@@ -118,7 +120,7 @@ export const EntityPopup = ({close, entities}: Props) => {
     <div className="header">New Entity</div>
     <div className="content">
       <FlexLabel>
-        <input type="radio" name="entity" value="existing" checked />Existing
+        <input type="radio" name="entity" value="existing" />Existing
         <Dropdown name="entity" id="entity">
           {renderExistingOptions}
         </Dropdown>
