@@ -67,7 +67,12 @@ const Dropdown = styled.select`
 
 export const DataProductMetadata = ({ metadata, columns }: Props) => {
   const renderedOptions = columns.map(col => (
-    <option value={col.title} selected={col.is_primary_key}>{col.title}</option>
+    <option
+      value={col.title}
+      selected={col.is_primary_key}
+    >
+      {col.title}
+    </option>
   ))
 
   return (

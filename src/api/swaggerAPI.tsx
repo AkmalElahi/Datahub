@@ -1,9 +1,5 @@
 import axios from 'axios'
 
-export interface Entity {
-  name: string
-}
-
 export interface ViewFilter {
   description: string
 }
@@ -27,7 +23,7 @@ export interface ColumnMetadata {
   entity_name: string
   column_num: number
   generated: boolean
-  entity_name_candidate_list: Entity[]
+  entity_name_candidate_list: string[]
   view_filter: ViewFilter
 
 }

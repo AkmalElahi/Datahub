@@ -27,6 +27,7 @@ const Button = styled.button`
   text-align: center;
   padding: 0.8rem 1rem;
   border: none;
+  cursor: pointer;
 `
 
 const ButtonGroup = styled.div`
@@ -43,6 +44,7 @@ const AddDataButton = styled(Button)`
   font-weight: 500;
   padding: 0.8rem 1.4rem;
 `
+
 const SaveButton = styled(Button)`
   color: #F8F8F8;
   background: #4D9EF6;

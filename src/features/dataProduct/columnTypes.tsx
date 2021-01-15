@@ -1,7 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import Popup from 'reactjs-popup'
+import 'reactjs-popup/dist/index.css'
+
 import { ColumnMetadata } from '../../api/swaggerAPI'
+import { EntityPopup } from '../../components/EntityPopup'
 
 interface Props {
   metadata: ColumnMetadata[]
@@ -46,6 +50,7 @@ const EntityBox = styled(ColumnBox)`
   position: relative;
 `
 const Ellipses = styled.div`
+  cursor: pointer;
   :after {
     content: '•••';
     position: absolute;
@@ -62,10 +67,37 @@ const EntityBoxHeader = styled(EntityBox)`
   background: #ffffff;
 `
 
+const StyledPopup = styled(Popup)`
+  &-content {
+    border: none;
+    border-radius: 8px;
+    max-width: 480px;
+
+    .modal {
+      padding: 2rem;
+
+      >.close {
+        cursor: pointer;
+        position: absolute;
+        display: block;
+        padding: 2px 5px;
+        right: 20px;
+        font-size: 36px;
+        font-weight: 600;
+        border: none;
+        background-color: transparent;
+      }
+      >.header {
+        font-size: 2em;
+        font-weight: 500;
+        margin-bottom: 1rem;
+      }
+  }
+`
+
 const DATA_TYPES = {0: 'int', 1: 'float', 2: 'string', 3: 'boolean'}
 
 export const ColumnTypes = ({ metadata }: Props) => {
-  console.log(metadata)
   let renderedNames = metadata.map(meta => (
     <FlexColumn key={meta.column_num}>
       <ColumnBox>
@@ -73,6 +105,7 @@ export const ColumnTypes = ({ metadata }: Props) => {
       </ColumnBox>
     </FlexColumn>
   ))
+
   let renderedTitles = metadata.map(meta => (
     <FlexColumn key={meta.column_num}>
       <ColumnBox>
@@ -80,6 +113,7 @@ export const ColumnTypes = ({ metadata }: Props) => {
       </ColumnBox>
     </FlexColumn>
   ))
+
   let renderedDataTypes = metadata.map(meta => (
     <FlexColumn key={meta.column_num}>
       <ColumnBox>
@@ -87,14 +121,23 @@ export const ColumnTypes = ({ metadata }: Props) => {
       </ColumnBox>
     </FlexColumn>
   ))
+
   let renderedEntities = metadata.map(meta => (
     <FlexColumn key={meta.column_num}>
       <EntityBox>
-        {meta.entity_name ? meta.entity_name : 'null'}
-        <Ellipses />
+        {meta.entity_name ? meta.entity_name : 'none'}
+        <StyledPopup trigger={<Ellipses />} modal>
+          {close => (
+            <EntityPopup 
+              close={close}
+              entities={meta.entity_name_candidate_list}
+            />
+          )}
+        </StyledPopup>
       </EntityBox>
     </FlexColumn>
   ))
+
   return (
     <ColumnsContainer>
       <FlexRow>
