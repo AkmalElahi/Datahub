@@ -65,16 +65,24 @@ const Dropdown = styled.select`
   border-radius: 0 6px 6px 0;
 `
 
+//type InputEvent = ChangeEvent<HTMLInputElement>
+//type ChangeHandler = (event: InputEvent) => void
+
 export const DataProductMetadata = ({ metadata, columns }: Props) => {
+  //const [currentKey, setCurrentKey] = useState('0')
+
+  //const handleChange: ChangeHandler = event => {
+  //  setCurrentKey(event.target.value)
+  //}
+
   const renderedOptions = columns.map(col => (
     <option
       value={col.title}
-      selected={col.is_primary_key}
+      key={col.column_num}
     >
       {col.title}
     </option>
   ))
-
   return (
     <div>
     <h1>Product Table</h1>
@@ -100,7 +108,7 @@ export const DataProductMetadata = ({ metadata, columns }: Props) => {
       <UList style={{width: '100%'}}>
         <List>
           <Label>Primary Key</Label>
-          <Dropdown name="primary" id="primary">
+          <Dropdown name="primary" id="primary" defaultValue={columns[0].toString()}>
             {renderedOptions}
           </Dropdown>
         </List>

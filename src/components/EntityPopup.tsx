@@ -108,6 +108,7 @@ export const EntityPopup = ({close, entities}: Props) => {
   const renderExistingOptions = entities.map(entity => (
     <option
       value={entity}
+      key={entity}
     >
       {entity}
     </option>
