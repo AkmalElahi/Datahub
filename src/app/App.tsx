@@ -1,5 +1,5 @@
 import React from 'react'
-import { ThemeProvider } from 'styled-components'
+import styled, { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { lightTheme } from '../styles/Theme'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -7,15 +7,24 @@ import { RootState } from './rootReducer'
 
 import { DataProductPage } from '../features/dataProduct/dataProductPage'
 
-import './App.css';
+const GlobalStyle = createGlobalStyle`
+  body {
+    background-color: #f8f8f8;
+  }
+`
+
+const AppContainer = styled.div`
+  font-family: ${props => props.theme.fontFamily}
+`
 
 const App: React.FC = () => {
 
   return (
     <ThemeProvider theme={lightTheme}>
-      <div className="App">
+      <GlobalStyle />
+      <AppContainer>
         <DataProductPage />
-      </div>
+      </AppContainer>
     </ThemeProvider>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import styled from 'styled-components'
 
 import { RootState } from '../../app/rootReducer'
 
@@ -7,6 +8,30 @@ import { DataProductHeader } from './dataProductHeader'
 import { DataProductMetadata } from './dataProductMetadata'
 import { TableView } from '../../components/TableView'
 import { fetchTable } from './tableSlice'
+
+const FlexRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+`
+
+const FlexColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+`
+
+const LeftColumn = styled(FlexColumn)`
+  flex: 1;
+  padding-left: 50px;
+`
+
+const RightColumn = styled(FlexColumn)`
+  flex: 8;
+  padding-right: 120px;
+`
 
 export const DataProductPage = () => {
   const dispatch = useDispatch()
@@ -34,12 +59,21 @@ export const DataProductPage = () => {
   ) : (
     <TableView data={table} />
   )
-
+  let renderedMetadata = isLoading ? (
+    <h3>Loading...</h3>
+  ) : (
+    <DataProductMetadata metadata={table.table_metadata} />
+  )
   return (
-    <div>
-    <DataProductHeader />
-    <DataProductMetadata />
-    {renderedTable}
-    </div>
+    <FlexRow>
+      <LeftColumn>
+        <div>View</div>
+      </LeftColumn>
+      <RightColumn>
+        <DataProductHeader />
+        {renderedMetadata}
+        {renderedTable}
+      </RightColumn>
+    </FlexRow>
   );
 }

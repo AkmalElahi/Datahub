@@ -4,7 +4,7 @@ declare module 'styled-components' {
   export interface DefaultTheme {
     primaryColor: string,
     secondaryColor: string,
-    fonts: string[],
+    fontFamily: string,
     fontSizes: object
   }
 }
@@ -12,7 +12,7 @@ declare module 'styled-components' {
 export const lightTheme: DefaultTheme = {
   primaryColor: '#4d9ef6',
   secondaryColor: '#181d23',
-  fonts: ['Roboto', 'sans-serif'],
+  fontFamily: 'Roboto',
   fontSizes: {
     small: '1em',
     medium: '2em',
