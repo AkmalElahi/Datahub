@@ -99,9 +99,7 @@ const StyledPopup = styled(Popup)`
 const DATA_TYPES = {0: 'int', 1: 'float', 2: 'string', 3: 'boolean'}
 
 export const ColumnTypes = ({ metadata }: Props) => {
-  let renderedNames, renderedTitles, renderedDataTypes, renderedEntities
-  if (metadata != undefined) {
-    renderedNames = metadata.map(meta => (
+    let renderedNames = metadata?.map(meta => (
       <FlexColumn key={meta.column_num}>
         <ColumnBox>
           {meta.name}
@@ -109,7 +107,7 @@ export const ColumnTypes = ({ metadata }: Props) => {
       </FlexColumn>
     ))
 
-    renderedTitles = metadata.map(meta => (
+    let renderedTitles = metadata?.map(meta => (
       <FlexColumn key={meta.column_num}>
         <ColumnBox>
           {meta.title}
@@ -117,18 +115,18 @@ export const ColumnTypes = ({ metadata }: Props) => {
       </FlexColumn>
     ))
 
-    renderedDataTypes = metadata.map(meta => (
+    let renderedDataTypes = metadata?.map(meta => (
       <FlexColumn key={meta.column_num}>
         <ColumnBox>
-          {meta.data_type != undefined ? DATA_TYPES[meta.data_type] : -1}
+          {meta.data_type ? DATA_TYPES[meta.data_type] : 'unknown'}
         </ColumnBox>
       </FlexColumn>
     ))
 
-    renderedEntities = metadata.map(meta => (
+    let renderedEntities = metadata?.map(meta => (
       <FlexColumn key={meta.column_num}>
         <EntityBox>
-          {meta.entity_name ? meta.entity_name : 'none'}
+          {meta.entity_name || 'none'}
           <StyledPopup trigger={<Ellipses />} modal>
             {close => (
               <EntityPopup 
@@ -140,7 +138,7 @@ export const ColumnTypes = ({ metadata }: Props) => {
         </EntityBox>
       </FlexColumn>
     ))
-  }
+
 
   return (
     <ColumnsContainer>

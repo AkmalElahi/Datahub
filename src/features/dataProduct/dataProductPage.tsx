@@ -70,7 +70,7 @@ export const DataProductPage = () => {
 
   if (!isLoading && !isEmpty(table)) {
     const metadata = table.column_metadata_list
-    if (metadata != undefined) {
+    if (metadata) {
       columnHeaders = metadata.map(meta => meta.title)
     }
   }
