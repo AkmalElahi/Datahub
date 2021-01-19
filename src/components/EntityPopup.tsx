@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 interface Props {
-  entities: string[]
+  entities: string[] | undefined
   close: any
 }
 
@@ -105,14 +105,18 @@ const CancelButton = styled.button`
 `
 
 export const EntityPopup = ({close, entities}: Props) => {
-  const renderExistingOptions = entities.map(entity => (
-    <option
-      value={entity}
-      key={entity}
-    >
-      {entity}
-    </option>
-  ))
+  let renderExistingOptions
+  if (entities != undefined) {
+    renderExistingOptions = entities.map(entity => (
+      <option
+        value={entity}
+        key={entity}
+      >
+        {entity}
+      </option>
+    ))
+  }
+  else renderExistingOptions = (<option>none</option>)
   return (
   <div className="modal">
     <button className="close" onClick={close}>

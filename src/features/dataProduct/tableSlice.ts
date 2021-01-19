@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { Table, TableResult, getTable } from '../../api/swaggerAPI'
+import { TableConstructor } from 'typescript-axios'
+import { TableResult, getTable } from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
 
 interface TableState {
-  table: Table
+  table: TableConstructor
   isLoading: boolean
   error: string | null
 }

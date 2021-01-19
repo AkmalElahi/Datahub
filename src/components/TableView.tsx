@@ -5,8 +5,8 @@ import { Grid } from 'gridjs-react'
 import 'gridjs/dist/theme/mermaid.css'
 
 interface Props {
-  columnHeaders: string[]
-  data: string[][]
+  columnHeaders: (string | undefined)[]
+  data: string[][] | undefined
 }
 
 const GridContainer = styled.div`

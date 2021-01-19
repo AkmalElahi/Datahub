@@ -25,13 +25,16 @@
     "react-table": "^7.6.3",
     "reactjs-popup": "^2.0.4",
     "styled-components": "^5.2.1",
-    "typescript": "~3.8.2"
+    "typescript": "~3.8.2",
+    "typescript-axios": "file:gen/api"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "api": "rm -rf gen/api && openapi-generator-cli generate -i   https://api.swaggerhub.com/apis/igushev/DataHub/2.0/swagger.json --config api.json -g typescript-axios -o gen/api && cd gen/api && yarn install && yarn run build",
+    "watch": "npm-watch"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -47,5 +50,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.1.17",
+    "npm-watch": "^0.7.0"
+  },
+  "watch": {
+    "build": "gen/api/"
   }
 }

@@ -1,11 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { TableMetadata, ColumnMetadata } from '../../api/swaggerAPI'
+import { TableMetadata, ColumnMetadata } from 'typescript-axios'
 
 interface Props {
-  metadata: TableMetadata
-  columns: ColumnMetadata[]
+  metadata: TableMetadata | undefined
+  columns: ColumnMetadata[] | undefined
 }
 
 const FlexRow = styled.div`
@@ -74,15 +74,18 @@ export const DataProductMetadata = ({ metadata, columns }: Props) => {
   //const handleChange: ChangeHandler = event => {
   //  setCurrentKey(event.target.value)
   //}
-
-  const renderedOptions = columns.map(col => (
-    <option
-      value={col.title}
-      key={col.column_num}
-    >
-      {col.title}
-    </option>
-  ))
+  let renderedOptions
+  if (columns != undefined) {
+    renderedOptions = columns.map(col => (
+      <option
+        value={col.title}
+        key={col.column_num}
+      >
+        {col.title}
+      </option>
+    ))
+  }
+  else renderedOptions = (<option>none</option>)
   return (
     <div>
     <h1>Product Table</h1>
@@ -91,7 +94,7 @@ export const DataProductMetadata = ({ metadata, columns }: Props) => {
         <UList>
           <List>
             <Label>Name</Label>
-            <Input placeholder={metadata.name} disabled />
+            <Input placeholder={metadata != undefined ? metadata.name : 'none'} disabled />
           </List>
         </UList>
       </FlexColumn>
@@ -99,7 +102,7 @@ export const DataProductMetadata = ({ metadata, columns }: Props) => {
         <UList>
           <List>
             <Label>Title</Label>
-            <Input placeholder={metadata.title} disabled />
+            <Input placeholder={metadata != undefined ? metadata.title : 'none'} disabled />
           </List>
         </UList>
       </FlexColumn>
@@ -108,7 +111,7 @@ export const DataProductMetadata = ({ metadata, columns }: Props) => {
       <UList style={{width: '100%'}}>
         <List>
           <Label>Primary Key</Label>
-          <Dropdown name="primary" id="primary" defaultValue={columns[0].toString()}>
+          <Dropdown name="primary" id="primary" defaultValue={columns != undefined ? columns[0].toString() : 'none'}>
             {renderedOptions}
           </Dropdown>
         </List>

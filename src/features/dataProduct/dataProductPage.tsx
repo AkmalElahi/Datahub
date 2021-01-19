@@ -66,11 +66,13 @@ export const DataProductPage = () => {
     )
   }
 
-  let columnHeaders : string[] = []
+  let columnHeaders : (string | undefined)[] = []
 
   if (!isLoading && !isEmpty(table)) {
     const metadata = table.column_metadata_list
-    columnHeaders = metadata.map(meta => meta.title)
+    if (metadata != undefined) {
+      columnHeaders = metadata.map(meta => meta.title)
+    }
   }
 
   let renderedColumns = isLoading || isEmpty(table) ? (
