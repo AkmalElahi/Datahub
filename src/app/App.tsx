@@ -1,11 +1,10 @@
 import React from 'react'
+import { Routes, Route } from 'react-router-dom'
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { lightTheme } from '../styles/Theme'
-import { useSelector, useDispatch } from 'react-redux'
-
-import { RootState } from './rootReducer'
 
 import { Navbar } from '../components/Navbar'
+import { LandingPage } from '../features/landing/landingPage'
 import { DataProductPage } from '../features/dataProduct/dataProductPage'
 
 const GlobalStyle = createGlobalStyle`
@@ -25,7 +24,10 @@ const App: React.FC = () => {
       <GlobalStyle />
       <AppContainer>
         <Navbar />
-        <DataProductPage />
+        <Routes>
+          <Route path='/' element={<LandingPage />} />
+          <Route path='/:productSlug' element={<DataProductPage />} />
+        </Routes>
       </AppContainer>
     </ThemeProvider>
   );

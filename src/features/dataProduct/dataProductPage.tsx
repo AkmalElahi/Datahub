@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import isEmpty from 'lodash/isEmpty'
@@ -45,6 +46,7 @@ const ContentBox = styled.div`
 `
 
 export const DataProductPage = () => {
+  const { productSlug } = useParams()
   const dispatch = useDispatch()
 
   const {
