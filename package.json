@@ -52,10 +52,6 @@
     ]
   },
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^2.1.17",
-    "npm-watch": "^0.7.0"
-  },
-  "watch": {
-    "build": "gen/api/"
+    "@openapitools/openapi-generator-cli": "^2.1.17"
   }
 }
