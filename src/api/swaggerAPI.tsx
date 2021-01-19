@@ -12,7 +12,6 @@ export async function getTable(): Promise<TableResult> {
   const url = `${process.env.REACT_APP_API_ROOT}/get_table_constructor_example`
   try {
     const tableResponse = await apiService.getTableConstructorExampleGet()
-    console.log(tableResponse)
 
     return {
       table: tableResponse.data

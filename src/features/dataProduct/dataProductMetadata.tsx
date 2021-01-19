@@ -75,7 +75,7 @@ export const DataProductMetadata = ({ metadata, columns }: Props) => {
   //  setCurrentKey(event.target.value)
   //}
   let renderedOptions
-  if (columns != undefined) {
+  if (columns !== undefined) {
     renderedOptions = columns.map(col => (
       <option
         value={col.title}
@@ -94,7 +94,7 @@ export const DataProductMetadata = ({ metadata, columns }: Props) => {
         <UList>
           <List>
             <Label>Name</Label>
-            <Input placeholder={metadata != undefined ? metadata.name : 'none'} disabled />
+            <Input placeholder={metadata !== undefined ? metadata.name : 'none'} disabled />
           </List>
         </UList>
       </FlexColumn>
@@ -102,7 +102,7 @@ export const DataProductMetadata = ({ metadata, columns }: Props) => {
         <UList>
           <List>
             <Label>Title</Label>
-            <Input placeholder={metadata != undefined ? metadata.title : 'none'} disabled />
+            <Input placeholder={metadata !== undefined ? metadata.title : 'none'} disabled />
           </List>
         </UList>
       </FlexColumn>
@@ -111,7 +111,7 @@ export const DataProductMetadata = ({ metadata, columns }: Props) => {
       <UList style={{width: '100%'}}>
         <List>
           <Label>Primary Key</Label>
-          <Dropdown name="primary" id="primary" defaultValue={columns != undefined ? columns[0].toString() : 'none'}>
+          <Dropdown name="primary" id="primary" defaultValue={columns !== undefined ? columns[0].toString() : 'none'}>
             {renderedOptions}
           </Dropdown>
         </List>
