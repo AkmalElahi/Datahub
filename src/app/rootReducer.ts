@@ -1,6 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit';
 
-import tableReducer from '../features/dataProduct/tableSlice'
+import tableReducer from '../features/product/tableSlice'
 
 const rootReducer = combineReducers({
   table: tableReducer,

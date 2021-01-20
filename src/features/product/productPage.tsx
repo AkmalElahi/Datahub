@@ -6,9 +6,9 @@ import isEmpty from 'lodash/isEmpty'
 
 import { RootState } from '../../app/rootReducer'
 
-import { DataProductHeader } from './dataProductHeader'
-import { DataProductMetadata } from './dataProductMetadata'
-import { DataProductSidebar } from './dataProductSidebar'
+import { ProductHeader } from './productHeader'
+import { ProductMetadata } from './productMetadata'
+import { ProductSidebar } from './productSidebar'
 import { TableView } from '../../components/TableView'
 import { fetchTable } from './tableSlice'
 import { ColumnTypes } from './columnTypes'
@@ -45,7 +45,7 @@ const ContentBox = styled.div`
   margin-bottom: 1rem;
 `
 
-export const DataProductPage = () => {
+export const ProductPage = () => {
   const { productSlug } = useParams()
   const dispatch = useDispatch()
 
@@ -90,7 +90,7 @@ export const DataProductPage = () => {
   let renderedMetadata = isLoading || isEmpty(table) ? (
     <h3>Loading...</h3>
   ) : (
-    <DataProductMetadata 
+    <ProductMetadata 
       metadata={table.table_metadata}
       columns={table.column_metadata_list}
     />
@@ -98,10 +98,10 @@ export const DataProductPage = () => {
   return (
     <FlexRow>
       <LeftColumn>
-        <DataProductSidebar />
+        <ProductSidebar />
       </LeftColumn>
       <RightColumn>
-        <DataProductHeader />
+        <ProductHeader />
         <ContentBox>
           {renderedMetadata}
         </ContentBox>

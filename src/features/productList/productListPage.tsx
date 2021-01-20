@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { fetchDataProducts } from './dataProductListSlice'
+import { fetchProducts } from './productListSlice'
 
 
-export const DataProductListPage = () => {
+export const ProductListPage = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(fetchDataProducts())
+    dispatch(fetchProducts())
   }, [dispatch])
 
   return (

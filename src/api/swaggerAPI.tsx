@@ -1,7 +1,5 @@
-import axios from 'axios'
 import { DefaultApi, TableConstructor } from 'typescript-axios'
 
-const axiosInstance = axios.create()
 const apiService = new DefaultApi()
 
 export interface TableResult {

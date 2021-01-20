@@ -53,7 +53,7 @@ const SaveButton = styled(Button)`
   margin-left: 10px;
 `
 
-export function DataProductHeader() {
+export function ProductHeader() {
   return (
     <FlexRow>
       <FlexColumn>

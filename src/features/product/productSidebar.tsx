@@ -35,7 +35,7 @@ const DataSourceSelected = styled(DataSource)`
   font-weight: 500;
 `
 
-export const DataProductSidebar = () => {
+export const ProductSidebar = () => {
   return (
     <SidebarGroup>
       <SidebarLinkSelected>Data</SidebarLinkSelected>

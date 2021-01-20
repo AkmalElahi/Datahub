@@ -68,7 +68,7 @@ const Dropdown = styled.select`
 //type InputEvent = ChangeEvent<HTMLInputElement>
 //type ChangeHandler = (event: InputEvent) => void
 
-export const DataProductMetadata = ({ metadata, columns }: Props) => {
+export const ProductMetadata = ({ metadata, columns }: Props) => {
   //const [currentKey, setCurrentKey] = useState('0')
 
   //const handleChange: ChangeHandler = event => {

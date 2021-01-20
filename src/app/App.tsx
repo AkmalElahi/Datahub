@@ -5,8 +5,8 @@ import { lightTheme } from '../styles/Theme'
 
 import { Navbar } from '../components/Navbar'
 import { LandingPage } from '../features/landing/landingPage'
-import { DataProductListPage } from '../features/dataProductList/dataProductListPage'
-import { DataProductPage } from '../features/dataProduct/dataProductPage'
+//import { ProductListPage } from '../features/productList/ProductListPage'
+import { ProductPage } from '../features/product/productPage'
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -27,8 +27,8 @@ const App: React.FC = () => {
         <Navbar />
         <Routes>
           <Route path='/' element={<LandingPage />} />
-          <Route path='/my-products' element={<DataProductListPage />} />
-          <Route path='/:productSlug' element={<DataProductPage />} />
+          {/*<Route path='/my-products' element={<ProductListPage />} />*/}
+          <Route path='/:productSlug' element={<ProductPage />} />
         </Routes>
       </AppContainer>
     </ThemeProvider>
