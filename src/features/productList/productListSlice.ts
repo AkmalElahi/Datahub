@@ -1,58 +1,61 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { ProductMetadataList } from 'typescript-axios'
-import { ProductDataListResult, fetchProducts } from '../../api/swaggerAPI'
+import { ProductListResult, getProductList } from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
 
-interface DataProductListState {
-  list: ProductMetadataList
+interface ProductListState {
+  product_metadata_list: ProductMetadataList
   isLoading: boolean
   error: string | null
 }
 
-const tableInitialState = {
-  list: {},
+const productListInitialState = {
+  product_metadata_list: {},
   isLoading: false,
-  error: null
-} as DataProductListState
+  error: null,
+} as ProductListState
 
-function startLoading(state: DataProductListState) {
+function startLoading(state: ProductListState) {
   state.isLoading = true
 }
 
-function loadingFailed(state: DataProductListState, action: PayloadAction<string>) {
+function loadingFailed(state: ProductListState, action: PayloadAction<string>) {
   state.isLoading = false
   state.error = action.payload
 }
 
 const productList = createSlice({
   name: 'productList',
-  initialState: tableInitialState,
+  initialState: productListInitialState,
   reducers: {
     getListStart: startLoading,
-    getListSuccess(state, { payload }: PayloadAction<ProductDataListResult>) {
-      const { table } = payload
+    getListSuccess(state, { payload }: PayloadAction<ProductListResult>) {
+      const { product_metadata_list } = payload
       state.isLoading = false
       state.error = null
-      state.product_metadata_list = table
+      state.product_metadata_list = product_metadata_list
     },
-    getListFailure: loadingFailed
-  }
+    getListFailure: loadingFailed,
+  },
 })
 
 export const {
   getListStart,
   getListSuccess,
-  getListFailure
-} = list.actions
+  getListFailure,
+} = productList.actions
 
-export default list.reducer
+export default productList.reducer
 
-export const fetchProducts = (): AppThunk => async dispatch => {
+export const fetchProducts = (
+  sessionId: string,
+  options?: any
+): AppThunk => async (dispatch) => {
   try {
     dispatch(getListStart())
-    const table = await fetchProducts()
-    dispatch(getListSuccess(table))
+    const list = await getProductList(sessionId)
+    dispatch(getListSuccess(list))
   } catch (err) {
     dispatch(getListFailure(err.toString()))
   }

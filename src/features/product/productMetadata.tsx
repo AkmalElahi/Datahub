@@ -44,7 +44,7 @@ const Label = styled.label`
 const Input = styled.input`
   flex: 1;
   width: 100%;
-  padding: .375rem .75rem;
+  padding: 0.375rem 0.75rem;
   background-color: #f8f8f8;
   font-size: 1rem;
   color: #181d23;
@@ -56,7 +56,7 @@ const Input = styled.input`
 const Dropdown = styled.select`
   flex: 1;
   width: 100%;
-  padding: .375rem .75rem;
+  padding: 0.375rem 0.75rem;
   background-color: #f8f8f8;
   font-size: 1rem;
   color: #181d23;
@@ -75,46 +75,47 @@ export const ProductMetadata = ({ metadata, columns }: Props) => {
   //  setCurrentKey(event.target.value)
   //}
 
-  let renderedOptions = columns?.map(col => (
-    <option
-      value={col.title}
-      key={col.column_num}
-    >
+  let renderedOptions = columns?.map((col) => (
+    <option value={col.title} key={col.column_num}>
       {col.title}
     </option>
   ))
 
   return (
     <div>
-    <h1>Product Table</h1>
-    <FlexRow>
-      <FlexColumn style={{marginRight: '10px'}}>
-        <UList>
+      <h1>Product Table</h1>
+      <FlexRow>
+        <FlexColumn style={{ marginRight: '10px' }}>
+          <UList>
+            <List>
+              <Label>Name</Label>
+              <Input placeholder={metadata?.name || 'none'} disabled />
+            </List>
+          </UList>
+        </FlexColumn>
+        <FlexColumn>
+          <UList>
+            <List>
+              <Label>Title</Label>
+              <Input placeholder={metadata?.title || 'none'} disabled />
+            </List>
+          </UList>
+        </FlexColumn>
+      </FlexRow>
+      <FlexRow>
+        <UList style={{ width: '100%' }}>
           <List>
-            <Label>Name</Label>
-            <Input placeholder={metadata?.name || 'none'} disabled />
+            <Label>Primary Key</Label>
+            <Dropdown
+              name="primary"
+              id="primary"
+              defaultValue={columns ? columns[0].toString() : 'none'}
+            >
+              {renderedOptions}
+            </Dropdown>
           </List>
         </UList>
-      </FlexColumn>
-      <FlexColumn>
-        <UList>
-          <List>
-            <Label>Title</Label>
-            <Input placeholder={metadata?.title || 'none'} disabled />
-          </List>
-        </UList>
-      </FlexColumn>
-    </FlexRow>
-    <FlexRow>
-      <UList style={{width: '100%'}}>
-        <List>
-          <Label>Primary Key</Label>
-          <Dropdown name="primary" id="primary" defaultValue={columns ? columns[0].toString() : 'none'}>
-            {renderedOptions}
-          </Dropdown>
-        </List>
-      </UList>
-    </FlexRow>
+      </FlexRow>
     </div>
   )
 }

@@ -47,8 +47,8 @@ const AddDataButton = styled(Button)`
 `
 
 const SaveButton = styled(Button)`
-  color: #F8F8F8;
-  background: #4D9EF6;
+  color: #f8f8f8;
+  background: #4d9ef6;
   min-width: 110px;
   margin-left: 10px;
 `
@@ -57,12 +57,12 @@ export function ProductHeader() {
   return (
     <FlexRow>
       <FlexColumn>
-        <h1 style={{margin: '0'}}>Source 1</h1>
+        <h1 style={{ margin: '0' }}>Source 1</h1>
       </FlexColumn>
       <FlexColumn>
         <ButtonGroup>
-        <AddDataButton>Add Data Source</AddDataButton>
-        <SaveButton>Save</SaveButton>
+          <AddDataButton>Add Data Source</AddDataButton>
+          <SaveButton>Save</SaveButton>
         </ButtonGroup>
       </FlexColumn>
     </FlexRow>

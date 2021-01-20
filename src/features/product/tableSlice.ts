@@ -13,7 +13,7 @@ interface TableState {
 const tableInitialState = {
   table: {},
   isLoading: false,
-  error: null
+  error: null,
 } as TableState
 
 function startLoading(state: TableState) {
@@ -36,19 +36,15 @@ const table = createSlice({
       state.error = null
       state.table = table
     },
-    getTableFailure: loadingFailed
-  }
+    getTableFailure: loadingFailed,
+  },
 })
 
-export const {
-  getTableStart,
-  getTableSuccess,
-  getTableFailure
-} = table.actions
+export const { getTableStart, getTableSuccess, getTableFailure } = table.actions
 
 export default table.reducer
 
-export const fetchTable = (): AppThunk => async dispatch => {
+export const fetchTable = (): AppThunk => async (dispatch) => {
   try {
     dispatch(getTableStart())
     const table = await getTable()

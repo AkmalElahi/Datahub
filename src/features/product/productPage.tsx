@@ -49,11 +49,9 @@ export const ProductPage = () => {
   const { productSlug } = useParams()
   const dispatch = useDispatch()
 
-  const {
-    table,
-    isLoading,
-    error: tableError
-  } = useSelector((state: RootState) => state.table)
+  const { table, isLoading, error: tableError } = useSelector(
+    (state: RootState) => state.table
+  )
 
   useEffect(() => {
     dispatch(fetchTable())
@@ -68,33 +66,36 @@ export const ProductPage = () => {
     )
   }
 
-  let columnHeaders : (string | undefined)[] = []
+  let columnHeaders: (string | undefined)[] = []
 
   if (!isLoading && !isEmpty(table)) {
     const metadata = table.column_metadata_list
     if (metadata) {
-      columnHeaders = metadata.map(meta => meta.title)
+      columnHeaders = metadata.map((meta) => meta.title)
     }
   }
 
-  let renderedColumns = isLoading || isEmpty(table) ? (
-    <h3>Loading...</h3>
-  ) : (
-    <ColumnTypes metadata={table.column_metadata_list} />
-  )
-  let renderedTable = isLoading || isEmpty(table) ? (
-    <h3>Loading...</h3>
-  ) : (
-    <TableView columnHeaders={columnHeaders} data={table.value_list_list} />
-  )
-  let renderedMetadata = isLoading || isEmpty(table) ? (
-    <h3>Loading...</h3>
-  ) : (
-    <ProductMetadata 
-      metadata={table.table_metadata}
-      columns={table.column_metadata_list}
-    />
-  )
+  let renderedColumns =
+    isLoading || isEmpty(table) ? (
+      <h3>Loading...</h3>
+    ) : (
+      <ColumnTypes metadata={table.column_metadata_list} />
+    )
+  let renderedTable =
+    isLoading || isEmpty(table) ? (
+      <h3>Loading...</h3>
+    ) : (
+      <TableView columnHeaders={columnHeaders} data={table.value_list_list} />
+    )
+  let renderedMetadata =
+    isLoading || isEmpty(table) ? (
+      <h3>Loading...</h3>
+    ) : (
+      <ProductMetadata
+        metadata={table.table_metadata}
+        columns={table.column_metadata_list}
+      />
+    )
   return (
     <FlexRow>
       <LeftColumn>
@@ -102,9 +103,7 @@ export const ProductPage = () => {
       </LeftColumn>
       <RightColumn>
         <ProductHeader />
-        <ContentBox>
-          {renderedMetadata}
-        </ContentBox>
+        <ContentBox>{renderedMetadata}</ContentBox>
         <ContentBox>
           <h1>Columns</h1>
           {renderedColumns}
@@ -112,5 +111,5 @@ export const ProductPage = () => {
         </ContentBox>
       </RightColumn>
     </FlexRow>
-  );
+  )
 }

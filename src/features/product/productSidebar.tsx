@@ -20,7 +20,7 @@ const SidebarLink = styled.li`
 `
 
 const SidebarLinkSelected = styled(SidebarLink)`
-  color: ${props => props.theme.primaryColor};
+  color: ${(props) => props.theme.primaryColor};
   font-weight: 500;
 `
 
@@ -31,7 +31,7 @@ const DataSource = styled.li`
 `
 
 const DataSourceSelected = styled(DataSource)`
-  color: ${props => props.theme.primaryColor};
+  color: ${(props) => props.theme.primaryColor};
   font-weight: 500;
 `
 

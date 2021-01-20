@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { fetchProducts } from './productListSlice'
 
-
 export const ProductListPage = () => {
   const dispatch = useDispatch()
 
@@ -11,7 +10,5 @@ export const ProductListPage = () => {
     dispatch(fetchProducts())
   }, [dispatch])
 
-  return (
-    <div></div>
-  )
+  return <div></div>
 }

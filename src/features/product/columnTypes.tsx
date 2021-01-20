@@ -45,8 +45,8 @@ const ColumnBoxHeader = styled(ColumnBox)`
 `
 const EntityBox = styled(ColumnBox)`
   background: rgba(77, 158, 246, 0.06);
-  border: 1px solid ${props => props.theme.primaryColor};
-  color: ${props => props.theme.primaryColor};
+  border: 1px solid ${(props) => props.theme.primaryColor};
+  color: ${(props) => props.theme.primaryColor};
   position: relative;
 `
 const Ellipses = styled.div`
@@ -57,7 +57,7 @@ const Ellipses = styled.div`
     top: 50%;
     left: 90%;
     transform: translate(-50%, -50%) rotate(90deg);
-    font-size: 20px; 
+    font-size: 20px;
     letter-spacing: 2px;
     margin-top: 2px;
   }
@@ -96,83 +96,70 @@ const StyledPopup = styled(Popup)`
   }
 `
 
-const DATA_TYPES = {0: 'int', 1: 'float', 2: 'string', 3: 'boolean'}
+const DATA_TYPES = { 0: 'int', 1: 'float', 2: 'string', 3: 'boolean' }
 
 export const ColumnTypes = ({ metadata }: Props) => {
-    let renderedNames = metadata?.map(meta => (
-      <FlexColumn key={meta.column_num}>
-        <ColumnBox>
-          {meta.name}
-        </ColumnBox>
-      </FlexColumn>
-    ))
+  let renderedNames = metadata?.map((meta) => (
+    <FlexColumn key={meta.column_num}>
+      <ColumnBox>{meta.name}</ColumnBox>
+    </FlexColumn>
+  ))
 
-    let renderedTitles = metadata?.map(meta => (
-      <FlexColumn key={meta.column_num}>
-        <ColumnBox>
-          {meta.title}
-        </ColumnBox>
-      </FlexColumn>
-    ))
+  let renderedTitles = metadata?.map((meta) => (
+    <FlexColumn key={meta.column_num}>
+      <ColumnBox>{meta.title}</ColumnBox>
+    </FlexColumn>
+  ))
 
-    let renderedDataTypes = metadata?.map(meta => (
-      <FlexColumn key={meta.column_num}>
-        <ColumnBox>
-          {meta.data_type ? DATA_TYPES[meta.data_type] : 'unknown'}
-        </ColumnBox>
-      </FlexColumn>
-    ))
+  let renderedDataTypes = metadata?.map((meta) => (
+    <FlexColumn key={meta.column_num}>
+      <ColumnBox>
+        {meta.data_type ? DATA_TYPES[meta.data_type] : 'unknown'}
+      </ColumnBox>
+    </FlexColumn>
+  ))
 
-    let renderedEntities = metadata?.map(meta => (
-      <FlexColumn key={meta.column_num}>
-        <EntityBox>
-          {meta.entity_name || 'none'}
-          <StyledPopup trigger={<Ellipses />} modal>
-            {close => (
-              <EntityPopup 
-                close={close}
-                entities={meta.entity_name_candidate_list}
-              />
-            )}
-          </StyledPopup>
-        </EntityBox>
-      </FlexColumn>
-    ))
-
+  let renderedEntities = metadata?.map((meta) => (
+    <FlexColumn key={meta.column_num}>
+      <EntityBox>
+        {meta.entity_name || 'none'}
+        <StyledPopup trigger={<Ellipses />} modal>
+          {(close) => (
+            <EntityPopup
+              close={close}
+              entities={meta.entity_name_candidate_list}
+            />
+          )}
+        </StyledPopup>
+      </EntityBox>
+    </FlexColumn>
+  ))
 
   return (
     <ColumnsContainer>
       <FlexRow>
         <FlexColumn>
-          <ColumnBoxHeader>
-            Name
-          </ColumnBoxHeader>
+          <ColumnBoxHeader>Name</ColumnBoxHeader>
         </FlexColumn>
-          {renderedNames}
-      </FlexRow>
-       <FlexRow>
-        <FlexColumn>
-          <ColumnBoxHeader>
-            Title
-          </ColumnBoxHeader>
-        </FlexColumn>
-          {renderedTitles}
+        {renderedNames}
       </FlexRow>
       <FlexRow>
         <FlexColumn>
-          <ColumnBoxHeader>
-            Data Type
-          </ColumnBoxHeader>
+          <ColumnBoxHeader>Title</ColumnBoxHeader>
         </FlexColumn>
-          {renderedDataTypes}
+        {renderedTitles}
       </FlexRow>
       <FlexRow>
         <FlexColumn>
-          <EntityBoxHeader>
-            Entity
-          </EntityBoxHeader>
+          <ColumnBoxHeader>Data Type</ColumnBoxHeader>
         </FlexColumn>
-          {renderedEntities}
+        {renderedDataTypes}
+      </FlexRow>
+      <FlexRow>
+        <FlexColumn>
+          <EntityBoxHeader>Entity</EntityBoxHeader>
+        </FlexColumn>
+        {renderedEntities}
       </FlexRow>
     </ColumnsContainer>
   )
