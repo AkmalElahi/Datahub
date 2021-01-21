@@ -9,7 +9,7 @@ import { Navbar } from '../components/Navbar'
 import { UserCredentials } from 'typescript-axios'
 import { fetchUser } from '../features/user/userSlice'
 import { LandingPage } from '../features/landing/landingPage'
-//import { ProductListPage } from '../features/productList/ProductListPage'
+import { ProductListPage } from '../features/productList/productListPage'
 import { ProductPage } from '../features/product/productPage'
 
 const GlobalStyle = createGlobalStyle`
@@ -28,10 +28,12 @@ const user: UserCredentials = {
 
 const App: React.FC = () => {
   const dispatch = useDispatch()
-
+  const foundUser = localStorage.getItem('user')
   useEffect(() => {
-    dispatch(fetchUser(user))
-  }, [dispatch])
+    if (!foundUser) {
+      dispatch(fetchUser(user))
+    }
+  }, [dispatch, foundUser])
 
   return (
     <ThemeProvider theme={lightTheme}>
@@ -40,7 +42,7 @@ const App: React.FC = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          {/*<Route path='/my-products' element={<ProductListPage />} />*/}
+          <Route path="/my-products" element={<ProductListPage />} />
           <Route path="/:productSlug" element={<ProductPage />} />
         </Routes>
       </AppContainer>

@@ -35,8 +35,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "api": "rm -rf gen/api && openapi-generator-cli generate -i   https://api.swaggerhub.com/apis/igushev/DataHub/2.0/swagger.json --config api.json -g typescript-axios -o gen/api && cd gen/api && yarn install && yarn run build",
-    "watch": "npm-watch"
+    "api": "rm -rf gen/api && openapi-generator-cli generate -i swagger.json --config api.json -g typescript-axios -o gen/api && cd gen/api && yarn install && yarn run build"
   },
   "eslintConfig": {
     "extends": "react-app"

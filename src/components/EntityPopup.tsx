@@ -9,7 +9,7 @@ interface Props {
 const Input = styled.input`
   flex: 1;
   width: 100%;
-  padding: .375rem .75rem;
+  padding: 0.375rem 0.75rem;
   font-size: 1rem;
   color: #181d23;
   border: 1px solid #c4c4c4;
@@ -29,7 +29,7 @@ const LargeInput = styled(Input)`
 const Dropdown = styled.select`
   flex: 1;
   width: 100%;
-  padding: .375rem .75rem;
+  padding: 0.375rem 0.75rem;
   font-size: 1rem;
   color: #181d23;
   border: 1px solid #c4c4c4;
@@ -82,8 +82,8 @@ const DoneButton = styled.button`
   text-align: center;
   padding: 0.8rem 1rem;
   border: none;
-  color: #F8F8F8;
-  background: #4D9EF6;
+  color: #f8f8f8;
+  background: #4d9ef6;
   min-width: 110px;
   margin-left: 10px;
   cursor: pointer;
@@ -104,64 +104,66 @@ const CancelButton = styled.button`
   outline: none;
 `
 
-export const EntityPopup = ({close, entities}: Props) => {
+export const EntityPopup = ({ close, entities }: Props) => {
   let renderExistingOptions
-  if (entities != undefined) {
-    renderExistingOptions = entities.map(entity => (
-      <option
-        value={entity}
-        key={entity}
-      >
+  if (entities) {
+    renderExistingOptions = entities.map((entity) => (
+      <option value={entity} key={entity}>
         {entity}
       </option>
     ))
-  }
-  else renderExistingOptions = (<option>none</option>)
+  } else renderExistingOptions = <option>none</option>
   return (
-  <div className="modal">
-    <button className="close" onClick={close}>
-      &times;
-    </button>
-    <div className="header">New Entity</div>
-    <div className="content">
-      <FlexLabel>
-        <input type="radio" name="entity" value="existing" />Existing
-        <Dropdown name="entity" id="entity">
-          {renderExistingOptions}
-        </Dropdown>
-      </FlexLabel>
+    <div className="modal">
+      <button className="close" onClick={close}>
+        &times;
+      </button>
+      <div className="header">New Entity</div>
+      <div className="content">
+        <FlexLabel>
+          <input type="radio" name="entity" value="existing" />
+          Existing
+          <Dropdown name="entity" id="entity">
+            {renderExistingOptions}
+          </Dropdown>
+        </FlexLabel>
 
         <RadioLabel>
-          <input type="radio" name="entity" value="new" />Create New
+          <input type="radio" name="entity" value="new" />
+          Create New
         </RadioLabel>
         <TextInputGroup>
-          <NewLabel>Name</NewLabel><Input type="text" name="entity" />
-          <NewLabel>Title</NewLabel><Input type="text" name="entity" />
-          <NewLabel>Description</NewLabel><LargeInput type="text" name="entity" />
-          <NewLabel>Tags</NewLabel><Input type="text" name="entity" />
+          <NewLabel>Name</NewLabel>
+          <Input type="text" name="entity" />
+          <NewLabel>Title</NewLabel>
+          <Input type="text" name="entity" />
+          <NewLabel>Description</NewLabel>
+          <LargeInput type="text" name="entity" />
+          <NewLabel>Tags</NewLabel>
+          <Input type="text" name="entity" />
         </TextInputGroup>
 
-      <RadioLabel>
-        <input type="radio" name="entity" value="None" />None
-      </RadioLabel>
-
+        <RadioLabel>
+          <input type="radio" name="entity" value="None" />
+          None
+        </RadioLabel>
+      </div>
+      <ButtonGroup className="actions">
+        <CancelButton
+          onClick={() => {
+            close()
+          }}
+        >
+          Cancel
+        </CancelButton>
+        <DoneButton
+          onClick={() => {
+            close()
+          }}
+        >
+          Done
+        </DoneButton>
+      </ButtonGroup>
     </div>
-    <ButtonGroup className="actions">
-      <CancelButton
-        onClick={() => {
-          close();
-        }}
-      >
-        Cancel
-      </CancelButton>
-      <DoneButton
-        onClick={() => {
-          close();
-        }}
-      >
-        Done
-      </DoneButton>
-    </ButtonGroup>
-  </div>
   )
 }

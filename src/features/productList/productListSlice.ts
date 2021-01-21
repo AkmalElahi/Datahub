@@ -48,13 +48,13 @@ export const {
 
 export default productList.reducer
 
-export const fetchProducts = (
-  sessionId: string,
-  options?: any
-): AppThunk => async (dispatch) => {
+export const fetchProducts = (options: any = {}): AppThunk => async (
+  dispatch
+) => {
   try {
     dispatch(getListStart())
-    const list = await getProductList(sessionId)
+    const sessionId = localStorage.getItem('user') || ''
+    const list = await getProductList(sessionId, options)
     dispatch(getListSuccess(list))
   } catch (err) {
     dispatch(getListFailure(err.toString()))

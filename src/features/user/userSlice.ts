@@ -35,6 +35,7 @@ const userSlice = createSlice({
       state.isLoading = false
       state.error = null
       state.user = user
+      localStorage.setItem('user', user.id || '')
     },
     getUserFailure: loadingFailed,
   },

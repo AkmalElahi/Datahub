@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 const Button = styled.button`
@@ -23,8 +24,8 @@ const CreateDataButton = styled(Button)`
 `
 
 const ViewDataButton = styled(Button)`
-  color: #F8F8F8;
-  background: #4D9EF6;
+  color: #f8f8f8;
+  background: #4d9ef6;
   min-width: 110px;
   margin-left: 10px;
 `
@@ -33,7 +34,9 @@ export const LandingPage = () => {
   return (
     <div>
       <CreateDataButton>Create a New Data Product</CreateDataButton>
-      <ViewDataButton>View My Data Products</ViewDataButton>
+      <Link to="/my-products">
+        <ViewDataButton>View My Data Products</ViewDataButton>
+      </Link>
     </div>
   )
 }
