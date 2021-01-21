@@ -2,22 +2,38 @@ import {
   DefaultApi,
   TableConstructor,
   ProductMetadataList,
+  SessionInfo,
+  UserCredentials,
 } from 'typescript-axios'
 
 const apiService = new DefaultApi()
 
-export interface TableResult {
+export interface User {
+  user: SessionInfo
+}
+
+export interface Table {
   table: TableConstructor
 }
 
-export interface ProductListResult {
+export interface ProductList {
   product_metadata_list: ProductMetadataList
 }
 
-export async function getTable(): Promise<TableResult> {
+export async function signIn(user: UserCredentials) {
+  try {
+    const userResponse = await apiService.signInPost(user)
+    return {
+      user: userResponse.data,
+    }
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function getTable() {
   try {
     const tableResponse = await apiService.getTableConstructorExampleGet()
-
     return {
       table: tableResponse.data,
     }
@@ -26,10 +42,7 @@ export async function getTable(): Promise<TableResult> {
   }
 }
 
-export async function getProductList(
-  sessionId: string,
-  options?: any
-): Promise<ProductListResult> {
+export async function getProductList(sessionId: string, options?: any) {
   try {
     const listResponse = await apiService.getProductsGet(sessionId, options)
 

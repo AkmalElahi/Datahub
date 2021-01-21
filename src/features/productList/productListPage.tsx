@@ -6,9 +6,5 @@ import { fetchProducts } from './productListSlice'
 export const ProductListPage = () => {
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    dispatch(fetchProducts())
-  }, [dispatch])
-
   return <div></div>
 }

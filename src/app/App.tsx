@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { Routes, Route } from 'react-router-dom'
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components'
-import { lightTheme } from '../styles/Theme'
 
+import { lightTheme } from '../styles/Theme'
 import { Navbar } from '../components/Navbar'
+
+import { UserCredentials } from 'typescript-axios'
+import { fetchUser } from '../features/user/userSlice'
 import { LandingPage } from '../features/landing/landingPage'
 //import { ProductListPage } from '../features/productList/ProductListPage'
 import { ProductPage } from '../features/product/productPage'
@@ -15,10 +19,19 @@ const GlobalStyle = createGlobalStyle`
 `
 
 const AppContainer = styled.div`
-  font-family: ${props => props.theme.fontFamily}
+  font-family: ${(props) => props.theme.fontFamily};
 `
+const user: UserCredentials = {
+  email: process.env.REACT_APP_TEST_EMAIL,
+  password: process.env.REACT_APP_TEST_PW,
+}
 
 const App: React.FC = () => {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(fetchUser(user))
+  }, [dispatch])
 
   return (
     <ThemeProvider theme={lightTheme}>
@@ -26,13 +39,13 @@ const App: React.FC = () => {
       <AppContainer>
         <Navbar />
         <Routes>
-          <Route path='/' element={<LandingPage />} />
+          <Route path="/" element={<LandingPage />} />
           {/*<Route path='/my-products' element={<ProductListPage />} />*/}
-          <Route path='/:productSlug' element={<ProductPage />} />
+          <Route path="/:productSlug" element={<ProductPage />} />
         </Routes>
       </AppContainer>
     </ThemeProvider>
-  );
+  )
 }
 
-export default App;
+export default App

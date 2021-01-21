@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { ProductMetadataList } from 'typescript-axios'
-import { ProductListResult, getProductList } from '../../api/swaggerAPI'
+import { ProductList, getProductList } from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
 
 interface ProductListState {
@@ -30,7 +30,7 @@ const productList = createSlice({
   initialState: productListInitialState,
   reducers: {
     getListStart: startLoading,
-    getListSuccess(state, { payload }: PayloadAction<ProductListResult>) {
+    getListSuccess(state, { payload }: PayloadAction<ProductList>) {
       const { product_metadata_list } = payload
       state.isLoading = false
       state.error = null

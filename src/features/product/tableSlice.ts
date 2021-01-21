@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { TableConstructor } from 'typescript-axios'
-import { TableResult, getTable } from '../../api/swaggerAPI'
+import { Table, getTable } from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
 
 interface TableState {
@@ -30,7 +30,7 @@ const table = createSlice({
   initialState: tableInitialState,
   reducers: {
     getTableStart: startLoading,
-    getTableSuccess(state, { payload }: PayloadAction<TableResult>) {
+    getTableSuccess(state, { payload }: PayloadAction<Table>) {
       const { table } = payload
       state.isLoading = false
       state.error = null
