@@ -32,8 +32,10 @@ export const DataTab = ({ tableName, productName }: Props) => {
   )
 
   useEffect(() => {
-    dispatch(fetchTable())
-  }, [dispatch])
+    if (isEmpty(table)) {
+      dispatch(fetchTable())
+    }
+  }, [dispatch, table])
 
   if (tableError) {
     return (

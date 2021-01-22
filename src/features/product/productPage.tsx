@@ -6,6 +6,9 @@ import styled from 'styled-components'
 import { RootState } from '../../app/rootReducer'
 
 import { ProductSidebar } from './productSidebar'
+import { DataTab } from './dataTab'
+import { ViewsTab } from './viewsTab'
+import { PublishTab } from './publishTab'
 import { currentTab, setCurrentTab } from './tabDisplaySlice'
 
 const FlexRow = styled.div`
@@ -36,16 +39,29 @@ export const ProductPage = () => {
   const { productSlug } = useParams()
   const dispatch = useDispatch()
 
+  const { tab } = useSelector((state: RootState) => state.tabDisplay)
+
   const setTab = (tab: currentTab) => {
     dispatch(setCurrentTab(tab))
   }
 
+  let renderedContent
+
+  if (tab === 'data') {
+    renderedContent = (
+      <DataTab tableName="placeholder" productName={productSlug} />
+    )
+  } else if (tab === 'views') {
+    renderedContent = <ViewsTab />
+  } else if (tab === 'publish') {
+    renderedContent = <PublishTab />
+  }
   return (
     <FlexRow>
       <LeftColumn>
         <ProductSidebar setTab={setTab} />
       </LeftColumn>
-      <RightColumn></RightColumn>
+      <RightColumn>{renderedContent}</RightColumn>
     </FlexRow>
   )
 }
