@@ -1,6 +1,7 @@
 import {
   DefaultApi,
   TableConstructor,
+  ProductConstructor,
   ProductMetadataList,
   SessionInfo,
   UserCredentials,
@@ -14,6 +15,10 @@ export interface User {
 
 export interface Table {
   table: TableConstructor
+}
+
+export interface Product {
+  product: ProductConstructor
 }
 
 export interface ProductList {
@@ -44,6 +49,20 @@ export async function getTable(
     )
     return {
       table: tableResponse.data,
+    }
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function getProduct(sessionId: string, productName: string) {
+  try {
+    const productResponse = await apiService.getProductConstructorGet(
+      sessionId,
+      productName
+    )
+    return {
+      product: productResponse.data,
     }
   } catch (err) {
     throw err

@@ -20,11 +20,11 @@ const ContentBox = styled.div`
 `
 
 interface Props {
-  tableName: string
   productName: string
+  tableName: string
 }
 
-export const DataTab = ({ tableName, productName }: Props) => {
+export const DataTab = ({ productName, tableName }: Props) => {
   const dispatch = useDispatch()
 
   const { table, isLoading, error: tableError } = useSelector(
@@ -33,9 +33,9 @@ export const DataTab = ({ tableName, productName }: Props) => {
 
   useEffect(() => {
     if (isEmpty(table)) {
-      dispatch(fetchTable())
+      dispatch(fetchTable(productName, tableName))
     }
-  }, [dispatch, table])
+  }, [dispatch, table, productName, tableName])
 
   if (tableError) {
     return (
@@ -78,7 +78,7 @@ export const DataTab = ({ tableName, productName }: Props) => {
     )
 
   return (
-    <div>
+    <React.Fragment>
       <ProductHeader />
       <ContentBox>{renderedMetadata}</ContentBox>
       <ContentBox>
@@ -86,6 +86,6 @@ export const DataTab = ({ tableName, productName }: Props) => {
         {renderedColumns}
         {renderedTable}
       </ContentBox>
-    </div>
+    </React.Fragment>
   )
 }

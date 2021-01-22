@@ -28,17 +28,18 @@ const GridContainer = styled.div`
     border-bottom: 1px solid rgba(196, 196, 196, 0.5);
     border-top: 1px solid rgba(196, 196, 196, 0.5);
   }
+
+  table.gridjs-table {
+    table-layout: auto;
+  }
 `
 
 export const TableView = ({ columnHeaders, data }: Props) => {
   return (
     <div>
       <GridContainer>
-        <Grid
-          data={data}
-          columns={columnHeaders}
-       />
-     </GridContainer>
+        <Grid data={data} columns={columnHeaders} />
+      </GridContainer>
     </div>
-   )
+  )
 }

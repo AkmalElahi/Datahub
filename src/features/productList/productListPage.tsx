@@ -52,7 +52,6 @@ export const ProductListPage = () => {
         <FlexColumn>{productMetadataList[0].title}</FlexColumn>
       </Link>
     )
-  console.log(productMetadataList)
 
   return <FlexRow>{renderedList}</FlexRow>
 }

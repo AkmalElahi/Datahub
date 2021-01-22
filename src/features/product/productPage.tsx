@@ -9,6 +9,7 @@ import { ProductSidebar } from './productSidebar'
 import { DataTab } from './dataTab'
 import { ViewsTab } from './viewsTab'
 import { PublishTab } from './publishTab'
+import { fetchProduct } from './productSlice'
 import { currentTab, setCurrentTab } from './tabDisplaySlice'
 
 const FlexRow = styled.div`
@@ -41,15 +42,37 @@ export const ProductPage = () => {
 
   const { tab } = useSelector((state: RootState) => state.tabDisplay)
 
+  const { product, isLoading, error: ProductError } = useSelector(
+    (state: RootState) => state.product
+  )
+
+  useEffect(() => {
+    dispatch(fetchProduct(productSlug))
+  }, [dispatch, productSlug])
+
   const setTab = (tab: currentTab) => {
     dispatch(setCurrentTab(tab))
   }
 
   let renderedContent
+  //TODO: normalize data?
+  const productMetadata = product?.product_full_metadata
+  const tableMetadata =
+    productMetadata?.table_full_metadata_list?.[0].table_metadata
 
-  if (tab === 'data') {
+  if (ProductError) {
     renderedContent = (
-      <DataTab tableName="placeholder" productName={productSlug} />
+      <div>
+        <h1>Something went wrong...</h1>
+        <div>{ProductError.toString()}</div>
+      </div>
+    )
+  } else if (tab === 'data') {
+    renderedContent = (
+      <DataTab
+        productName={productSlug}
+        tableName={tableMetadata?.name || ''}
+      />
     )
   } else if (tab === 'views') {
     renderedContent = <ViewsTab />

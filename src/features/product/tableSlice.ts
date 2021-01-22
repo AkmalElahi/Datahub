@@ -44,10 +44,14 @@ export const { getTableStart, getTableSuccess, getTableFailure } = table.actions
 
 export default table.reducer
 
-export const fetchTable = (): AppThunk => async (dispatch) => {
+export const fetchTable = (
+  productName: string,
+  tableName: string
+): AppThunk => async (dispatch) => {
   try {
     dispatch(getTableStart())
-    const table = await getTable()
+    const sessionId = localStorage.getItem('user') || ''
+    const table = await getTable(sessionId, productName, tableName)
     dispatch(getTableSuccess(table))
   } catch (err) {
     dispatch(getTableFailure(err.toString()))
