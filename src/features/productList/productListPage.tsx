@@ -19,17 +19,17 @@ const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
   flex-basis: 100%;
-  flex: 1;
+  flex: 0 50%;
 `
 
 export const ProductListPage = () => {
   const dispatch = useDispatch()
 
   const {
-    product_metadata_list,
+    productMetadataList,
     isLoading,
     error: ProductListError,
-  } = useSelector((state: RootState) => state.product_metadata_list)
+  } = useSelector((state: RootState) => state.productMetadataList)
 
   useEffect(() => {
     dispatch(fetchProducts())
@@ -45,11 +45,14 @@ export const ProductListPage = () => {
   }
 
   let renderedList =
-    isLoading || isEmpty(product_metadata_list) ? (
+    isLoading || isEmpty(productMetadataList) ? (
       <h3>Loading...</h3>
     ) : (
-      <div>test</div>
+      <Link to={`/${productMetadataList[0].name}`}>
+        <FlexColumn>{productMetadataList[0].title}</FlexColumn>
+      </Link>
     )
+  console.log(productMetadataList)
 
-  return <div>renderedList</div>
+  return <FlexRow>{renderedList}</FlexRow>
 }

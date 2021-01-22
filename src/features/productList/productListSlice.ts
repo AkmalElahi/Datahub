@@ -5,13 +5,13 @@ import { ProductList, getProductList } from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
 
 interface ProductListState {
-  product_metadata_list: ProductMetadataList
+  productMetadataList: ProductMetadataList
   isLoading: boolean
   error: string | null
 }
 
 const productListInitialState = {
-  product_metadata_list: {},
+  productMetadataList: {},
   isLoading: false,
   error: null,
 } as ProductListState
@@ -31,10 +31,10 @@ const productList = createSlice({
   reducers: {
     getListStart: startLoading,
     getListSuccess(state, { payload }: PayloadAction<ProductList>) {
-      const { product_metadata_list } = payload
+      const { productMetadataList } = payload
       state.isLoading = false
       state.error = null
-      state.product_metadata_list = product_metadata_list
+      state.productMetadataList = productMetadataList
     },
     getListFailure: loadingFailed,
   },

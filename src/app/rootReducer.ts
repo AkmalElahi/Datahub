@@ -9,7 +9,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   table: tableReducer,
   tabDisplay: tabDisplayReducer,
-  product_metadata_list: productListReducer,
+  productMetadataList: productListReducer,
 })
 
 export type RootState = ReturnType<typeof rootReducer>

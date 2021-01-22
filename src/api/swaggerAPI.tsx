@@ -17,7 +17,7 @@ export interface Table {
 }
 
 export interface ProductList {
-  product_metadata_list: ProductMetadataList
+  productMetadataList: ProductMetadataList
 }
 
 export async function signIn(user: UserCredentials) {
@@ -31,9 +31,17 @@ export async function signIn(user: UserCredentials) {
   }
 }
 
-export async function getTable() {
+export async function getTable(
+  sessionId: string,
+  productName: string,
+  tableName: string
+) {
   try {
-    const tableResponse = await apiService.getTableConstructorExampleGet()
+    const tableResponse = await apiService.getTableConstructorGet(
+      sessionId,
+      productName,
+      tableName
+    )
     return {
       table: tableResponse.data,
     }
@@ -47,7 +55,7 @@ export async function getProductList(sessionId: string, options: any = {}) {
     const listResponse = await apiService.getProductsGet(sessionId, options)
 
     return {
-      product_metadata_list: listResponse.data,
+      productMetadataList: listResponse.data,
     }
   } catch (err) {
     throw err

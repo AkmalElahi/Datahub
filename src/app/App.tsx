@@ -16,6 +16,14 @@ const GlobalStyle = createGlobalStyle`
   body {
     background-color: #f8f8f8;
   }
+
+  html {
+    box-sizing: border-box;
+  }
+
+  * {
+    box-sizing: inherit;
+  }
 `
 
 const AppContainer = styled.div`

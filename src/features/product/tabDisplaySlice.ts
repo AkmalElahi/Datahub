@@ -5,7 +5,7 @@ export interface currentTab {
 }
 
 const tabInitialState = {
-  tab: 'data',
+  tab: 'publish',
 }
 
 const tabDisplaySlice = createSlice({
