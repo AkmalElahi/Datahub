@@ -44,7 +44,6 @@ export async function getTable() {
 
 export async function getProductList(sessionId: string, options: any = {}) {
   try {
-    console.log(sessionId)
     const listResponse = await apiService.getProductsGet(sessionId, options)
 
     return {

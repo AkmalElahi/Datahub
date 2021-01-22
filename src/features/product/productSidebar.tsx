@@ -1,5 +1,10 @@
 import React from 'react'
-import styled from 'styled-components'
+import { useSelector } from 'react-redux'
+import styled, { css } from 'styled-components'
+
+import { RootState } from '../../app/rootReducer'
+
+import { currentTab } from './tabDisplaySlice'
 
 const SidebarGroup = styled.ul`
   display: block;
@@ -14,14 +19,16 @@ const DataGroup = styled.div`
   padding-left: 10px;
 `
 
-const SidebarLink = styled.li`
+const SidebarLink = styled.li<{ active: boolean }>`
   margin: 15px 0;
   cursor: pointer;
-`
 
-const SidebarLinkSelected = styled(SidebarLink)`
-  color: ${(props) => props.theme.primaryColor};
-  font-weight: 500;
+  ${(props) =>
+    props.active &&
+    css`
+      color: ${props.theme.primaryColor};
+      font-weight: 500;
+    `}
 `
 
 const DataSource = styled.li`
@@ -35,17 +42,37 @@ const DataSourceSelected = styled(DataSource)`
   font-weight: 500;
 `
 
-export const ProductSidebar = () => {
+interface Props {
+  setTab: (tab: currentTab) => void
+}
+
+export const ProductSidebar = ({ setTab }: Props) => {
+  const { tab } = useSelector((state: RootState) => state.tabDisplay)
   return (
     <SidebarGroup>
-      <SidebarLinkSelected>Data</SidebarLinkSelected>
+      <SidebarLink
+        active={tab === 'data'}
+        onClick={() => setTab({ tab: 'data' })}
+      >
+        Data
+      </SidebarLink>
       <DataGroup>
-        <DataSourceSelected>Source 01</DataSourceSelected>
+        <DataSource>Source 01</DataSource>
         <DataSource>Source 02</DataSource>
         <DataSource>Source 03</DataSource>
       </DataGroup>
-      <SidebarLink>Views</SidebarLink>
-      <SidebarLink>Publish</SidebarLink>
+      <SidebarLink
+        active={tab === 'views'}
+        onClick={() => setTab({ tab: 'views' })}
+      >
+        Views
+      </SidebarLink>
+      <SidebarLink
+        active={tab === 'publish'}
+        onClick={() => setTab({ tab: 'publish' })}
+      >
+        Publish
+      </SidebarLink>
     </SidebarGroup>
   )
 }

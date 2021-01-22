@@ -50,6 +50,6 @@ export const ProductListPage = () => {
     ) : (
       <div>test</div>
     )
-  console.log(product_metadata_list)
+
   return <div>renderedList</div>
 }
