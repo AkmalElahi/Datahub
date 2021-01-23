@@ -53,11 +53,15 @@ const SaveButton = styled(Button)`
   margin-left: 10px;
 `
 
-export function ProductHeader() {
+interface Props {
+  tableTitle: string
+}
+
+export const ProductHeader = ({ tableTitle }: Props) => {
   return (
     <FlexRow>
       <FlexColumn>
-        <h1 style={{ margin: '0' }}>Source 1</h1>
+        <h1 style={{ margin: '0' }}>{tableTitle}</h1>
       </FlexColumn>
       <FlexColumn>
         <ButtonGroup>

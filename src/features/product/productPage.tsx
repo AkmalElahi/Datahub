@@ -41,7 +41,7 @@ export const ProductPage = () => {
   const { productSlug } = useParams()
   const dispatch = useDispatch()
 
-  const { tab } = useSelector((state: RootState) => state.tabDisplay)
+  const { source, tab } = useSelector((state: RootState) => state.tabDisplay)
 
   const { product, isLoading, error: ProductError } = useSelector(
     (state: RootState) => state.product
@@ -66,7 +66,7 @@ export const ProductPage = () => {
   const productMetadata = product?.product_full_metadata
   const tableMetadataList: TableFullMetadata[] | undefined =
     productMetadata?.table_full_metadata_list
-  const defaultTableName = tableMetadataList?.[0].table_metadata
+  let tableName = tableMetadataList?.[source].table_metadata?.name
 
   if (ProductError) {
     renderedContent = (
@@ -77,10 +77,7 @@ export const ProductPage = () => {
     )
   } else if (tab === 'data') {
     renderedContent = (
-      <DataTab
-        productName={productSlug}
-        tableName={defaultTableName?.name || ''}
-      />
+      <DataTab productName={productSlug} tableName={tableName || ''} />
     )
   } else if (tab === 'views') {
     renderedContent = <ViewsTab />

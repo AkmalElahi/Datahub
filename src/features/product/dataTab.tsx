@@ -32,7 +32,7 @@ export const DataTab = ({ productName, tableName }: Props) => {
   )
 
   useEffect(() => {
-    if (isEmpty(table)) {
+    if (isEmpty(table) || table.table_metadata?.name !== tableName) {
       dispatch(fetchTable(productName, tableName))
     }
   }, [dispatch, table, productName, tableName])
@@ -79,7 +79,7 @@ export const DataTab = ({ productName, tableName }: Props) => {
 
   return (
     <React.Fragment>
-      <ProductHeader />
+      <ProductHeader tableTitle={table.table_metadata?.title || ''} />
       <ContentBox>{renderedMetadata}</ContentBox>
       <ContentBox>
         <h1>Columns</h1>
