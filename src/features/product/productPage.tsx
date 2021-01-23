@@ -1,16 +1,17 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { RootState } from '../../app/rootReducer'
+import { TableFullMetadata } from 'typescript-axios'
 
 import { ProductSidebar } from './productSidebar'
 import { DataTab } from './dataTab'
 import { ViewsTab } from './viewsTab'
 import { PublishTab } from './publishTab'
 import { fetchProduct } from './productSlice'
-import { currentTab, setCurrentTab } from './tabDisplaySlice'
+import { currentTab, setCurrentTab, setCurrentSource } from './tabDisplaySlice'
 
 const FlexRow = styled.div`
   display: flex;
@@ -50,15 +51,22 @@ export const ProductPage = () => {
     dispatch(fetchProduct(productSlug))
   }, [dispatch, productSlug])
 
-  const setTab = (tab: currentTab) => {
-    dispatch(setCurrentTab(tab))
-  }
+  const setTab = useCallback(
+    (tab: currentTab) => dispatch(setCurrentTab(tab)),
+    [dispatch]
+  )
+
+  const setSource = useCallback(
+    (source: number) => dispatch(setCurrentSource(source)),
+    [dispatch]
+  )
 
   let renderedContent
   //TODO: normalize data?
   const productMetadata = product?.product_full_metadata
-  const tableMetadata =
-    productMetadata?.table_full_metadata_list?.[0].table_metadata
+  const tableMetadataList: TableFullMetadata[] | undefined =
+    productMetadata?.table_full_metadata_list
+  const defaultTableName = tableMetadataList?.[0].table_metadata
 
   if (ProductError) {
     renderedContent = (
@@ -71,7 +79,7 @@ export const ProductPage = () => {
     renderedContent = (
       <DataTab
         productName={productSlug}
-        tableName={tableMetadata?.name || ''}
+        tableName={defaultTableName?.name || ''}
       />
     )
   } else if (tab === 'views') {
@@ -82,7 +90,11 @@ export const ProductPage = () => {
   return (
     <FlexRow>
       <LeftColumn>
-        <ProductSidebar setTab={setTab} />
+        <ProductSidebar
+          sources={tableMetadataList}
+          setSource={setSource}
+          setTab={setTab}
+        />
       </LeftColumn>
       <RightColumn>{renderedContent}</RightColumn>
     </FlexRow>

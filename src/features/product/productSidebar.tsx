@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import styled, { css } from 'styled-components'
 
 import { RootState } from '../../app/rootReducer'
+import { TableFullMetadata } from 'typescript-axios'
 
 import { currentTab } from './tabDisplaySlice'
 
@@ -31,23 +32,42 @@ const SidebarLink = styled.li<{ active: boolean }>`
     `}
 `
 
-const DataSource = styled.li`
+const DataSource = styled.li<{ active: boolean }>`
   margin: 15px 0;
   font-size: 14px;
   cursor: pointer;
-`
 
-const DataSourceSelected = styled(DataSource)`
-  color: ${(props) => props.theme.primaryColor};
-  font-weight: 500;
+  ${(props) =>
+    props.active &&
+    css`
+      color: ${props.theme.primaryColor};
+      font-weight: 500;
+    `}
 `
 
 interface Props {
+  sources?: TableFullMetadata[]
+  setSource: (source: number) => void
   setTab: (tab: currentTab) => void
 }
 
-export const ProductSidebar = ({ setTab }: Props) => {
-  const { tab } = useSelector((state: RootState) => state.tabDisplay)
+export const ProductSidebar = ({ sources, setSource, setTab }: Props) => {
+  const { tab, source } = useSelector((state: RootState) => state.tabDisplay)
+
+  const handleSourceChange = (index) => {
+    setSource(index)
+    if (tab !== 'data') setTab({ tab: 'data' })
+  }
+
+  const renderedSources = sources?.map((s, index) => (
+    <DataSource
+      active={tab === 'data' && source === index}
+      onClick={() => handleSourceChange(index)}
+      key={s?.table_metadata?.name}
+    >
+      {s?.table_metadata?.title}
+    </DataSource>
+  ))
   return (
     <SidebarGroup>
       <SidebarLink
@@ -56,11 +76,7 @@ export const ProductSidebar = ({ setTab }: Props) => {
       >
         Data
       </SidebarLink>
-      <DataGroup>
-        <DataSource>Source 01</DataSource>
-        <DataSource>Source 02</DataSource>
-        <DataSource>Source 03</DataSource>
-      </DataGroup>
+      <DataGroup>{renderedSources}</DataGroup>
       <SidebarLink
         active={tab === 'views'}
         onClick={() => setTab({ tab: 'views' })}

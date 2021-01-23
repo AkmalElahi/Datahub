@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 const FlexRow = styled.div`
@@ -54,6 +55,12 @@ const SignUpText = styled.span`
 const LogoPlaceholder = styled.span`
   font-size: 18px;
   font-weight: 300;
+  a:link {
+    text-decoration: none;
+  }
+  a:visited {
+    text-decoration: none;
+  }
 `
 
 export const Navbar = () => {
@@ -62,15 +69,20 @@ export const Navbar = () => {
       <LeftColumn></LeftColumn>
       <RightColumn>
         <FlexRowInner>
-          <FlexColumn style={{justifyContent: 'flex-start'}}>
-            <LogoPlaceholder><b>DATA</b>HUB</LogoPlaceholder>
+          <FlexColumn style={{ justifyContent: 'flex-start' }}>
+            <LogoPlaceholder>
+              <Link to="/">
+                <b>DATA</b>HUB
+              </Link>
+            </LogoPlaceholder>
           </FlexColumn>
-          <FlexColumn style={{justifyContent: 'center'}}>
-            <div style={{display: 'flex'}}>
-            <CreateText>Create Data Product</CreateText><MyText>My Data Products</MyText>
+          <FlexColumn style={{ justifyContent: 'center' }}>
+            <div style={{ display: 'flex' }}>
+              <CreateText>Create Data Product</CreateText>
+              <MyText>My Data Products</MyText>
             </div>
           </FlexColumn>
-          <FlexColumn style={{justifyContent: 'flex-end'}}>
+          <FlexColumn style={{ justifyContent: 'flex-end' }}>
             <SignUpText>Sign Up</SignUpText>
           </FlexColumn>
         </FlexRowInner>
