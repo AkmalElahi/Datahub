@@ -32,8 +32,10 @@ export const ProductListPage = () => {
   } = useSelector((state: RootState) => state.productMetadataList)
 
   useEffect(() => {
-    dispatch(fetchProducts())
-  }, [dispatch])
+    if (isEmpty(productMetadataList)) {
+      dispatch(fetchProducts())
+    }
+  }, [dispatch, productMetadataList])
 
   if (ProductListError) {
     return (

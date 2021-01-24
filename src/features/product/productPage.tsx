@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
+import isEmpty from 'lodash/isEmpty'
 
 import { RootState } from '../../app/rootReducer'
 import { TableFullMetadata } from 'typescript-axios'
@@ -48,8 +49,8 @@ export const ProductPage = () => {
   )
 
   useEffect(() => {
-    dispatch(fetchProduct(productSlug))
-  }, [dispatch, productSlug])
+    if (isEmpty(product)) dispatch(fetchProduct(productSlug))
+  }, [dispatch, product, productSlug])
 
   const setTab = useCallback(
     (tab: currentTab) => dispatch(setCurrentTab(tab)),

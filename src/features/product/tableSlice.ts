@@ -4,45 +4,49 @@ import { TableConstructor } from 'typescript-axios'
 import { Table, getTable } from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
 
-interface TableState {
-  table: TableConstructor
+interface TablesState {
+  tablesByName: Record<string, TableConstructor>
   isLoading: boolean
   error: string | null
 }
 
-const tableInitialState = {
-  table: {},
+const tablesInitialState: TablesState = {
+  tablesByName: {},
   isLoading: false,
   error: null,
-} as TableState
+}
 
-function startLoading(state: TableState) {
+function startLoading(state: TablesState) {
   state.isLoading = true
 }
 
-function loadingFailed(state: TableState, action: PayloadAction<string>) {
+function loadingFailed(state: TablesState, action: PayloadAction<string>) {
   state.isLoading = false
   state.error = action.payload
 }
 
-const table = createSlice({
-  name: 'table',
-  initialState: tableInitialState,
+const tables = createSlice({
+  name: 'tables',
+  initialState: tablesInitialState,
   reducers: {
     getTableStart: startLoading,
     getTableSuccess(state, { payload }: PayloadAction<Table>) {
       const { table } = payload
       state.isLoading = false
       state.error = null
-      state.table = table
+      state.tablesByName[table.table_metadata?.name || 'none'] = table
     },
     getTableFailure: loadingFailed,
   },
 })
 
-export const { getTableStart, getTableSuccess, getTableFailure } = table.actions
+export const {
+  getTableStart,
+  getTableSuccess,
+  getTableFailure,
+} = tables.actions
 
-export default table.reducer
+export default tables.reducer
 
 export const fetchTable = (
   productName: string,

@@ -8,7 +8,7 @@ import productListReducer from '../features/productList/productListSlice'
 
 const rootReducer = combineReducers({
   user: userReducer,
-  table: tableReducer,
+  tables: tableReducer,
   product: productReducer,
   tabDisplay: tabDisplayReducer,
   productMetadataList: productListReducer,

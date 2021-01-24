@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import isEmpty from 'lodash/isEmpty'
 
 import { RootState } from '../../app/rootReducer'
 
@@ -27,15 +26,17 @@ interface Props {
 export const DataTab = ({ productName, tableName }: Props) => {
   const dispatch = useDispatch()
 
-  const { table, isLoading, error: tableError } = useSelector(
-    (state: RootState) => state.table
+  const { tablesByName, isLoading, error: tableError } = useSelector(
+    (state: RootState) => state.tables
   )
 
+  let currentTable = tablesByName[tableName]
+
   useEffect(() => {
-    if (isEmpty(table) || table.table_metadata?.name !== tableName) {
+    if (!currentTable) {
       dispatch(fetchTable(productName, tableName))
     }
-  }, [dispatch, table, productName, tableName])
+  }, [dispatch, currentTable, productName, tableName])
 
   if (tableError) {
     return (
@@ -48,38 +49,43 @@ export const DataTab = ({ productName, tableName }: Props) => {
 
   let columnHeaders: (string | undefined)[] = []
 
-  if (!isLoading && !isEmpty(table)) {
-    const metadata = table.column_metadata_list
+  if (!isLoading && currentTable) {
+    const metadata = currentTable.column_metadata_list
     if (metadata) {
       columnHeaders = metadata.map((meta) => meta.title)
     }
   }
 
   let renderedColumns =
-    isLoading || isEmpty(table) ? (
+    isLoading || !currentTable ? (
       <h3>Loading...</h3>
     ) : (
-      <ColumnTypes metadata={table.column_metadata_list} />
+      <ColumnTypes metadata={currentTable.column_metadata_list} />
     )
   let renderedTable =
-    isLoading || isEmpty(table) ? (
+    isLoading || !currentTable ? (
       <h3>Loading...</h3>
     ) : (
-      <TableView columnHeaders={columnHeaders} data={table.value_list_list} />
+      <TableView
+        columnHeaders={columnHeaders}
+        data={currentTable.value_list_list}
+      />
     )
   let renderedMetadata =
-    isLoading || isEmpty(table) ? (
+    isLoading || !currentTable ? (
       <h3>Loading...</h3>
     ) : (
       <ProductMetadata
-        metadata={table.table_metadata}
-        columns={table.column_metadata_list}
+        metadata={currentTable.table_metadata}
+        columns={currentTable.column_metadata_list}
       />
     )
 
   return (
     <React.Fragment>
-      <ProductHeader tableTitle={table.table_metadata?.title || ''} />
+      {currentTable && (
+        <ProductHeader tableTitle={currentTable.table_metadata?.title || ''} />
+      )}
       <ContentBox>{renderedMetadata}</ContentBox>
       <ContentBox>
         <h1>Columns</h1>
