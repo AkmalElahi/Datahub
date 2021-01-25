@@ -1,6 +1,7 @@
 import {
   DefaultApi,
   TableConstructor,
+  TableFullMetadata,
   ProductConstructor,
   ProductMetadataList,
   SessionInfo,
@@ -27,9 +28,9 @@ export interface ProductList {
 
 export async function signIn(user: UserCredentials) {
   try {
-    const userResponse = await apiService.signInPost(user)
+    const response = await apiService.signInPost(user)
     return {
-      user: userResponse.data,
+      user: response.data,
     }
   } catch (err) {
     throw err
@@ -42,14 +43,29 @@ export async function getTable(
   tableName: string
 ) {
   try {
-    const tableResponse = await apiService.getTableConstructorGet(
+    const response = await apiService.getTableConstructorGet(
       sessionId,
       productName,
       tableName
     )
     return {
-      table: tableResponse.data,
+      table: response.data,
     }
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function upsertTableMetadata(
+  sessionId: string,
+  metadata: TableFullMetadata
+) {
+  try {
+    const response = await apiService.upsertTableMetadataPost(
+      sessionId,
+      metadata
+    )
+    return response.data
   } catch (err) {
     throw err
   }
@@ -57,12 +73,12 @@ export async function getTable(
 
 export async function getProduct(sessionId: string, productName: string) {
   try {
-    const productResponse = await apiService.getProductConstructorGet(
+    const response = await apiService.getProductConstructorGet(
       sessionId,
       productName
     )
     return {
-      product: productResponse.data,
+      product: response.data,
     }
   } catch (err) {
     throw err
@@ -71,10 +87,10 @@ export async function getProduct(sessionId: string, productName: string) {
 
 export async function getProductList(sessionId: string, options: any = {}) {
   try {
-    const listResponse = await apiService.getProductsGet(sessionId, options)
+    const response = await apiService.getProductsGet(sessionId, options)
 
     return {
-      productMetadataList: listResponse.data,
+      productMetadataList: response.data,
     }
   } catch (err) {
     throw err

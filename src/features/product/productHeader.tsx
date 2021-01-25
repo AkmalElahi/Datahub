@@ -1,4 +1,5 @@
 import React from 'react'
+import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 
 const FlexRow = styled.div`
@@ -55,9 +56,10 @@ const SaveButton = styled(Button)`
 
 interface Props {
   tableTitle: string
+  register: ReturnType<typeof useForm>['register']
 }
 
-export const ProductHeader = ({ tableTitle }: Props) => {
+export const ProductHeader = ({ tableTitle, register }: Props) => {
   return (
     <FlexRow>
       <FlexColumn>
@@ -66,7 +68,9 @@ export const ProductHeader = ({ tableTitle }: Props) => {
       <FlexColumn>
         <ButtonGroup>
           <AddDataButton>Add Data Source</AddDataButton>
-          <SaveButton>Save</SaveButton>
+          <SaveButton type="submit" ref={register}>
+            Save
+          </SaveButton>
         </ButtonGroup>
       </FlexColumn>
     </FlexRow>

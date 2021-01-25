@@ -78,7 +78,11 @@ export const ProductPage = () => {
     )
   } else if (tab === 'data') {
     renderedContent = (
-      <DataTab productName={productSlug} tableName={tableName || ''} />
+      <DataTab
+        productName={productSlug}
+        tableName={tableName || ''}
+        fullMetadata={tableMetadataList?.[source]}
+      />
     )
   } else if (tab === 'views') {
     renderedContent = <ViewsTab />

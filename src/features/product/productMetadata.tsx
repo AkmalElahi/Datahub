@@ -1,11 +1,19 @@
 import React from 'react'
+import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 
-import { TableMetadata, ColumnMetadata } from 'typescript-axios'
+import {
+  TableMetadata,
+  ColumnMetadata,
+  TableFullMetadata,
+} from 'typescript-axios'
 
 interface Props {
   metadata: TableMetadata | undefined
   columns: ColumnMetadata[] | undefined
+  fullMetadata: TableFullMetadata | undefined
+  register: ReturnType<typeof useForm>['register']
+  errors: ReturnType<typeof useForm>['errors']
 }
 
 const FlexRow = styled.div`
@@ -68,7 +76,13 @@ const Dropdown = styled.select`
 //type InputEvent = ChangeEvent<HTMLInputElement>
 //type ChangeHandler = (event: InputEvent) => void
 
-export const ProductMetadata = ({ metadata, columns }: Props) => {
+export const ProductMetadata = ({
+  metadata,
+  columns,
+  fullMetadata,
+  register,
+  errors,
+}: Props) => {
   //const [currentKey, setCurrentKey] = useState('0')
 
   //const handleChange: ChangeHandler = event => {
@@ -82,14 +96,14 @@ export const ProductMetadata = ({ metadata, columns }: Props) => {
   ))
 
   return (
-    <div>
+    <React.Fragment>
       <h1>Product Table</h1>
       <FlexRow>
         <FlexColumn style={{ marginRight: '10px' }}>
           <UList>
             <List>
               <Label>Name</Label>
-              <Input placeholder={metadata?.name || 'none'} disabled />
+              <Input value={metadata?.name || 'none'} disabled />
             </List>
           </UList>
         </FlexColumn>
@@ -97,10 +111,28 @@ export const ProductMetadata = ({ metadata, columns }: Props) => {
           <UList>
             <List>
               <Label>Title</Label>
-              <Input placeholder={metadata?.title || 'none'} disabled />
+              <Input
+                name="title"
+                defaultValue={metadata?.title || 'none'}
+                ref={register}
+              />
+              {errors.title}
             </List>
           </UList>
         </FlexColumn>
+      </FlexRow>
+      <FlexRow>
+        <UList style={{ width: '100%' }}>
+          <List>
+            <Label>Description</Label>
+            <Input
+              name="description"
+              value={metadata?.description || 'none'}
+              ref={register}
+            />
+            {errors.description}
+          </List>
+        </UList>
       </FlexRow>
       <FlexRow>
         <UList style={{ width: '100%' }}>
@@ -116,6 +148,6 @@ export const ProductMetadata = ({ metadata, columns }: Props) => {
           </List>
         </UList>
       </FlexRow>
-    </div>
+    </React.Fragment>
   )
 }

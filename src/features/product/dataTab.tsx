@@ -1,14 +1,16 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 
+import { TableFullMetadata } from 'typescript-axios'
 import { RootState } from '../../app/rootReducer'
 
 import { ProductHeader } from './productHeader'
 import { ProductMetadata } from './productMetadata'
 import { ColumnTypes } from './columnTypes'
 import { TableView } from '../../components/TableView'
-import { fetchTable } from './tableSlice'
+import { fetchTable, postTableMetadata } from './tableSlice'
 
 const ContentBox = styled.div`
   background: #ffffff;
@@ -17,14 +19,35 @@ const ContentBox = styled.div`
   padding: 30px;
   margin-bottom: 1rem;
 `
+type FormData = {
+  title: string
+  description: string
+}
 
 interface Props {
   productName: string
   tableName: string
+  fullMetadata: TableFullMetadata | undefined
 }
 
-export const DataTab = ({ productName, tableName }: Props) => {
+export const DataTab = ({ productName, tableName, fullMetadata }: Props) => {
   const dispatch = useDispatch()
+
+  const { register, errors, handleSubmit } = useForm<FormData>()
+
+  const onSubmit = (data) => {
+    // TODO: remove when primary key is set
+    const temp = { ...data, primary_key_column_name: 'move_genre' }
+    const combinedData = {
+      ...fullMetadata,
+      table_metadata: {
+        ...fullMetadata?.table_metadata,
+        ...temp,
+      },
+    }
+    console.log(combinedData)
+    dispatch(postTableMetadata(combinedData))
+  }
 
   const { tablesByName, isLoading, error: tableError } = useSelector(
     (state: RootState) => state.tables
@@ -78,15 +101,23 @@ export const DataTab = ({ productName, tableName }: Props) => {
       <ProductMetadata
         metadata={currentTable.table_metadata}
         columns={currentTable.column_metadata_list}
+        fullMetadata={fullMetadata}
+        register={register}
+        errors={errors}
       />
     )
 
   return (
     <React.Fragment>
-      {currentTable && (
-        <ProductHeader tableTitle={currentTable.table_metadata?.title || ''} />
-      )}
-      <ContentBox>{renderedMetadata}</ContentBox>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {currentTable && (
+          <ProductHeader
+            tableTitle={currentTable.table_metadata?.title || ''}
+            register={register}
+          />
+        )}
+        <ContentBox>{renderedMetadata}</ContentBox>
+      </form>
       <ContentBox>
         <h1>Columns</h1>
         {renderedColumns}
