@@ -87,7 +87,9 @@ export const ProductPage = () => {
   } else if (tab === 'views') {
     renderedContent = <ViewsTab />
   } else if (tab === 'publish') {
-    renderedContent = <PublishTab />
+    renderedContent = (
+      <PublishTab productName={productSlug || ''} tableName={tableName || ''} />
+    )
   }
   return (
     <FlexRow>
