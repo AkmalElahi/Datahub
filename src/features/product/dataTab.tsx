@@ -7,7 +7,7 @@ import { TableFullMetadata } from 'typescript-axios'
 import { RootState } from '../../app/rootReducer'
 
 import { ProductHeader } from './productHeader'
-import { ProductMetadata } from './productMetadata'
+import { ProductMetadataSection } from './productMetadata'
 import { ColumnTypes } from './columnTypes'
 import { TableView } from '../../components/TableView'
 import { fetchTable, postTableMetadata } from './tableSlice'
@@ -98,7 +98,7 @@ export const DataTab = ({ productName, tableName, fullMetadata }: Props) => {
     isLoading || !currentTable ? (
       <h3>Loading...</h3>
     ) : (
-      <ProductMetadata
+      <ProductMetadataSection
         metadata={currentTable.table_metadata}
         columns={currentTable.column_metadata_list}
         fullMetadata={fullMetadata}

@@ -6,6 +6,8 @@ import {
   ProductMetadataList,
   SessionInfo,
   UserCredentials,
+  ViewConstructor,
+  ViewMetadata,
 } from 'typescript-axios'
 
 const apiService = new DefaultApi()
@@ -16,6 +18,10 @@ export interface User {
 
 export interface Table {
   table: TableConstructor
+}
+
+export interface View {
+  view: ViewConstructor
 }
 
 export interface Product {
@@ -56,12 +62,46 @@ export async function getTable(
   }
 }
 
+export async function getView(
+  sessionId: string,
+  productName: string,
+  viewName: string
+) {
+  try {
+    const response = await apiService.getViewConstructorGet(
+      sessionId,
+      productName,
+      viewName
+    )
+    return {
+      view: response.data,
+    }
+  } catch (err) {
+    throw err
+  }
+}
+
 export async function upsertTableMetadata(
   sessionId: string,
   metadata: TableFullMetadata
 ) {
   try {
     const response = await apiService.upsertTableMetadataPost(
+      sessionId,
+      metadata
+    )
+    return response.data
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function upsertViewMetadata(
+  sessionId: string,
+  metadata: ViewMetadata
+) {
+  try {
+    const response = await apiService.upsertViewMetadataPost(
       sessionId,
       metadata
     )

@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import isEmpty from 'lodash/isEmpty'
 
 import { RootState } from '../../app/rootReducer'
-import { TableFullMetadata } from 'typescript-axios'
+import { TableFullMetadata, ViewMetadata } from 'typescript-axios'
 
 import { ProductSidebar } from './productSidebar'
 import { DataTab } from './dataTab'
@@ -67,7 +67,10 @@ export const ProductPage = () => {
   const productMetadata = product?.product_full_metadata
   const tableMetadataList: TableFullMetadata[] | undefined =
     productMetadata?.table_full_metadata_list
+  const viewMetadataList: ViewMetadata[] | undefined =
+    productMetadata?.view_metadata_list
   let tableName = tableMetadataList?.[source].table_metadata?.name
+  let viewName = viewMetadataList?.[0].name
 
   if (ProductError) {
     renderedContent = (
@@ -85,7 +88,9 @@ export const ProductPage = () => {
       />
     )
   } else if (tab === 'views') {
-    renderedContent = <ViewsTab />
+    renderedContent = (
+      <ViewsTab productName={productSlug} viewName={viewName || ''} />
+    )
   } else if (tab === 'publish') {
     renderedContent = (
       <PublishTab productName={productSlug || ''} tableName={tableName || ''} />

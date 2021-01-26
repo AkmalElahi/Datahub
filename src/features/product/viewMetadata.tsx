@@ -2,16 +2,10 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 
-import {
-  TableMetadata,
-  ColumnMetadata,
-  TableFullMetadata,
-} from 'typescript-axios'
+import { ViewMetadata } from 'typescript-axios'
 
 interface Props {
-  metadata: TableMetadata | undefined
-  columns: ColumnMetadata[] | undefined
-  fullMetadata: TableFullMetadata | undefined
+  metadata: ViewMetadata | undefined
   register: ReturnType<typeof useForm>['register']
   errors: ReturnType<typeof useForm>['errors']
 }
@@ -76,30 +70,26 @@ const Dropdown = styled.select`
 //type InputEvent = ChangeEvent<HTMLInputElement>
 //type ChangeHandler = (event: InputEvent) => void
 
-export const ProductMetadataSection = ({
-  metadata,
-  columns,
-  fullMetadata,
-  register,
-  errors,
-}: Props) => {
+export const ViewMetadataSection = ({ metadata, register, errors }: Props) => {
   //const [currentKey, setCurrentKey] = useState('0')
 
   //const handleChange: ChangeHandler = event => {
   //  setCurrentKey(event.target.value)
   //}
 
-  let renderedOptions = columns?.map((col) => (
-    <option value={col.title} key={col.column_num}>
-      {col.title}
-    </option>
-  ))
-
   return (
     <React.Fragment>
-      <h1>Product Table</h1>
+      <h1>Data</h1>
       <FlexRow>
         <FlexColumn style={{ marginRight: '10px' }}>
+          <UList>
+            <List>
+              <Label>Table</Label>
+              <Input value={metadata?.table_name || 'none'} disabled />
+            </List>
+          </UList>
+        </FlexColumn>
+        <FlexColumn>
           <UList>
             <List>
               <Label>Name</Label>
@@ -107,46 +97,6 @@ export const ProductMetadataSection = ({
             </List>
           </UList>
         </FlexColumn>
-        <FlexColumn>
-          <UList>
-            <List>
-              <Label>Title</Label>
-              <Input
-                name="title"
-                defaultValue={metadata?.title || 'none'}
-                ref={register}
-              />
-              {errors.title}
-            </List>
-          </UList>
-        </FlexColumn>
-      </FlexRow>
-      <FlexRow>
-        <UList style={{ width: '100%' }}>
-          <List>
-            <Label>Description</Label>
-            <Input
-              name="description"
-              value={metadata?.description || 'none'}
-              ref={register}
-            />
-            {errors.description}
-          </List>
-        </UList>
-      </FlexRow>
-      <FlexRow>
-        <UList style={{ width: '100%' }}>
-          <List>
-            <Label>Primary Key</Label>
-            <Dropdown
-              name="primary"
-              id="primary"
-              defaultValue={columns ? columns[0].toString() : 'none'}
-            >
-              {renderedOptions}
-            </Dropdown>
-          </List>
-        </UList>
       </FlexRow>
     </React.Fragment>
   )
