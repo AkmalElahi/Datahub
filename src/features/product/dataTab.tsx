@@ -45,7 +45,6 @@ export const DataTab = ({ productName, tableName, fullMetadata }: Props) => {
         ...temp,
       },
     }
-    console.log(combinedData)
     dispatch(postTableMetadata(combinedData))
   }
 

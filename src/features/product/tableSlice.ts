@@ -41,9 +41,12 @@ const tables = createSlice({
       state,
       { payload }: PayloadAction<TableFullMetadata>
     ) {
-      const { table_metadata, column_metadata_list } = payload
       state.isLoading = false
       state.error = null
+      state.tablesByName[payload.table_metadata?.name || 'none'] = {
+        ...state.tablesByName[payload.table_metadata?.name || 'none'],
+        ...payload,
+      }
     },
     getTableFailure: loadingFailed,
     upsertTableMetadataFailure: loadingFailed,

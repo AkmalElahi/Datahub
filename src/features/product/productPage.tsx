@@ -64,10 +64,10 @@ export const ProductPage = () => {
 
   let renderedContent
   //TODO: normalize data?
-  const productMetadata = product?.product_full_metadata
-  const tableMetadataList: TableFullMetadata[] | undefined =
+  let productMetadata = product?.product_full_metadata
+  let tableMetadataList: TableFullMetadata[] | undefined =
     productMetadata?.table_full_metadata_list
-  const viewMetadataList: ViewMetadata[] | undefined =
+  let viewMetadataList: ViewMetadata[] | undefined =
     productMetadata?.view_metadata_list
   let tableName = tableMetadataList?.[source].table_metadata?.name
   let viewName = viewMetadataList?.[0].name
