@@ -5,7 +5,7 @@ import { Grid } from 'gridjs-react'
 import 'gridjs/dist/theme/mermaid.css'
 
 interface Props {
-  columnHeaders: (string | undefined)[]
+  columnHeaders: (string | null | undefined)[]
   data: string[][] | undefined
 }
 

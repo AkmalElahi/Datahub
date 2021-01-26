@@ -70,7 +70,7 @@ export const DataTab = ({ productName, tableName, fullMetadata }: Props) => {
     )
   }
 
-  let columnHeaders: (string | undefined)[] = []
+  let columnHeaders: (string | null | undefined)[] = []
 
   if (!isLoading && currentTable) {
     const metadata = currentTable.column_metadata_list

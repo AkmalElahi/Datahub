@@ -89,11 +89,15 @@ export const ProductMetadataSection = ({
   //  setCurrentKey(event.target.value)
   //}
 
-  let renderedOptions = columns?.map((col) => (
-    <option value={col.title} key={col.column_num}>
-      {col.title}
-    </option>
-  ))
+  let renderedOptions = columns?.map((col) => {
+    if (col.title) {
+      return (
+        <option value={col.title} key={col.column_num}>
+          {col.title}
+        </option>
+      )
+    }
+  })
 
   return (
     <React.Fragment>

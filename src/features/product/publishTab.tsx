@@ -48,7 +48,7 @@ export const PublishTab = ({ productName, tableName }: Props) => {
     )
   }
 
-  let columnHeaders: (string | undefined)[] = []
+  let columnHeaders: (string | null | undefined)[] = []
 
   if (!isLoading && currentTable) {
     const metadata = currentTable.column_metadata_list

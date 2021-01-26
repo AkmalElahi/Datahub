@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 interface Props {
-  entities: string[] | undefined
+  entities: string[] | null | undefined
   close: any
 }
 
