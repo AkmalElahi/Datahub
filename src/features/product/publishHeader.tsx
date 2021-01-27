@@ -61,7 +61,9 @@ export const PublishHeader = () => {
       <FlexColumn>
         <ButtonGroup>
           <AddDataButton>Save</AddDataButton>
-          <SaveButton type="submit">Publish</SaveButton>
+          <SaveButton name="submit" type="submit">
+            Publish
+          </SaveButton>
         </ButtonGroup>
       </FlexColumn>
     </FlexRow>

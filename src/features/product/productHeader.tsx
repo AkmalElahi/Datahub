@@ -68,7 +68,7 @@ export const ProductHeader = ({ tableTitle, register }: Props) => {
       <FlexColumn>
         <ButtonGroup>
           <AddDataButton>Add Data Source</AddDataButton>
-          <SaveButton type="submit" ref={register}>
+          <SaveButton name="submit" type="submit" ref={register}>
             Save
           </SaveButton>
         </ButtonGroup>

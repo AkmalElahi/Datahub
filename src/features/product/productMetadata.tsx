@@ -89,15 +89,11 @@ export const ProductMetadataSection = ({
   //  setCurrentKey(event.target.value)
   //}
 
-  let renderedOptions = columns?.map((col) => {
-    if (col.title) {
-      return (
-        <option value={col.title} key={col.column_num}>
-          {col.title}
-        </option>
-      )
-    }
-  })
+  let renderedOptions = columns?.map((col) => (
+    <option value={col.title || 'none'} key={col.column_num}>
+      {col.title}
+    </option>
+  ))
 
   return (
     <React.Fragment>
@@ -117,6 +113,7 @@ export const ProductMetadataSection = ({
               <Label>Title</Label>
               <Input
                 name="title"
+                key={metadata?.title}
                 defaultValue={metadata?.title || 'none'}
                 ref={register}
               />
@@ -131,7 +128,8 @@ export const ProductMetadataSection = ({
             <Label>Description</Label>
             <Input
               name="description"
-              value={metadata?.description || 'none'}
+              key={metadata?.description}
+              defaultValue={metadata?.description || 'none'}
               ref={register}
             />
             {errors.description}
