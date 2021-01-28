@@ -82,7 +82,10 @@ export const DataTab = ({ productName, tableName, fullMetadata }: Props) => {
     isLoading || !currentTable ? (
       <h3>Loading...</h3>
     ) : (
-      <ColumnTypes metadata={currentTable.column_metadata_list} />
+      <ColumnTypes
+        metadata={currentTable.column_metadata_list}
+        table={tableName}
+      />
     )
   let renderedTable =
     isLoading || !currentTable ? (

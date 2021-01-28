@@ -8,11 +8,6 @@ import { TagsContainer } from '../styles/tags'
 import { EntityFullMetadata, EntityTag } from 'typescript-axios'
 import { postEntityMetadata } from '../features/product/tableSlice'
 
-interface Props {
-  entities: string[] | null | undefined
-  close: any
-}
-
 const Input = styled.input`
   flex: 1;
   width: 100%;
@@ -119,7 +114,14 @@ const CancelButton = styled.button`
   outline: none;
 `
 
-export const EntityPopup = ({ close, entities }: Props) => {
+interface Props {
+  close: any
+  entities: string[] | null | undefined
+  table: string
+  index: number
+}
+
+export const EntityPopup = ({ close, entities, table, index }: Props) => {
   const [tags, setTags] = useState<
     Array<{
       id: string
@@ -142,7 +144,7 @@ export const EntityPopup = ({ close, entities }: Props) => {
           entity_tag_list: tags,
         }
     }
-    dispatch(postEntityMetadata(entity))
+    dispatch(postEntityMetadata(entity, table, index))
     close()
   }
 

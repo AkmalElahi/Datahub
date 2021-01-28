@@ -66,7 +66,6 @@ const tables = createSlice({
     ) {
       state.isLoading = false
       state.error = null
-      console.log(payload)
     },
     getTableFailure: loadingFailed,
     upsertTableMetadataFailure: loadingFailed,
@@ -78,6 +77,48 @@ const updateProductThunk = (metadata: TableConstructor) => {
   return (dispatch, getState) => {
     if (metadata.product_full_metadata)
       dispatch(updateProductMetadata(metadata.product_full_metadata))
+  }
+}
+
+const updateColumnThunk = (
+  entityMetadata: EntityFullMetadata,
+  tableName: string,
+  columnIndex: number
+) => {
+  return (dispatch, getState) => {
+    const { table_full_metadata } = getState().tables.tablesByName[tableName]
+    const entityName = entityMetadata.entity_metadata?.name
+
+    let candidateList =
+      table_full_metadata.column_metadata_list[columnIndex]
+        .entity_name_candidate_list
+    candidateList
+      ? candidateList.push(entityName)
+      : (candidateList = [entityName])
+
+    let combinedColumnData = table_full_metadata.column_metadata_list.map(
+      (v, k) => {
+        if (k !== columnIndex) {
+          return {
+            ...v,
+            entity_name_candidate_list: candidateList,
+          }
+        }
+        return {
+          ...v,
+          entity_name: entityName,
+          entity_name_candidate_list: candidateList,
+        }
+      }
+    )
+
+    const newMetadata = {
+      ...table_full_metadata,
+      column_metadata_list: [...combinedColumnData],
+    }
+
+    console.log(newMetadata)
+    dispatch(postTableMetadata(newMetadata))
   }
 }
 
@@ -124,12 +165,15 @@ export const postTableMetadata = (
 }
 
 export const postEntityMetadata = (
-  fullMetadata: EntityFullMetadata
+  fullMetadata: EntityFullMetadata,
+  tableName: string,
+  columnIndex: number
 ): AppThunk => async (dispatch) => {
   try {
     dispatch(upsertEntityMetadataStart())
     const metadata = await upsertEntityMetadata(fullMetadata)
     dispatch(upsertEntityMetadataSuccess(metadata))
+    dispatch(updateColumnThunk(metadata, tableName, columnIndex))
   } catch (err) {
     dispatch(upsertEntityMetadataFailure(err.toString()))
   }

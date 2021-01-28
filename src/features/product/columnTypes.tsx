@@ -9,6 +9,7 @@ import { EntityPopup } from '../../components/EntityPopup'
 
 interface Props {
   metadata: ColumnMetadata[] | undefined
+  table: string
 }
 
 const ColumnsContainer = styled.div`
@@ -98,7 +99,7 @@ const StyledPopup = styled(Popup)`
 
 const DATA_TYPES = { 0: 'int', 1: 'float', 2: 'string', 3: 'boolean' }
 
-export const ColumnTypes = ({ metadata }: Props) => {
+export const ColumnTypes = ({ metadata, table }: Props) => {
   let renderedNames = metadata?.map((meta) => (
     <FlexColumn key={meta.column_num}>
       <ColumnBox>{meta.name}</ColumnBox>
@@ -119,7 +120,7 @@ export const ColumnTypes = ({ metadata }: Props) => {
     </FlexColumn>
   ))
 
-  let renderedEntities = metadata?.map((meta) => (
+  let renderedEntities = metadata?.map((meta, i) => (
     <FlexColumn key={meta.column_num}>
       <EntityBox>
         {meta.entity_name || 'none'}
@@ -128,6 +129,8 @@ export const ColumnTypes = ({ metadata }: Props) => {
             <EntityPopup
               close={close}
               entities={meta.entity_name_candidate_list}
+              table={table}
+              index={i}
             />
           )}
         </StyledPopup>
