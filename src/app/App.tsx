@@ -24,6 +24,10 @@ const GlobalStyle = createGlobalStyle`
   * {
     box-sizing: inherit;
   }
+
+  textarea {
+    font-family: ${(props) => props.theme.fontFamily};  
+  }
 `
 
 const AppContainer = styled.div`

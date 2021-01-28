@@ -1,5 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
+import { WithContext as ReactTags } from 'react-tag-input'
+import { TagsContainer } from '../styles/tags'
 
 interface Props {
   entities: string[] | null | undefined
@@ -22,8 +24,16 @@ const TextInputGroup = styled.div`
   margin-bottom: 15px;
 `
 
-const LargeInput = styled(Input)`
+const LargeInput = styled.textarea`
   min-height: 100px;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  color: #181d23;
+  border: 1px solid #c4c4c4;
+  box-sizing: border-box;
+  border-radius: 4px;
+  margin-bottom: 15px;
 `
 
 const Dropdown = styled.select`
@@ -105,14 +115,30 @@ const CancelButton = styled.button`
 `
 
 export const EntityPopup = ({ close, entities }: Props) => {
-  let renderExistingOptions
+  const [tags, setTags] = useState<
+    Array<{
+      key: string
+      value: string
+    }>
+  >([])
+
+  const handleDelete = (i) => {
+    setTags(tags.filter((tag, index) => index !== i))
+  }
+
+  const handleAddition = (tag) => {
+    setTags([...tags, tag])
+  }
+
+  let renderExistingEntities
+  let noEntities = false
   if (entities) {
-    renderExistingOptions = entities.map((entity) => (
+    renderExistingEntities = entities.map((entity) => (
       <option value={entity} key={entity}>
         {entity}
       </option>
     ))
-  } else renderExistingOptions = <option>none</option>
+  } else noEntities = true
   return (
     <div className="modal">
       <button className="close" onClick={close}>
@@ -121,10 +147,15 @@ export const EntityPopup = ({ close, entities }: Props) => {
       <div className="header">New Entity</div>
       <div className="content">
         <FlexLabel>
-          <input type="radio" name="entity" value="existing" />
+          <input
+            type="radio"
+            name="entity"
+            value="existing"
+            disabled={noEntities}
+          />
           Existing
-          <Dropdown name="entity" id="entity">
-            {renderExistingOptions}
+          <Dropdown name="entity" id="entity" disabled={noEntities}>
+            {renderExistingEntities}
           </Dropdown>
         </FlexLabel>
 
@@ -138,9 +169,15 @@ export const EntityPopup = ({ close, entities }: Props) => {
           <NewLabel>Title</NewLabel>
           <Input type="text" name="entity" />
           <NewLabel>Description</NewLabel>
-          <LargeInput type="text" name="entity" />
+          <LargeInput name="entity" />
           <NewLabel>Tags</NewLabel>
-          <Input type="text" name="entity" />
+          <TagsContainer>
+            <ReactTags
+              tags={tags}
+              handleDelete={handleDelete}
+              handleAddition={handleAddition}
+            />
+          </TagsContainer>
         </TextInputGroup>
 
         <RadioLabel>
