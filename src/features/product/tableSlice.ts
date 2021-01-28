@@ -81,20 +81,24 @@ const updateProductThunk = (metadata: TableConstructor) => {
 }
 
 const updateColumnThunk = (
-  entityMetadata: EntityFullMetadata,
+  entityMetadata: EntityFullMetadata | null,
   tableName: string,
   columnIndex: number
 ) => {
   return (dispatch, getState) => {
     const { table_full_metadata } = getState().tables.tablesByName[tableName]
-    const entityName = entityMetadata.entity_metadata?.name
-
+    const entityName =
+      entityMetadata !== null ? entityMetadata.entity_metadata?.name : null
+    let newMetadata
     let candidateList =
       table_full_metadata.column_metadata_list[columnIndex]
         .entity_name_candidate_list
-    candidateList
-      ? candidateList.push(entityName)
-      : (candidateList = [entityName])
+
+    if (entityMetadata !== null) {
+      candidateList
+        ? candidateList.push(entityName)
+        : (candidateList = [entityName])
+    }
 
     let combinedColumnData = table_full_metadata.column_metadata_list.map(
       (v, k) => {
@@ -112,12 +116,11 @@ const updateColumnThunk = (
       }
     )
 
-    const newMetadata = {
+    newMetadata = {
       ...table_full_metadata,
       column_metadata_list: [...combinedColumnData],
     }
 
-    console.log(newMetadata)
     dispatch(postTableMetadata(newMetadata))
   }
 }
@@ -165,16 +168,20 @@ export const postTableMetadata = (
 }
 
 export const postEntityMetadata = (
-  fullMetadata: EntityFullMetadata,
+  fullMetadata: EntityFullMetadata | null,
   tableName: string,
   columnIndex: number
 ): AppThunk => async (dispatch) => {
-  try {
-    dispatch(upsertEntityMetadataStart())
-    const metadata = await upsertEntityMetadata(fullMetadata)
-    dispatch(upsertEntityMetadataSuccess(metadata))
-    dispatch(updateColumnThunk(metadata, tableName, columnIndex))
-  } catch (err) {
-    dispatch(upsertEntityMetadataFailure(err.toString()))
+  if (!fullMetadata) {
+    dispatch(updateColumnThunk(null, tableName, columnIndex))
+  } else {
+    try {
+      dispatch(upsertEntityMetadataStart())
+      const metadata = await upsertEntityMetadata(fullMetadata)
+      dispatch(upsertEntityMetadataSuccess(metadata))
+      dispatch(updateColumnThunk(metadata, tableName, columnIndex))
+    } catch (err) {
+      dispatch(upsertEntityMetadataFailure(err.toString()))
+    }
   }
 }

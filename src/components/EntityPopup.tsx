@@ -132,7 +132,7 @@ export const EntityPopup = ({ close, entities, table, index }: Props) => {
 
   const { register, errors, handleSubmit } = useForm<FormData>()
   const onSubmit = (data) => {
-    let entity: EntityFullMetadata = {}
+    let entity: EntityFullMetadata | null = {}
     switch (data.entityRadio) {
       case 'new':
         entity = {
@@ -143,6 +143,10 @@ export const EntityPopup = ({ close, entities, table, index }: Props) => {
           },
           entity_tag_list: tags,
         }
+        break
+      case 'none':
+        entity = null
+        break
     }
     dispatch(postEntityMetadata(entity, table, index))
     close()
