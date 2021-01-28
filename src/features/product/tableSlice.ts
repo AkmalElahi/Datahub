@@ -11,6 +11,8 @@ import {
   upsertTableMetadata,
   upsertEntityMetadata,
 } from '../../api/swaggerAPI'
+
+import { updateProductMetadata } from './productSlice'
 import { AppThunk } from '../../app/store'
 
 interface TablesState {
@@ -49,7 +51,7 @@ const tables = createSlice({
     },
     upsertTableMetadataSuccess(
       state,
-      { payload }: PayloadAction<TableFullMetadata>
+      { payload }: PayloadAction<TableConstructor>
     ) {
       state.isLoading = false
       state.error = null
@@ -71,6 +73,13 @@ const tables = createSlice({
     upsertEntityMetadataFailure: loadingFailed,
   },
 })
+
+const updateProductThunk = (metadata: TableConstructor) => {
+  return (dispatch, getState) => {
+    if (metadata.product_full_metadata)
+      dispatch(updateProductMetadata(metadata.product_full_metadata))
+  }
+}
 
 export const {
   getTableStart,
@@ -108,6 +117,7 @@ export const postTableMetadata = (
     const sessionId = localStorage.getItem('user') || ''
     const metadata = await upsertTableMetadata(sessionId, fullMetadata)
     dispatch(upsertTableMetadataSuccess(metadata))
+    dispatch(updateProductThunk(metadata))
   } catch (err) {
     dispatch(upsertTableMetadataFailure(err.toString()))
   }

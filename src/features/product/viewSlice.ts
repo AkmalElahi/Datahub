@@ -37,7 +37,10 @@ const views = createSlice({
       state.error = null
       state.viewsByName[view.view_metadata?.name || 'none'] = view
     },
-    upsertViewMetadataSuccess(state, { payload }: PayloadAction<ViewMetadata>) {
+    upsertViewMetadataSuccess(
+      state,
+      { payload }: PayloadAction<ViewConstructor>
+    ) {
       state.isLoading = false
       state.error = null
     },

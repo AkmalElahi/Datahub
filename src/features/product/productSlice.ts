@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { ProductConstructor } from 'typescript-axios'
+import { ProductConstructor, ProductFullMetadata } from 'typescript-axios'
 import { Product, getProduct } from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
 
@@ -36,6 +36,12 @@ const product = createSlice({
       state.error = null
       state.product = product
     },
+    updateProductMetadata(
+      state,
+      { payload }: PayloadAction<ProductFullMetadata>
+    ) {
+      state.product.product_full_metadata = payload
+    },
     getProductFailure: loadingFailed,
   },
 })
@@ -44,6 +50,7 @@ export const {
   getProductStart,
   getProductSuccess,
   getProductFailure,
+  updateProductMetadata,
 } = product.actions
 
 export default product.reducer
