@@ -1,7 +1,12 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
+import { useForm } from 'react-hook-form'
 import { WithContext as ReactTags } from 'react-tag-input'
 import { TagsContainer } from '../styles/tags'
+
+import { EntityFullMetadata, EntityTag } from 'typescript-axios'
+import { postEntityMetadata } from '../features/product/tableSlice'
 
 interface Props {
   entities: string[] | null | undefined
@@ -117,10 +122,29 @@ const CancelButton = styled.button`
 export const EntityPopup = ({ close, entities }: Props) => {
   const [tags, setTags] = useState<
     Array<{
-      key: string
-      value: string
+      id: string
+      name: string
     }>
   >([])
+  const dispatch = useDispatch()
+
+  const { register, errors, handleSubmit } = useForm<FormData>()
+  const onSubmit = (data) => {
+    let entity: EntityFullMetadata = {}
+    switch (data.entityRadio) {
+      case 'new':
+        entity = {
+          entity_metadata: {
+            name: data.newName,
+            title: data.newTitle,
+            description: data.newDescription,
+          },
+          entity_tag_list: tags,
+        }
+    }
+    dispatch(postEntityMetadata(entity))
+    close()
+  }
 
   const handleDelete = (i) => {
     setTags(tags.filter((tag, index) => index !== i))
@@ -145,62 +169,72 @@ export const EntityPopup = ({ close, entities }: Props) => {
         &times;
       </button>
       <div className="header">New Entity</div>
-      <div className="content">
-        <FlexLabel>
-          <input
-            type="radio"
-            name="entity"
-            value="existing"
-            disabled={noEntities}
-          />
-          Existing
-          <Dropdown name="entity" id="entity" disabled={noEntities}>
-            {renderExistingEntities}
-          </Dropdown>
-        </FlexLabel>
-
-        <RadioLabel>
-          <input type="radio" name="entity" value="new" />
-          Create New
-        </RadioLabel>
-        <TextInputGroup>
-          <NewLabel>Name</NewLabel>
-          <Input type="text" name="entity" />
-          <NewLabel>Title</NewLabel>
-          <Input type="text" name="entity" />
-          <NewLabel>Description</NewLabel>
-          <LargeInput name="entity" />
-          <NewLabel>Tags</NewLabel>
-          <TagsContainer>
-            <ReactTags
-              tags={tags}
-              handleDelete={handleDelete}
-              handleAddition={handleAddition}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="content">
+          <FlexLabel>
+            <input
+              type="radio"
+              name="entityRadio"
+              value="existing"
+              ref={register}
+              disabled={noEntities}
             />
-          </TagsContainer>
-        </TextInputGroup>
+            Existing
+            <Dropdown
+              name="entity"
+              id="existingDropdown"
+              ref={register}
+              disabled={noEntities}
+            >
+              {renderExistingEntities}
+            </Dropdown>
+          </FlexLabel>
 
-        <RadioLabel>
-          <input type="radio" name="entity" value="None" />
-          None
-        </RadioLabel>
-      </div>
-      <ButtonGroup className="actions">
-        <CancelButton
-          onClick={() => {
-            close()
-          }}
-        >
-          Cancel
-        </CancelButton>
-        <DoneButton
-          onClick={() => {
-            close()
-          }}
-        >
-          Done
-        </DoneButton>
-      </ButtonGroup>
+          <RadioLabel>
+            <input type="radio" name="entityRadio" value="new" ref={register} />
+            Create New
+          </RadioLabel>
+          <TextInputGroup>
+            <NewLabel>Name</NewLabel>
+            <Input type="text" name="newName" ref={register} />
+            <NewLabel>Title</NewLabel>
+            <Input type="text" name="newTitle" ref={register} />
+            <NewLabel>Description</NewLabel>
+            <LargeInput name="newDescription" ref={register} />
+            <NewLabel>Tags</NewLabel>
+            <TagsContainer>
+              <ReactTags
+                tags={tags}
+                handleDelete={handleDelete}
+                handleAddition={handleAddition}
+                labelField="name"
+              />
+            </TagsContainer>
+          </TextInputGroup>
+
+          <RadioLabel>
+            <input
+              type="radio"
+              name="entityRadio"
+              value="none"
+              ref={register}
+            />
+            None
+          </RadioLabel>
+        </div>
+        <ButtonGroup className="actions">
+          <CancelButton
+            onClick={() => {
+              close()
+            }}
+          >
+            Cancel
+          </CancelButton>
+          <DoneButton name="entitySubmit" type="submit" ref={register}>
+            Done
+          </DoneButton>
+        </ButtonGroup>
+      </form>
     </div>
   )
 }

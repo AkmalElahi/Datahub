@@ -2,6 +2,7 @@ import {
   DefaultApi,
   TableConstructor,
   TableFullMetadata,
+  EntityFullMetadata,
   ProductConstructor,
   ProductMetadataList,
   SessionInfo,
@@ -90,6 +91,15 @@ export async function upsertTableMetadata(
       sessionId,
       metadata
     )
+    return response.data
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function upsertEntityMetadata(metadata: EntityFullMetadata) {
+  try {
+    const response = await apiService.upsertEntityMetadataPost(metadata)
     return response.data
   } catch (err) {
     throw err

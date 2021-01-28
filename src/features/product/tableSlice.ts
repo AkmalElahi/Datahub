@@ -1,7 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { TableConstructor, TableFullMetadata } from 'typescript-axios'
-import { Table, getTable, upsertTableMetadata } from '../../api/swaggerAPI'
+import {
+  TableConstructor,
+  TableFullMetadata,
+  EntityFullMetadata,
+} from 'typescript-axios'
+import {
+  Table,
+  getTable,
+  upsertTableMetadata,
+  upsertEntityMetadata,
+} from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
 
 interface TablesState {
@@ -31,6 +40,7 @@ const tables = createSlice({
   reducers: {
     getTableStart: startLoading,
     upsertTableMetadataStart: startLoading,
+    upsertEntityMetadataStart: startLoading,
     getTableSuccess(state, { payload }: PayloadAction<Table>) {
       const { table } = payload
       state.isLoading = false
@@ -48,18 +58,30 @@ const tables = createSlice({
         ...payload,
       }
     },
+    upsertEntityMetadataSuccess(
+      state,
+      { payload }: PayloadAction<EntityFullMetadata>
+    ) {
+      state.isLoading = false
+      state.error = null
+      console.log(payload)
+    },
     getTableFailure: loadingFailed,
     upsertTableMetadataFailure: loadingFailed,
+    upsertEntityMetadataFailure: loadingFailed,
   },
 })
 
 export const {
   getTableStart,
   upsertTableMetadataStart,
+  upsertEntityMetadataStart,
   getTableSuccess,
   upsertTableMetadataSuccess,
+  upsertEntityMetadataSuccess,
   getTableFailure,
   upsertTableMetadataFailure,
+  upsertEntityMetadataFailure,
 } = tables.actions
 
 export default tables.reducer
@@ -88,5 +110,17 @@ export const postTableMetadata = (
     dispatch(upsertTableMetadataSuccess(metadata))
   } catch (err) {
     dispatch(upsertTableMetadataFailure(err.toString()))
+  }
+}
+
+export const postEntityMetadata = (
+  fullMetadata: EntityFullMetadata
+): AppThunk => async (dispatch) => {
+  try {
+    dispatch(upsertEntityMetadataStart())
+    const metadata = await upsertEntityMetadata(fullMetadata)
+    dispatch(upsertEntityMetadataSuccess(metadata))
+  } catch (err) {
+    dispatch(upsertEntityMetadataFailure(err.toString()))
   }
 }
