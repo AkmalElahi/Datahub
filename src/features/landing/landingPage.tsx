@@ -1,6 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import Popup from 'reactjs-popup'
+import { DataSourcePopup } from '../../components/DataSourcePopup'
 
 const Button = styled.button`
   border-radius: 32px;
@@ -30,13 +32,47 @@ const ViewDataButton = styled(Button)`
   margin-left: 10px;
 `
 
+const StyledPopup = styled(Popup)`
+  &-content {
+    border: none;
+    border-radius: 8px;
+    max-width: 480px;
+
+    .modal {
+      padding: 2rem;
+
+      >.close {
+        cursor: pointer;
+        position: absolute;
+        display: block;
+        padding: 2px 5px;
+        right: 20px;
+        font-size: 36px;
+        font-weight: 600;
+        border: none;
+        background-color: transparent;
+        outline: none;
+      }
+      >.header {
+        font-size: 2em;
+        font-weight: 500;
+        margin-bottom: 1rem;
+      }
+  }
+`
+
 export const LandingPage = () => {
   return (
-    <div>
-      <CreateDataButton>Create a New Data Product</CreateDataButton>
+    <React.Fragment>
+      <StyledPopup
+        trigger={<CreateDataButton>Create a New Data Product</CreateDataButton>}
+        modal
+      >
+        {(close) => <DataSourcePopup close={close} addType="product" />}
+      </StyledPopup>
       <Link to="/my-products">
         <ViewDataButton>View My Data Products</ViewDataButton>
       </Link>
-    </div>
+    </React.Fragment>
   )
 }
