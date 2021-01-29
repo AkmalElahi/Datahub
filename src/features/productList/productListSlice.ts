@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { ProductMetadataList } from 'typescript-axios'
-import { ProductList, getProductList } from '../../api/swaggerAPI'
+import { ProductList, getProductListAPI } from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
 
 interface ProductListState {
@@ -54,7 +54,7 @@ export const fetchProducts = (options: any = {}): AppThunk => async (
   try {
     dispatch(getListStart())
     const sessionId = localStorage.getItem('user') || ''
-    const list = await getProductList(sessionId, options)
+    const list = await getProductListAPI(sessionId, options)
     dispatch(getListSuccess(list))
   } catch (err) {
     dispatch(getListFailure(err.toString()))

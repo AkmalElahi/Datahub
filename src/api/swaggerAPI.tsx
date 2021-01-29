@@ -1,4 +1,5 @@
 import {
+  DataSource,
   DefaultApi,
   TableConstructor,
   TableFullMetadata,
@@ -33,7 +34,7 @@ export interface ProductList {
   productMetadataList: ProductMetadataList
 }
 
-export async function signIn(user: UserCredentials) {
+export async function signInAPI(user: UserCredentials) {
   try {
     const response = await apiService.signInPost(user)
     return {
@@ -44,7 +45,7 @@ export async function signIn(user: UserCredentials) {
   }
 }
 
-export async function getTable(
+export async function getTableAPI(
   sessionId: string,
   productName: string,
   tableName: string
@@ -63,7 +64,7 @@ export async function getTable(
   }
 }
 
-export async function getView(
+export async function getViewAPI(
   sessionId: string,
   productName: string,
   viewName: string
@@ -82,7 +83,7 @@ export async function getView(
   }
 }
 
-export async function upsertTableMetadata(
+export async function upsertTableMetadataAPI(
   sessionId: string,
   metadata: TableFullMetadata
 ) {
@@ -97,7 +98,7 @@ export async function upsertTableMetadata(
   }
 }
 
-export async function upsertEntityMetadata(metadata: EntityFullMetadata) {
+export async function upsertEntityMetadataAPI(metadata: EntityFullMetadata) {
   try {
     const response = await apiService.upsertEntityMetadataPost(metadata)
     return response.data
@@ -106,7 +107,7 @@ export async function upsertEntityMetadata(metadata: EntityFullMetadata) {
   }
 }
 
-export async function upsertViewMetadata(
+export async function upsertViewMetadataAPI(
   sessionId: string,
   metadata: ViewMetadata
 ) {
@@ -121,7 +122,7 @@ export async function upsertViewMetadata(
   }
 }
 
-export async function getProduct(sessionId: string, productName: string) {
+export async function getProductAPI(sessionId: string, productName: string) {
   try {
     const response = await apiService.getProductConstructorGet(
       sessionId,
@@ -135,13 +136,62 @@ export async function getProduct(sessionId: string, productName: string) {
   }
 }
 
-export async function getProductList(sessionId: string, options: any = {}) {
+export async function createProductAPI(
+  sessionId: string,
+  productName: string,
+  tableName: string,
+  addDefaultViews: string,
+  filename?: string,
+  fileLink?: string,
+  dataSource?: DataSource,
+  options?: any
+) {
+  try {
+    const response = await apiService.createProductUploadFilePost(
+      sessionId,
+      productName,
+      tableName,
+      addDefaultViews,
+      filename,
+      fileLink,
+      dataSource,
+      options
+    )
+    return {
+      product: response.data,
+    }
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function getProductListAPI(sessionId: string, options: any = {}) {
   try {
     const response = await apiService.getProductsGet(sessionId, options)
 
     return {
       productMetadataList: response.data,
     }
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function uploadFileAPI(
+  category: 'data' | 'image',
+  publicLink?: string,
+  file?: FormData,
+  options: any = {}
+) {
+  try {
+    const response = await apiService.uploadFilePost(
+      category,
+      publicLink,
+      file,
+      options
+    )
+
+    return response.data
   } catch (err) {
     throw err
   }

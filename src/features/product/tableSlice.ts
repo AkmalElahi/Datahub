@@ -7,9 +7,9 @@ import {
 } from 'typescript-axios'
 import {
   Table,
-  getTable,
-  upsertTableMetadata,
-  upsertEntityMetadata,
+  getTableAPI,
+  upsertTableMetadataAPI,
+  upsertEntityMetadataAPI,
 } from '../../api/swaggerAPI'
 
 import { updateProductMetadata } from './productSlice'
@@ -146,7 +146,7 @@ export const fetchTable = (
   try {
     dispatch(getTableStart())
     const sessionId = localStorage.getItem('user') || ''
-    const table = await getTable(sessionId, productName, tableName)
+    const table = await getTableAPI(sessionId, productName, tableName)
     dispatch(getTableSuccess(table))
   } catch (err) {
     dispatch(getTableFailure(err.toString()))
@@ -159,7 +159,7 @@ export const postTableMetadata = (
   try {
     dispatch(upsertTableMetadataStart())
     const sessionId = localStorage.getItem('user') || ''
-    const metadata = await upsertTableMetadata(sessionId, fullMetadata)
+    const metadata = await upsertTableMetadataAPI(sessionId, fullMetadata)
     dispatch(upsertTableMetadataSuccess(metadata))
     dispatch(updateProductThunk(metadata))
   } catch (err) {
@@ -177,7 +177,7 @@ export const postEntityMetadata = (
   } else {
     try {
       dispatch(upsertEntityMetadataStart())
-      const metadata = await upsertEntityMetadata(fullMetadata)
+      const metadata = await upsertEntityMetadataAPI(fullMetadata)
       dispatch(upsertEntityMetadataSuccess(metadata))
       dispatch(updateColumnThunk(metadata, tableName, columnIndex))
     } catch (err) {

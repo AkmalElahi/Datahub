@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { ViewConstructor, ViewMetadata } from 'typescript-axios'
-import { View, getView, upsertViewMetadata } from '../../api/swaggerAPI'
+import { View, getViewAPI, upsertViewMetadataAPI } from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
 
 interface ViewState {
@@ -67,7 +67,7 @@ export const fetchView = (
   try {
     dispatch(getViewStart())
     const sessionId = localStorage.getItem('user') || ''
-    const table = await getView(sessionId, productName, tableName)
+    const table = await getViewAPI(sessionId, productName, tableName)
     dispatch(getViewSuccess(table))
   } catch (err) {
     dispatch(getViewFailure(err.toString()))
@@ -80,7 +80,7 @@ export const postViewMetadata = (
   try {
     dispatch(upsertViewMetadataStart())
     const sessionId = localStorage.getItem('user') || ''
-    const metadata = await upsertViewMetadata(sessionId, fullMetadata)
+    const metadata = await upsertViewMetadataAPI(sessionId, fullMetadata)
     dispatch(upsertViewMetadataSuccess(metadata))
   } catch (err) {
     dispatch(upsertViewMetadataFailure(err.toString()))

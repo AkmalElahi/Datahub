@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { SessionInfo, UserCredentials } from 'typescript-axios'
-import { User, signIn } from '../../api/swaggerAPI'
+import { User, signInAPI } from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
 
 interface UserState {
@@ -54,7 +54,7 @@ export const fetchUser = (user: UserCredentials): AppThunk => async (
 ) => {
   try {
     dispatch(getUserStart())
-    const userResponse = await signIn(user)
+    const userResponse = await signInAPI(user)
     dispatch(getUserSuccess(userResponse))
   } catch (err) {
     dispatch(getUserFailure(err.toString()))

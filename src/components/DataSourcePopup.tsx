@@ -1,13 +1,9 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { useDropzone } from 'react-dropzone'
-import { WithContext as ReactTags } from 'react-tag-input'
-import { TagsContainer } from '../styles/tags'
-
-import { EntityFullMetadata, EntityTag } from 'typescript-axios'
-import { postEntityMetadata } from '../features/product/tableSlice'
+import { createProduct } from '../features/product/productSlice'
 
 const Container = styled.div`
   flex: 1;
@@ -40,31 +36,6 @@ const InlineInput = styled(Input)`
 
 const TextInputGroup = styled.div`
   margin-bottom: 15px;
-`
-
-const LargeInput = styled.textarea`
-  min-height: 100px;
-  width: 100%;
-  padding: 0.375rem 0.75rem;
-  font-size: 1rem;
-  color: #181d23;
-  border: 1px solid #c4c4c4;
-  box-sizing: border-box;
-  border-radius: 4px;
-  margin-bottom: 15px;
-`
-
-const Dropdown = styled.select`
-  flex: 1;
-  width: 100%;
-  padding: 0.375rem 0.75rem;
-  font-size: 1rem;
-  color: #181d23;
-  border: 1px solid #c4c4c4;
-  box-sizing: border-box;
-  border-radius: 4px;
-  background-color: #ffffff;
-  margin-left: 10px;
 `
 
 const Label = styled.label`
@@ -166,8 +137,8 @@ interface Props {
   addType: 'product' | 'table'
 }
 
-export const DataSourcePopup = ({ close, addType }: Props) => {
-  const dispatch = useDispatch()
+const Dropzone = (props) => {
+  const { onChange } = props
   const {
     acceptedFiles,
     fileRejections,
@@ -177,16 +148,33 @@ export const DataSourcePopup = ({ close, addType }: Props) => {
     accept: '.csv',
   })
 
-  const { register, errors, handleSubmit } = useForm<FormData>()
-  const onSubmit = (data) => {
-    close()
-  }
-
   const acceptedFileItem = acceptedFiles.map((file) => (
     <div>
       {(file as any).path} - {file.size} bytes
     </div>
   ))
+
+  return (
+    <Container {...getRootProps()}>
+      <input {...getInputProps({ onChange })} />
+      <p>Drag & drop file here, or click to select file</p>
+      <aside>
+        <p>{acceptedFileItem}</p>
+      </aside>
+    </Container>
+  )
+}
+
+export const DataSourcePopup = ({ close, addType }: Props) => {
+  const dispatch = useDispatch()
+
+  const { control, register, errors, handleSubmit } = useForm<FormData>()
+  const onSubmit = (data) => {
+    console.log(data)
+    const formData = new FormData()
+    formData.append('file', data.file)
+    //dispatch(createProduct(data.productName, data.tableName, data.fileRadio.value, data.addViews ? 'true' : 'false', ))
+  }
 
   return (
     <div className="modal">
@@ -198,8 +186,9 @@ export const DataSourcePopup = ({ close, addType }: Props) => {
         <div className="content">
           <TextInputGroup>
             {addType === 'product' && <NewLabel>Product Name</NewLabel>}
-            {addType === 'table' && <NewLabel>Table Name</NewLabel>}
-            <Input type="text" name="newName" ref={register} />
+            <Input type="text" name="productName" ref={register} />
+            <NewLabel>Table Name</NewLabel>
+            <Input type="text" name="tableName" ref={register} />
           </TextInputGroup>
           <NewLabel>CSV File</NewLabel>
           <FlexLabel>
@@ -216,13 +205,11 @@ export const DataSourcePopup = ({ close, addType }: Props) => {
             />
             Upload
           </RadioLabel>
-          <Container {...getRootProps()}>
-            <input {...getInputProps()} />
-            <p>Drag & drop file here, or click to select file</p>
-            <aside>
-              <p>{acceptedFileItem}</p>
-            </aside>
-          </Container>
+          <Controller
+            name="file"
+            control={control}
+            render={({ onChange }) => <Dropzone onChange={onChange} />}
+          />
         </div>
 
         <FlexRow>
@@ -232,6 +219,7 @@ export const DataSourcePopup = ({ close, addType }: Props) => {
                 type="checkbox"
                 name="addViews"
                 style={{ marginRight: '10px' }}
+                ref={register}
                 checked
               />
               Add views
@@ -247,7 +235,7 @@ export const DataSourcePopup = ({ close, addType }: Props) => {
                 Cancel
               </CancelButton>
               <DoneButton name="entitySubmit" type="submit" ref={register}>
-                Done
+                Upload
               </DoneButton>
             </ButtonGroup>
           </RightColumn>
