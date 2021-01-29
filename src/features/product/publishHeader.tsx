@@ -54,14 +54,18 @@ const SaveButton = styled(Button)`
   margin-left: 10px;
 `
 
-export const PublishHeader = () => {
+interface Props {
+  register: ReturnType<typeof useForm>['register']
+}
+
+export const PublishHeader = ({ register }: Props) => {
   return (
     <FlexRow>
       <FlexColumn></FlexColumn>
       <FlexColumn>
         <ButtonGroup>
           <AddDataButton>Save</AddDataButton>
-          <SaveButton name="submit" type="submit">
+          <SaveButton type="submit" ref={register}>
             Publish
           </SaveButton>
         </ButtonGroup>
