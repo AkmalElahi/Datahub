@@ -168,10 +168,7 @@ export async function createProductAPI(
 export async function getProductListAPI(sessionId: string, options: any = {}) {
   try {
     const response = await apiService.getProductsGet(sessionId, options)
-
-    return {
-      productMetadataList: response.data,
-    }
+    return response.data
   } catch (err) {
     throw err
   }
@@ -187,7 +184,7 @@ export async function uploadFileAPI(
     const response = await apiService.uploadFilePost(
       category,
       publicLink,
-      file,
+      undefined,
       options
     )
 

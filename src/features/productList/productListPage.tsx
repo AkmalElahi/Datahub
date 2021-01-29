@@ -6,6 +6,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import { RootState } from '../../app/rootReducer'
 
+import { ProductList } from './productList'
 import { fetchProducts } from './productListSlice'
 
 const FlexRow = styled.div`
@@ -20,6 +21,16 @@ const FlexColumn = styled.div`
   flex-direction: column;
   flex-basis: 100%;
   flex: 0 50%;
+`
+
+const LeftColumn = styled(FlexColumn)`
+  flex: 1;
+  padding-left: 50px;
+`
+
+const RightColumn = styled(FlexColumn)`
+  flex: 8;
+  padding-right: 120px;
 `
 
 export const ProductListPage = () => {
@@ -50,10 +61,13 @@ export const ProductListPage = () => {
     isLoading || isEmpty(productMetadataList) ? (
       <h3>Loading...</h3>
     ) : (
-      <Link to={`/${productMetadataList[0].name}`}>
-        <FlexColumn>{productMetadataList[0].title}</FlexColumn>
-      </Link>
+      <ProductList products={productMetadataList} />
     )
 
-  return <FlexRow>{renderedList}</FlexRow>
+  return (
+    <FlexRow>
+      <LeftColumn></LeftColumn>
+      <RightColumn>{renderedList}</RightColumn>
+    </FlexRow>
+  )
 }

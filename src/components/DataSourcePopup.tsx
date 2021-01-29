@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { useForm, Controller } from 'react-hook-form'
 import { useDropzone } from 'react-dropzone'
-import { createProduct } from '../features/product/productSlice'
+import { uploadThenCreateProductThunk } from '../features/product/productSlice'
+import { RootState } from '../app/rootReducer'
 
 const Container = styled.div`
   flex: 1;
@@ -167,13 +168,36 @@ const Dropzone = (props) => {
 
 export const DataSourcePopup = ({ close, addType }: Props) => {
   const dispatch = useDispatch()
+  const { isLoading, error: ProductError } = useSelector(
+    (state: RootState) => state.product
+  )
+
+  let checked
+  let renderedError
 
   const { control, register, errors, handleSubmit } = useForm<FormData>()
   const onSubmit = (data) => {
     console.log(data)
     const formData = new FormData()
     formData.append('file', data.file)
-    //dispatch(createProduct(data.productName, data.tableName, data.fileRadio.value, data.addViews ? 'true' : 'false', ))
+    dispatch(
+      uploadThenCreateProductThunk(
+        data.productName,
+        data.tableName,
+        data.fileRadio,
+        data.addViews ? 'true' : 'false',
+        data.newLink,
+        formData
+      )
+    )
+  }
+  if (ProductError) {
+    renderedError = (
+      <div>
+        <h1>Something went wrong...</h1>
+        <div>{ProductError.toString()}</div>
+      </div>
+    )
   }
 
   return (
@@ -212,6 +236,8 @@ export const DataSourcePopup = ({ close, addType }: Props) => {
           />
         </div>
 
+        {renderedError}
+
         <FlexRow>
           <LeftColumn>
             <ViewsLabel>
@@ -220,7 +246,8 @@ export const DataSourcePopup = ({ close, addType }: Props) => {
                 name="addViews"
                 style={{ marginRight: '10px' }}
                 ref={register}
-                checked
+                value="true"
+                defaultChecked={true}
               />
               Add views
             </ViewsLabel>

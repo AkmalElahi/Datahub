@@ -28,6 +28,10 @@ const GlobalStyle = createGlobalStyle`
   textarea {
     font-family: ${(props) => props.theme.fontFamily};  
   }
+
+  a:hover, a:visited, a:link, a:active {
+    text-decoration: none;
+  }
 `
 
 const AppContainer = styled.div`

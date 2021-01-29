@@ -92,18 +92,24 @@ export const uploadThenCreateProductThunk = (
   publicLink?: string,
   file?: FormData
 ) => async (dispatch) => {
-  try {
+  let fileParams
+  /*try {
+    console.log('test2')
     dispatch(uploadFileStart())
-    const fileParams = await uploadFileAPI('data', publicLink, file)
+    fileParams = await uploadFileAPI('data', publicLink, file)
     console.log(fileParams)
     dispatch(uploadFileSuccess(fileParams))
+  } catch (err) {
+    dispatch(uploadFileFailure(err.toString()))
+  }*/
 
+  try {
     dispatch(createProductStart())
     const sessionId = localStorage.getItem('user') || ''
     const dataSource = {
       csv_data_source: {
-        filename: fileParams.filename,
-        file_link: fileParams.public_link,
+        filename: 'data-b5011eb8-c7b1-4c95-8675-76d60aece900',
+        file_link: undefined,
       },
     }
     const product = await createProductAPI(
@@ -111,8 +117,8 @@ export const uploadThenCreateProductThunk = (
       productName,
       tableName,
       addViews,
-      fileParams.filename,
-      fileParams.public_link,
+      'data-b5011eb8-c7b1-4c95-8675-76d60aece900',
+      undefined,
       dataSource
     )
     console.log(product)
@@ -141,7 +147,8 @@ export const createProduct = (
   addViews: string,
   publicLink?: string,
   file?: FormData
-): AppThunk => async (dispatch) => {
+) => {
+  console.log('test')
   uploadThenCreateProductThunk(
     productName,
     tableName,

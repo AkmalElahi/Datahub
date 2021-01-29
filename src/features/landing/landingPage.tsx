@@ -11,25 +11,22 @@ const Button = styled.button`
   font-size: 16px;
   line-height: 24px;
   text-align: center;
-  padding: 0.8rem 1rem;
+  padding: 0.8rem 1.4rem;
   border: none;
   cursor: pointer;
   outline: none;
+  width: 300px;
 `
 
 const CreateDataButton = styled(Button)`
   background: none;
   border: 1px solid #272d34;
-  max-width: 180px;
-  font-weight: 500;
-  padding: 0.8rem 1.4rem;
+  margin-bottom: 1rem;
 `
 
 const ViewDataButton = styled(Button)`
   color: #f8f8f8;
   background: #4d9ef6;
-  min-width: 110px;
-  margin-left: 10px;
 `
 
 const StyledPopup = styled(Popup)`
@@ -60,19 +57,49 @@ const StyledPopup = styled(Popup)`
       }
   }
 `
+const FlexRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+`
+
+const FlexColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+`
+
+const LeftColumn = styled(FlexColumn)`
+  flex: 1;
+  padding-left: 50px;
+`
+
+const RightColumn = styled(FlexColumn)`
+  flex: 8;
+  padding-right: 120px;
+`
 
 export const LandingPage = () => {
   return (
     <React.Fragment>
-      <StyledPopup
-        trigger={<CreateDataButton>Create a New Data Product</CreateDataButton>}
-        modal
-      >
-        {(close) => <DataSourcePopup close={close} addType="product" />}
-      </StyledPopup>
-      <Link to="/my-products">
-        <ViewDataButton>View My Data Products</ViewDataButton>
-      </Link>
+      <FlexRow>
+        <LeftColumn></LeftColumn>
+        <RightColumn>
+          <StyledPopup
+            trigger={
+              <CreateDataButton>Create a New Data Product</CreateDataButton>
+            }
+            modal
+          >
+            {(close) => <DataSourcePopup close={close} addType="product" />}
+          </StyledPopup>
+          <Link to="/my-products">
+            <ViewDataButton>View My Data Products</ViewDataButton>
+          </Link>
+        </RightColumn>
+      </FlexRow>
     </React.Fragment>
   )
 }
