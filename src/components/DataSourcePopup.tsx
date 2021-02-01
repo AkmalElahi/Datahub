@@ -138,8 +138,11 @@ interface Props {
   addType: 'product' | 'table'
 }
 
-const Dropzone = (props) => {
-  const { onChange } = props
+interface DropzoneProps {
+  onChange: ((event: React.ChangeEvent<HTMLInputElement>) => void) | undefined
+}
+
+const Dropzone = ({ onChange }: DropzoneProps) => {
   const {
     acceptedFiles,
     fileRejections,
@@ -186,8 +189,8 @@ export const DataSourcePopup = ({ close, addType }: Props) => {
         data.tableName,
         data.fileRadio,
         data.addViews ? 'true' : 'false',
-        data.newLink,
-        formData
+        data.fileRadio === 'link' ? data.newLink : undefined,
+        data.fileRadio === 'upload' ? formData : undefined
       )
     )
   }
@@ -232,7 +235,10 @@ export const DataSourcePopup = ({ close, addType }: Props) => {
           <Controller
             name="file"
             control={control}
-            render={({ onChange }) => <Dropzone onChange={onChange} />}
+            defaultValue=""
+            render={({ onChange }) => (
+              <Dropzone onChange={(e) => onChange(e.target.files?.[0])} />
+            )}
           />
         </div>
 

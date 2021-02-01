@@ -181,10 +181,15 @@ export async function uploadFileAPI(
   options: any = {}
 ) {
   try {
+    if (file)
+      file.forEach((value, key) => {
+        console.log(key + ', ' + value)
+      })
+    console.log(publicLink)
     const response = await apiService.uploadFilePost(
       category,
       publicLink,
-      undefined,
+      file,
       options
     )
 
