@@ -35,20 +35,19 @@ const RightColumn = styled(FlexColumn)`
 const CreateText = styled.span`
   font-size: 18px;
   font-weight: 500;
-  padding-right: 15px;
+  padding-right: 1.5rem;
   border-right: 1px solid #3e4651;
 `
 
 const MyText = styled.span`
   opacity: 0.4;
-  padding-left: 15px;
+  padding-left: 1.5rem;
 `
 
 const SignUpText = styled.span`
   font-size: 18px;
   font-weight: 500;
-  padding-left: 15px;
-  border-left: 1px solid #3e4651;
+  padding-left: 1.5rem;
   margin-left: auto;
 `
 
