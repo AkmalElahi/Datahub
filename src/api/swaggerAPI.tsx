@@ -98,7 +98,9 @@ export async function upsertTableMetadataAPI(
   }
 }
 
-export async function upsertEntityMetadataAPI(metadata: EntityFullMetadata) {
+export async function upsertEntityMetadataAPI(
+  metadata: EntityFullMetadata | undefined
+) {
   try {
     const response = await apiService.upsertEntityMetadataPost(metadata)
     return response.data

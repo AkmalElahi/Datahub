@@ -5,12 +5,8 @@ import Popup from 'reactjs-popup'
 import 'reactjs-popup/dist/index.css'
 
 import { ColumnMetadata } from 'typescript-axios'
+import { DraftEntity } from './tableSlice'
 import { EntityPopup } from '../../components/EntityPopup'
-
-interface Props {
-  metadata: ColumnMetadata[] | undefined
-  table: string
-}
 
 const ColumnsContainer = styled.div`
   padding-bottom: 2rem;
@@ -97,9 +93,15 @@ const StyledPopup = styled(Popup)`
   }
 `
 
+interface Props {
+  metadata: ColumnMetadata[] | undefined
+  entities: DraftEntity[]
+  table: string
+}
+
 const DATA_TYPES = { 0: 'int', 1: 'float', 2: 'string', 3: 'boolean' }
 
-export const ColumnTypes = ({ metadata, table }: Props) => {
+export const ColumnTypes = ({ metadata, entities, table }: Props) => {
   let renderedNames = metadata?.map((meta) => (
     <FlexColumn key={meta.column_num}>
       <ColumnBox>{meta.name}</ColumnBox>
@@ -120,15 +122,15 @@ export const ColumnTypes = ({ metadata, table }: Props) => {
     </FlexColumn>
   ))
 
-  let renderedEntities = metadata?.map((meta, i) => (
-    <FlexColumn key={meta.column_num}>
+  let renderedEntities = entities?.map((ent, i) => (
+    <FlexColumn key={ent.entity?.entity_metadata?.name}>
       <EntityBox>
-        {meta.entity_name || 'none'}
+        {ent.entity?.entity_metadata?.name || 'none'}
         <StyledPopup trigger={<Ellipses />} modal>
           {(close) => (
             <EntityPopup
               close={close}
-              entities={meta.entity_name_candidate_list}
+              entities={metadata?.[i].entity_name_candidate_list}
               table={table}
               index={i}
             />

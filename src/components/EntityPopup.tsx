@@ -5,8 +5,8 @@ import { useForm } from 'react-hook-form'
 import { WithContext as ReactTags } from 'react-tag-input'
 import { TagsContainer } from '../styles/tags'
 
-import { EntityFullMetadata, EntityTag } from 'typescript-axios'
-import { postEntityMetadata } from '../features/product/tableSlice'
+import { EntityFullMetadata } from 'typescript-axios'
+import { draftEntityMetadata } from '../features/product/tableSlice'
 
 const Input = styled.input`
   flex: 1;
@@ -132,23 +132,20 @@ export const EntityPopup = ({ close, entities, table, index }: Props) => {
 
   const { register, errors, handleSubmit } = useForm<FormData>()
   const onSubmit = (data) => {
-    let entity: EntityFullMetadata | null = {}
-    switch (data.entityRadio) {
-      case 'new':
-        entity = {
-          entity_metadata: {
-            name: data.newName,
-            title: data.newTitle,
-            description: data.newDescription,
-          },
-          entity_tag_list: tags,
-        }
-        break
-      case 'none':
-        entity = null
-        break
+    let entity: EntityFullMetadata | undefined = {}
+    if (data.entityRadio === 'new') {
+      entity = {
+        entity_metadata: {
+          name: data.newName,
+          title: data.newTitle,
+          description: data.newDescription,
+        },
+        entity_tag_list: tags,
+      }
     }
-    dispatch(postEntityMetadata(entity, table, index))
+    dispatch(
+      draftEntityMetadata({ entity: entity, columnIndex: index, edited: true })
+    )
     close()
   }
 

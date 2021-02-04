@@ -17,14 +17,22 @@ import { AppThunk } from '../../app/store'
 
 interface TablesState {
   tablesByName: Record<string, TableConstructor>
+  draftEntities: DraftEntity[]
   isLoading: boolean
   error: string | null
 }
 
 const tablesInitialState: TablesState = {
   tablesByName: {},
+  draftEntities: [],
   isLoading: false,
   error: null,
+}
+
+export interface DraftEntity {
+  entity: EntityFullMetadata | undefined
+  columnIndex: number
+  edited: boolean
 }
 
 function startLoading(state: TablesState) {
@@ -48,6 +56,30 @@ const tables = createSlice({
       state.isLoading = false
       state.error = null
       state.tablesByName[table.table_metadata?.name || 'none'] = table
+
+      table.column_metadata_list?.forEach((col, i) => {
+        let entity: EntityFullMetadata | null = {}
+        const foundEntity = table.entity_metadata_candidate_list_list?.[
+          i
+        ].entity_metadata_list?.find((e) => e.name === col.entity_name)
+
+        if (col.entity_name !== null) {
+          entity = {
+            entity_metadata: {
+              name: foundEntity?.name,
+              title: foundEntity?.title,
+              description: foundEntity?.description,
+            },
+          }
+        }
+
+        let draft: DraftEntity = {
+          entity: entity,
+          columnIndex: i,
+          edited: false,
+        }
+        state.draftEntities[i] = draft
+      })
     },
     upsertTableMetadataSuccess(
       state,
@@ -67,61 +99,36 @@ const tables = createSlice({
       state.isLoading = false
       state.error = null
     },
+    draftEntityMetadata(state, { payload }: PayloadAction<DraftEntity>) {
+      state.draftEntities[payload.columnIndex] = payload
+    },
     getTableFailure: loadingFailed,
     upsertTableMetadataFailure: loadingFailed,
     upsertEntityMetadataFailure: loadingFailed,
   },
 })
 
+const postEntityThunk = (
+  draftEntities: DraftEntity[],
+  tableName: string
+): AppThunk => async (dispatch) => {
+  for (let entity of draftEntities) {
+    if (entity.edited) {
+      try {
+        dispatch(upsertEntityMetadataStart())
+        const metadata = await upsertEntityMetadataAPI(entity.entity)
+        dispatch(upsertEntityMetadataSuccess(metadata))
+      } catch (err) {
+        dispatch(upsertEntityMetadataFailure(err.toString()))
+      }
+    }
+  }
+}
+
 const updateProductThunk = (metadata: TableConstructor) => {
   return (dispatch, getState) => {
     if (metadata.product_full_metadata)
       dispatch(updateProductMetadata(metadata.product_full_metadata))
-  }
-}
-
-const updateColumnThunk = (
-  entityMetadata: EntityFullMetadata | null,
-  tableName: string,
-  columnIndex: number
-) => {
-  return (dispatch, getState) => {
-    const { table_full_metadata } = getState().tables.tablesByName[tableName]
-    const entityName =
-      entityMetadata !== null ? entityMetadata.entity_metadata?.name : null
-    let newMetadata
-    let candidateList =
-      table_full_metadata.column_metadata_list[columnIndex]
-        .entity_name_candidate_list
-
-    if (entityMetadata !== null) {
-      candidateList
-        ? candidateList.push(entityName)
-        : (candidateList = [entityName])
-    }
-
-    let combinedColumnData = table_full_metadata.column_metadata_list.map(
-      (v, k) => {
-        if (k !== columnIndex) {
-          return {
-            ...v,
-            entity_name_candidate_list: candidateList,
-          }
-        }
-        return {
-          ...v,
-          entity_name: entityName,
-          entity_name_candidate_list: candidateList,
-        }
-      }
-    )
-
-    newMetadata = {
-      ...table_full_metadata,
-      column_metadata_list: [...combinedColumnData],
-    }
-
-    dispatch(postTableMetadata(newMetadata))
   }
 }
 
@@ -135,6 +142,7 @@ export const {
   getTableFailure,
   upsertTableMetadataFailure,
   upsertEntityMetadataFailure,
+  draftEntityMetadata,
 } = tables.actions
 
 export default tables.reducer
@@ -154,34 +162,21 @@ export const fetchTable = (
 }
 
 export const postTableMetadata = (
-  fullMetadata: TableFullMetadata
+  fullMetadata: TableFullMetadata,
+  draftEntities: DraftEntity[],
+  tableName: string
 ): AppThunk => async (dispatch) => {
   try {
+    await dispatch(postEntityThunk(draftEntities, tableName))
+
     dispatch(upsertTableMetadataStart())
     const sessionId = localStorage.getItem('user') || ''
     const metadata = await upsertTableMetadataAPI(sessionId, fullMetadata)
+    console.log(metadata)
     dispatch(upsertTableMetadataSuccess(metadata))
+
     dispatch(updateProductThunk(metadata))
   } catch (err) {
     dispatch(upsertTableMetadataFailure(err.toString()))
-  }
-}
-
-export const postEntityMetadata = (
-  fullMetadata: EntityFullMetadata | null,
-  tableName: string,
-  columnIndex: number
-): AppThunk => async (dispatch) => {
-  if (!fullMetadata) {
-    dispatch(updateColumnThunk(null, tableName, columnIndex))
-  } else {
-    try {
-      dispatch(upsertEntityMetadataStart())
-      const metadata = await upsertEntityMetadataAPI(fullMetadata)
-      dispatch(upsertEntityMetadataSuccess(metadata))
-      dispatch(updateColumnThunk(metadata, tableName, columnIndex))
-    } catch (err) {
-      dispatch(upsertEntityMetadataFailure(err.toString()))
-    }
   }
 }

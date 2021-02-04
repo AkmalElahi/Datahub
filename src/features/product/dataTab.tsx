@@ -11,6 +11,7 @@ import { ProductMetadataSection } from './productMetadata'
 import { ColumnTypes } from './columnTypes'
 import { TableView } from '../../components/TableView'
 import { fetchTable, postTableMetadata } from './tableSlice'
+import { applyEntities } from '../../util/applyEntities'
 
 const ContentBox = styled.div`
   background: #ffffff;
@@ -19,6 +20,7 @@ const ContentBox = styled.div`
   padding: 30px;
   margin-bottom: 1rem;
 `
+
 type FormData = {
   title: string
   description: string
@@ -37,20 +39,25 @@ export const DataTab = ({ productName, tableName, fullMetadata }: Props) => {
 
   const onSubmit = (data) => {
     // TODO: remove when primary key is set
+    const newMetadata = applyEntities(fullMetadata, draftEntities)
     const temp = { ...data, primary_key_column_name: 'move_genre' }
     const combinedData = {
-      ...fullMetadata,
+      ...newMetadata,
       table_metadata: {
-        ...fullMetadata?.table_metadata,
+        ...newMetadata.table_metadata,
         ...temp,
       },
     }
-    dispatch(postTableMetadata(combinedData))
+
+    dispatch(postTableMetadata(combinedData, draftEntities, tableName))
   }
 
-  const { tablesByName, isLoading, error: tableError } = useSelector(
-    (state: RootState) => state.tables
-  )
+  const {
+    tablesByName,
+    draftEntities,
+    isLoading,
+    error: tableError,
+  } = useSelector((state: RootState) => state.tables)
 
   let currentTable = tablesByName[tableName]
 
@@ -84,6 +91,7 @@ export const DataTab = ({ productName, tableName, fullMetadata }: Props) => {
     ) : (
       <ColumnTypes
         metadata={currentTable.column_metadata_list}
+        entities={draftEntities}
         table={tableName}
       />
     )
