@@ -2,6 +2,7 @@ import {
   DataSource,
   DefaultApi,
   DisplayParams,
+  ViewParams,
   TableConstructor,
   TableFullMetadata,
   EntityFullMetadata,
@@ -191,6 +192,31 @@ export async function getProductAPI(
       productName,
       sessionId,
       displayParams,
+      options
+    )
+    return response.data
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function getProductViewAPI(
+  productName: string,
+  viewName: string,
+  sessionId: string,
+  columnName?: string,
+  value?: string,
+  viewParams?: ViewParams,
+  options: any = {}
+) {
+  try {
+    const response = await apiService.getViewPost(
+      productName,
+      viewName,
+      sessionId,
+      columnName,
+      value,
+      viewParams,
       options
     )
     return response.data

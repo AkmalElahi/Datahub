@@ -1,45 +1,56 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { DisplayParams, ViewPage } from 'typescript-axios'
-import { getProductAPI } from '../../api/swaggerAPI'
+import { DisplayParams, ViewParams, ViewPage } from 'typescript-axios'
+import { getProductAPI, getProductViewAPI } from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
+import { setCurrentTab } from '../product/tabDisplaySlice'
 
-interface ProductViewState {
-  productView: ViewPage
+interface ProductHomeState {
+  productViewsByName: Record<string, ViewPage>
   isLoading: boolean
   error: string | null
 }
 
-const productViewInitialState = {
-  productView: {},
+const productHomeInitialState = {
+  productViewsByName: {},
   isLoading: false,
   error: null,
-} as ProductViewState
+} as ProductHomeState
 
-function startLoading(state: ProductViewState) {
+function startLoading(state: ProductHomeState) {
   state.isLoading = true
 }
 
-function loadingFailed(state: ProductViewState, action: PayloadAction<string>) {
+function loadingFailed(state: ProductHomeState, action: PayloadAction<string>) {
   state.isLoading = false
   state.error = action.payload
 }
 
 const productView = createSlice({
   name: 'productView',
-  initialState: productViewInitialState,
+  initialState: productHomeInitialState,
   reducers: {
+    getProductHomeStart: startLoading,
     getProductViewStart: startLoading,
+    getProductHomeSuccess(state, { payload }: PayloadAction<ViewPage>) {
+      state.isLoading = false
+      state.error = null
+      state.productViewsByName[payload.view_metadata?.name || 'none'] = payload
+    },
     getProductViewSuccess(state, { payload }: PayloadAction<ViewPage>) {
       state.isLoading = false
       state.error = null
-      state.productView = payload
+      state.productViewsByName[payload.view_metadata?.name || 'none'] = payload
     },
+    getProductHomeFailure: loadingFailed,
     getProductViewFailure: loadingFailed,
   },
 })
 
 export const {
+  getProductHomeStart,
+  getProductHomeSuccess,
+  getProductHomeFailure,
   getProductViewStart,
   getProductViewSuccess,
   getProductViewFailure,
@@ -47,18 +58,45 @@ export const {
 
 export default productView.reducer
 
-export const fetchProductView = (
+export const fetchProductHome = (
   productName: string,
   displayParams: DisplayParams,
   options: any = {}
-): AppThunk => async (dispatch) => {
+): AppThunk => async (dispatch, getState) => {
   try {
-    dispatch(getProductViewStart())
+    dispatch(getProductHomeStart())
     const sessionId = localStorage.getItem('user') || ''
     const productView = await getProductAPI(
       sessionId,
       productName,
       displayParams,
+      options
+    )
+    dispatch(getProductHomeSuccess(productView))
+    dispatch(setCurrentTab({ tab: productView.view_metadata?.name || '' }))
+  } catch (err) {
+    dispatch(getProductHomeFailure(err.toString()))
+  }
+}
+
+export const fetchProductView = (
+  productName: string,
+  viewName: string,
+  columnName?: string,
+  value?: string,
+  viewParams?: ViewParams,
+  options: any = {}
+): AppThunk => async (dispatch, getState) => {
+  try {
+    dispatch(getProductViewStart())
+    const sessionId = localStorage.getItem('user') || ''
+    const productView = await getProductViewAPI(
+      productName,
+      viewName,
+      sessionId,
+      columnName,
+      value,
+      viewParams,
       options
     )
     dispatch(getProductViewSuccess(productView))

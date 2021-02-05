@@ -8,7 +8,7 @@ import { RootState } from '../../app/rootReducer'
 import {} from 'typescript-axios'
 
 import { ViewNavbar } from '../../components/ViewNavbar'
-import { fetchProductView } from './productViewSlice'
+import { fetchProductHome, fetchProductView } from './productViewSlice'
 import { TableView } from '../../components/TableView'
 import { ProductViewHeader } from './productViewHeader'
 import {
@@ -47,38 +47,39 @@ export const ProductViewPage = () => {
 
   const { tab } = useSelector((state: RootState) => state.tabDisplay)
 
-  const { productView, isLoading, error: ProductViewError } = useSelector(
-    (state: RootState) => state.productView
-  )
+  const {
+    productViewsByName,
+    isLoading,
+    error: ProductViewError,
+  } = useSelector((state: RootState) => state.productView)
+
+  let currentView = productViewsByName[tab]
 
   useEffect(() => {
-    if (isEmpty(productView))
-      dispatch(fetchProductView(productSlug, { offset: 0, limit: 100 }))
-  }, [dispatch, productView, productSlug])
-
-  useEffect(() => {
-    if (!isEmpty(productView))
-      dispatch(
-        setCurrentTab({
-          tab:
-            productView.top_level_nav_view_metadata_list?.[0].table_view
-              ?.title || '',
-        })
-      )
-  }, [productView])
+    dispatch(fetchProductHome(productSlug, { offset: 0, limit: 100 }))
+  }, [dispatch])
 
   const setTab = useCallback(
-    (tab: currentTab) => dispatch(setCurrentTab(tab)),
-    [dispatch]
+    (tab: currentTab) => {
+      dispatch(setCurrentTab(tab))
+      if (!productViewsByName[tab.tab]) {
+        dispatch(
+          fetchProductView(productSlug, tab.tab, undefined, undefined, {
+            display_params: { offset: 0, limit: 100 },
+          })
+        )
+      }
+    },
+    [dispatch, productViewsByName]
   )
 
   let renderedContent
-  let viewMetadata = productView.view_metadata
   let columnHeaders
-  let viewTitles = productView.top_level_nav_view_metadata_list?.map(
-    (view) => view?.table_view?.title
-  )
-  console.log(viewTitles)
+  let viewTitles
+  if (!isEmpty(productViewsByName))
+    viewTitles = productViewsByName[
+      Object.keys(productViewsByName)[0]
+    ].top_level_nav_view_metadata_list?.map((view) => view.name || '')
 
   if (ProductViewError) {
     renderedContent = (
@@ -87,14 +88,14 @@ export const ProductViewPage = () => {
         <div>{ProductViewError.toString()}</div>
       </div>
     )
-  } else if (viewMetadata?.table_view) {
-    columnHeaders = viewMetadata?.table_view?.column_view_list?.map(
+  } else if (currentView?.view_metadata?.table_view) {
+    columnHeaders = currentView?.view_metadata?.table_view?.column_view_list?.map(
       (c) => c.title
     )
     renderedContent = (
       <TableView
         columnHeaders={columnHeaders}
-        data={productView.value_list_list}
+        data={currentView.value_list_list}
         isPreview={false}
       />
     )
