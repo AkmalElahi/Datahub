@@ -84,6 +84,7 @@ export const PublishTab = ({ productName, tableName }: Props) => {
       <TableView
         columnHeaders={columnHeaders}
         data={currentTable.value_list_list}
+        isPreview={true}
       />
     )
 

@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import Popup from 'reactjs-popup'
+import { Navbar } from '../../components/Navbar'
 import { DataSourcePopup } from '../../components/DataSourcePopup'
 
 const Button = styled.button`
@@ -84,6 +85,7 @@ const RightColumn = styled(FlexColumn)`
 export const LandingPage = () => {
   return (
     <React.Fragment>
+      <Navbar />
       <FlexRow>
         <LeftColumn></LeftColumn>
         <RightColumn>

@@ -172,7 +172,6 @@ export const postTableMetadata = (
     dispatch(upsertTableMetadataStart())
     const sessionId = localStorage.getItem('user') || ''
     const metadata = await upsertTableMetadataAPI(sessionId, fullMetadata)
-    console.log(metadata)
     dispatch(upsertTableMetadataSuccess(metadata))
 
     dispatch(updateProductThunk(metadata))

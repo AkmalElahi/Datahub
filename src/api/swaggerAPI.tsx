@@ -1,6 +1,7 @@
 import {
   DataSource,
   DefaultApi,
+  DisplayParams,
   TableConstructor,
   TableFullMetadata,
   EntityFullMetadata,
@@ -124,7 +125,10 @@ export async function upsertViewMetadataAPI(
   }
 }
 
-export async function getProductAPI(sessionId: string, productName: string) {
+export async function getProductConstructorAPI(
+  sessionId: string,
+  productName: string
+) {
   try {
     const response = await apiService.getProductConstructorGet(
       sessionId,
@@ -170,6 +174,25 @@ export async function createProductAPI(
 export async function getProductListAPI(sessionId: string, options: any = {}) {
   try {
     const response = await apiService.getProductsGet(sessionId, options)
+    return response.data
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function getProductAPI(
+  sessionId: string,
+  productName: string,
+  displayParams?: DisplayParams,
+  options: any = {}
+) {
+  try {
+    const response = await apiService.getProductPost(
+      productName,
+      sessionId,
+      displayParams,
+      options
+    )
     return response.data
   } catch (err) {
     throw err

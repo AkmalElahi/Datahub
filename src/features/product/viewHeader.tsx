@@ -129,7 +129,7 @@ export const ViewHeader = ({ productTitle, register }: Props) => {
       <FlexColumn>
         <ButtonGroup>
           <AddDataButton>Add View</AddDataButton>
-          <SaveButton type="submit" ref={register}>
+          <SaveButton type="submit" name="submit" ref={register}>
             Save
           </SaveButton>
         </ButtonGroup>

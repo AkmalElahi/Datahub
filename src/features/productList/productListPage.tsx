@@ -6,6 +6,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import { RootState } from '../../app/rootReducer'
 
+import { Navbar } from '../../components/Navbar'
 import { ProductList } from './productList'
 import { fetchProducts } from './productListSlice'
 
@@ -65,9 +66,12 @@ export const ProductListPage = () => {
     )
 
   return (
-    <FlexRow>
-      <LeftColumn></LeftColumn>
-      <RightColumn>{renderedList}</RightColumn>
-    </FlexRow>
+    <React.Fragment>
+      <Navbar />
+      <FlexRow>
+        <LeftColumn></LeftColumn>
+        <RightColumn>{renderedList}</RightColumn>
+      </FlexRow>
+    </React.Fragment>
   )
 }

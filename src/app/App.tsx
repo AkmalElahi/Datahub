@@ -4,13 +4,13 @@ import { Routes, Route } from 'react-router-dom'
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components'
 
 import { lightTheme } from '../styles/Theme'
-import { Navbar } from '../components/Navbar'
 
 import { UserCredentials } from 'typescript-axios'
 import { fetchUser } from '../features/user/userSlice'
 import { LandingPage } from '../features/landing/landingPage'
 import { ProductListPage } from '../features/productList/productListPage'
 import { ProductPage } from '../features/product/productPage'
+import { ProductViewPage } from '../features/productView/productViewPage'
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -55,11 +55,11 @@ const App: React.FC = () => {
     <ThemeProvider theme={lightTheme}>
       <GlobalStyle />
       <AppContainer>
-        <Navbar />
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/my-products" element={<ProductListPage />} />
           <Route path="/:productSlug" element={<ProductPage />} />
+          <Route path="/view/:productSlug" element={<ProductViewPage />} />
         </Routes>
       </AppContainer>
     </ThemeProvider>

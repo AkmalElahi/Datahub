@@ -7,6 +7,7 @@ import 'gridjs/dist/theme/mermaid.css'
 interface Props {
   columnHeaders: (string | null | undefined)[]
   data: string[][] | undefined
+  isPreview: boolean
 }
 
 const GridContainer = styled.div`
@@ -34,11 +35,15 @@ const GridContainer = styled.div`
   }
 `
 
-export const TableView = ({ columnHeaders, data }: Props) => {
+export const TableView = ({ columnHeaders, data, isPreview }: Props) => {
   return (
     <div>
       <GridContainer>
-        <Grid data={data} columns={columnHeaders} />
+        <Grid
+          data={data}
+          columns={columnHeaders}
+          pagination={{ enabled: true, limit: 10 }}
+        />
       </GridContainer>
     </div>
   )

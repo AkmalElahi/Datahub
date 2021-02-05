@@ -102,6 +102,7 @@ export const DataTab = ({ productName, tableName, fullMetadata }: Props) => {
       <TableView
         columnHeaders={columnHeaders}
         data={currentTable.value_list_list}
+        isPreview={true}
       />
     )
   let renderedMetadata =

@@ -7,6 +7,7 @@ import isEmpty from 'lodash/isEmpty'
 import { RootState } from '../../app/rootReducer'
 import { TableFullMetadata, ViewMetadata } from 'typescript-axios'
 
+import { Navbar } from '../../components/Navbar'
 import { ProductSidebar } from './productSidebar'
 import { DataTab } from './dataTab'
 import { ViewsTab } from './viewsTab'
@@ -97,15 +98,18 @@ export const ProductPage = () => {
     )
   }
   return (
-    <FlexRow>
-      <LeftColumn>
-        <ProductSidebar
-          sources={tableMetadataList}
-          setSource={setSource}
-          setTab={setTab}
-        />
-      </LeftColumn>
-      <RightColumn>{renderedContent}</RightColumn>
-    </FlexRow>
+    <React.Fragment>
+      <Navbar />
+      <FlexRow>
+        <LeftColumn>
+          <ProductSidebar
+            sources={tableMetadataList}
+            setSource={setSource}
+            setTab={setTab}
+          />
+        </LeftColumn>
+        <RightColumn>{renderedContent}</RightColumn>
+      </FlexRow>
+    </React.Fragment>
   )
 }

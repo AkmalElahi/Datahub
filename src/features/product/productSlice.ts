@@ -7,7 +7,7 @@ import {
 } from 'typescript-axios'
 import {
   Product,
-  getProductAPI,
+  getProductConstructorAPI,
   createProductAPI,
   uploadFileAPI,
 } from '../../api/swaggerAPI'
@@ -128,7 +128,7 @@ export const fetchProduct = (productName: string): AppThunk => async (
   try {
     dispatch(getProductStart())
     const sessionId = localStorage.getItem('user') || ''
-    const product = await getProductAPI(sessionId, productName)
+    const product = await getProductConstructorAPI(sessionId, productName)
     dispatch(getProductSuccess(product))
   } catch (err) {
     dispatch(getProductFailure(err.toString()))

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export interface currentTab {
-  tab: 'data' | 'views' | 'publish'
+  tab: string
 }
 
 type currentDisplayState = {
