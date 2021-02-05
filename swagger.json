@@ -1,0 +1,2950 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "DataHub Server API",
+    "description": "REST API for DataHub Server and Client Communication",
+    "contact": {
+      "email": "igushev@gmail.com"
+    },
+    "version": "2.0"
+  },
+  "servers": [
+    {
+      "url": "https://0.0.0.0"
+    }
+  ],
+  "paths": {
+    "/sign_up": {
+      "post": {
+        "summary": "Sign Up User and return their new session_id",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sign_in": {
+      "post": {
+        "summary": "Sign In User and return their new session_id",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCredentials"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get_products": {
+      "get": {
+        "summary": "Get list of Products for current Maker. OBSOLETE. Use /get_product_list_page instead.",
+        "description": "This call is made when Maker click on 'My Data Products'. Frontend should display list of those Product for Maker to select one.",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductMetadataList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get_product_list_page": {
+      "get": {
+        "summary": "Get list of Products for current Maker.",
+        "description": "This call is made when Maker click on 'My Data Products'. Frontend should display list of those Product for Maker to select one.",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductListPage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get_product_constructor": {
+      "get": {
+        "summary": "Get ProductConsructor.",
+        "description": "This call is made when Maker selects their product from their list. Backend returns a ProductConstructor and Frontend should switch immidietely 'Publish' tab where ProductConstructor is displayed.",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "product_name",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductConstructor"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/upsert_product_metadata": {
+      "post": {
+        "summary": "Add or updates ProductMetadata.",
+        "description": "This call is made when Maker on 'Publish' tab makes changes to Product as a whole. Frontend sends ProductMetadata, Backend uses only certain fields from entire structure, updates it in MetadataStore and returns as it stored in MetadataStore.",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductMetadata"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductMetadata"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/publish_product": {
+      "post": {
+        "summary": "Add or updates ProductMetadata.",
+        "description": "This call is made to publish or unpublish Product.",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "product_name",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "published",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductMetadata"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/upsert_publish_product_metadata": {
+      "post": {
+        "summary": "Add or updates ProductMetadata.",
+        "description": "This call is made when Maker on 'Publish' tab makes changes to Product as a whole. It also has a parameter to publish or unpublish Product. Frontend sends ProductMetadata, Backend uses only certain fields from entire structure, updates it in MetadataStore and returns as it stored in MetadataStore.",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "published",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductMetadata"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductMetadata"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/create_product_upload_file": {
+      "post": {
+        "summary": "Create Product by uploadig file.",
+        "description": "This call is made when Maker creates a new Product and uploads a file. File can be provided by either uploading using /upload_file call and providing filename or by providing file_link to publicly available file. Backend reads file, adds data to DataStore, if applicable, adds Views and returns a ProductConstructor. Frontend should switch immidietely to 'Publish' tab and display ProductConstructor.",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "product_name",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "table_name",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filename",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "file_link",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "add_default_views",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataSource"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductConstructor"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get_table_constructor": {
+      "get": {
+        "summary": "Get TableConsructor.",
+        "description": "This call is made when Maker click on 'Data' tab on one of tables. Frontend sends request Product and Table. Backend sends back TableConstructor which contain Table metadata and Preview data to be displayed.",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "product_name",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "table_name",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TableConstructor"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/upsert_table_metadata": {
+      "post": {
+        "summary": "Add or updates TableMetadata with all Columns.",
+        "description": "This call is made when Maker on 'Data' tab makes changes to a Table. Frontend sends TableFullMetadata, Backend uses only certain fields from entire structure, updates it in MetadataStore and returns as it stored in MetadataStore.",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TableFullMetadata"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TableConstructor"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/add_table_upload_file": {
+      "post": {
+        "summary": "Add new Table by uploadig file.",
+        "description": "This call is made when Maker adds a new Table to their Product and uploads a file. File can be provided by either uploading using /upload_file call and providing filename or by providing file_link to publicly available file. Backend reads file, adds data to DataStore, if applicable, adds Views and returns a TableConstructor with Table metadata and Preview data. Frontend should display this new Table in 'Data' tab.",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "product_name",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "table_name",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filename",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "file_link",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "add_default_views",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataSource"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TableConstructor"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/upsert_entity_metadata": {
+      "post": {
+        "summary": "Add or updates Entity.",
+        "description": "This call is made when Maker on 'Data' tab add a new Entity. Frontend sends EntityFullMetadata, Backend uses only certain fields from entire structure, updates it in MetadataStore and returns as it stored in MetadataStore.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EntityFullMetadata"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityFullMetadata"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/upsert_table_upload_file": {
+      "post": {
+        "summary": "Refresh table by uploadig file.",
+        "description": "This call is made when Maker refreshes data in existing Table in their Product and uploads a file. File can be provided by either uploading using /upload_file call and providing filename or by providing file_link to publicly available file. Backend reads file, refreshes data in DataStore and returns a TableConstructor with data and metadata. Frontend should display refreshed Table in 'Data' tab. In reality only data is refreshed and metadata is remained the same.",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "product_name",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "table_name",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filename",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "file_link",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataSource"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TableConstructor"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get_view_constructor": {
+      "get": {
+        "summary": "Get ViewConsructor.",
+        "description": "This call is made when Maker click on 'View' tab on one of Views. Frontend sends request Product and View. Backend sends back ViewConstructor which contain View Table metadata and Preview View to be displayed. Preview View should not be interactive.",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "product_name",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "view_name",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewConstructor"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/upsert_view_metadata": {
+      "post": {
+        "summary": "Add or updates ViewMetadata.",
+        "description": "This call is made when Maker on 'View' tab makes changes to a View. Frontend sends ViewMetadata, Backend uses only certain fields from entire structure, updates it in MetadataStore and returns as it stored in MetadataStore.",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ViewMetadata"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewConstructor"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/add_view": {
+      "post": {
+        "summary": "Add new View.",
+        "description": "This call is made when Maker adds a new View to their Product. Frontend sends Table name which new View should display and mode (Table or Card). Backend adds new View and returns a ViewConstructor with View metadata and Preview data. Frontend should display this new View in 'View' tab.",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ViewMetadata"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewConstructor"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get_product": {
+      "post": {
+        "summary": "Get Product home page View as seen by End User.",
+        "description": "This call is made when End User visits a home page of a Product. This is how End User starts navigating the Product.",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "product_name",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Params to display a View.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DisplayParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewPage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get_view": {
+      "post": {
+        "summary": "Get View as seen by End User.",
+        "description": "This call is made when End User navigates a Product. When End User navigates to a Card View, a value and, optionally, column_name should be sent.",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "product_name",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "view_name",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "column_name",
+            "in": "query",
+            "description": "If row queried not by primary key, specify column name.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "description": "Value of primary key or specified column.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Params to display a View.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ViewParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewPage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get_file": {
+      "get": {
+        "summary": "Gets file from Backend file storage.",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Category of file, possible values are 'image', 'data'.",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filename",
+            "in": "query",
+            "description": "Filename as returned by /upload_file.",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/upload_file": {
+      "post": {
+        "summary": "Upload file to Backend file storage.",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Category of file, possible values are 'image', 'data'.",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "public_link",
+            "in": "query",
+            "description": "If provide permanent public link to file.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileParams"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get_stripe_account_link": {
+      "post": {
+        "summary": "Creates and returns a URL to redirect to to connect a Maker to their Stripe account.",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StripeAccountLink"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stripe_account_link_refresh": {
+      "get": {
+        "summary": "HTML page when a Maker finishes connecting Stripe account. INTERNAL ONLY.",
+        "parameters": [
+          {
+            "name": "user_account_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_account_email",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stripe_account_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stripe_account_link_return": {
+      "get": {
+        "summary": "HTML page when a Maker doesn't finish connecting Stripe account. INTERNAL ONLY.",
+        "parameters": [
+          {
+            "name": "user_account_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_account_email",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stripe_account_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/upsert_stripe_product": {
+      "post": {
+        "summary": "Creates a Stripe Product for Connected Account to be able to subscribe.",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "product_name",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "price",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get_stripe_checkout_session": {
+      "post": {
+        "summary": "Creates and returns Stripe Checkout Session for an End User to subscribe for a Product.",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "product_name",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StripeCheckoutSession"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stripe_checkout_session_success": {
+      "get": {
+        "summary": "HTML page when an End User successfully finishes Checkout process. INTERNAL ONLY.",
+        "parameters": [
+          {
+            "name": "checkout_session_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_account_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stripe_account_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "product_name",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stripe_product_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stripe_price_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_customer_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_customer_email",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stripe_customer_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stripe_checkout_session_cancel": {
+      "get": {
+        "summary": "HTML page when an End User does not finish checkout process. INTERNAL ONLY.",
+        "parameters": [
+          {
+            "name": "user_account_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stripe_account_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "product_name",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stripe_product_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stripe_price_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_customer_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_customer_email",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stripe_customer_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cancel_stripe_subscription": {
+      "post": {
+        "summary": "Cancels a Stripe Subscription for current End User to given Product.",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "product_name",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cancel_stripe_all_product_subscription": {
+      "post": {
+        "summary": "Cancels a Stripe Subscription for all End User to given Product.",
+        "parameters": [
+          {
+            "name": "product_name",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/initialize": {
+      "post": {
+        "summary": "Initializes server. Adds built-in entites and various data. INTERNAL ONLY.",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/refresh_stores": {
+      "post": {
+        "summary": "Refresh all stores and drops all the data. INTERNAL ONLY.",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/add_test_data": {
+      "post": {
+        "summary": "Add test and demo accounts and data products. INTERNAL ONLY.",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get_table_constructor_example": {
+      "get": {
+        "summary": "Get TableConsructor example.",
+        "description": "This call is made when Maker click on 'Data' tab on one of tables. Backend sends back hard coded example. Backend sends back TableConstructor which contain Table metadata and Preview data to be displayed.",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TableConstructor"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ping": {
+      "get": {
+        "summary": "Allows to ping Server to make sure it's running. INTERNAL ONLY.",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Obfusticated User Id."
+          },
+          "first_name": {
+            "type": "string",
+            "description": "User First Name."
+          },
+          "last_name": {
+            "type": "string",
+            "description": "User Last Name."
+          },
+          "display_name": {
+            "type": "string",
+            "description": "Name as other Users see it."
+          },
+          "email": {
+            "type": "string",
+            "description": "User Email."
+          },
+          "password_salt": {
+            "type": "string",
+            "description": "Salt of User Password."
+          },
+          "password_hash": {
+            "type": "string",
+            "description": "Hash of User Password."
+          }
+        },
+        "description": "User, both Maker and End User stored in database."
+      },
+      "NewUser": {
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "type": "string",
+            "description": "User First Name.",
+            "nullable": true
+          },
+          "last_name": {
+            "type": "string",
+            "description": "User Last Name.",
+            "nullable": true
+          },
+          "display_name": {
+            "type": "string",
+            "description": "Name as other Users see it.",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "description": "User Email."
+          },
+          "password": {
+            "type": "string",
+            "description": "Hash of User Password."
+          }
+        },
+        "description": "User, both Maker and End User received from frontend."
+      },
+      "UserCredentials": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User Email."
+          },
+          "password": {
+            "type": "string",
+            "description": "Hash of User Password."
+          }
+        },
+        "description": "User, both Maker and End User, credentials to sign in."
+      },
+      "UserInfo": {
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "type": "string",
+            "description": "User First Name."
+          },
+          "last_name": {
+            "type": "string",
+            "description": "User Last Name."
+          },
+          "display_name": {
+            "type": "string",
+            "description": "Name as other Users see it."
+          },
+          "email": {
+            "type": "string",
+            "description": "User Email."
+          },
+          "stripe_connected": {
+            "type": "boolean",
+            "description": "if Stripe Account has been connected to User."
+          },
+          "stripe_charges_enabled": {
+            "type": "boolean",
+            "description": "If Stripe Account allows to charge End Users."
+          }
+        },
+        "description": "User, both Maker and End User."
+      },
+      "Session": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Session Id."
+          },
+          "user_id": {
+            "type": "string",
+            "description": "Obfusticated User Id."
+          },
+          "datetime_created": {
+            "type": "string",
+            "description": "Date/Time when Session where created."
+          }
+        },
+        "description": "Store User and their Session information."
+      },
+      "SessionInfo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Session Id."
+          }
+        },
+        "description": "Information about Session to send to Frontend."
+      },
+      "CSVDataSource": {
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string",
+            "description": "Filename generated by Backend and returned via /upload_file."
+          },
+          "file_link": {
+            "type": "string",
+            "description": "Publish ULR link to the file."
+          },
+          "has_header": {
+            "type": "boolean",
+            "description": "If CSV file has header. If null, Backend will infer from file.",
+            "nullable": true
+          }
+        },
+        "description": "CSV Data Source of data to create a Product or add a Table."
+      },
+      "AirtableDataSource": {
+        "type": "object",
+        "properties": {
+          "base_id": {
+            "type": "string",
+            "description": "Base ID provided by Maker."
+          },
+          "table_name": {
+            "type": "string",
+            "description": "Table name as seen my Maker in Airtable, no need to escape."
+          },
+          "api_key": {
+            "type": "string",
+            "description": "API Key provided by Maker."
+          }
+        },
+        "description": "Airtable Data Source of data to create a Product or add a Table."
+      },
+      "DataSource": {
+        "type": "object",
+        "properties": {
+          "csv_data_source": {
+            "$ref": "#/components/schemas/CSVDataSource"
+          },
+          "airtable_data_source": {
+            "$ref": "#/components/schemas/AirtableDataSource"
+          }
+        },
+        "description": "Data Source of data to create a Product or add a Table."
+      },
+      "ColumnMetadata": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "A unique name as referenced by system and in scripts. Subject to regular variable name rules."
+          },
+          "table_name": {
+            "type": "string",
+            "description": "Name of the Table the Column belongs to."
+          },
+          "product_name": {
+            "type": "string",
+            "description": "Name of the Product the Table belongs to."
+          },
+          "title": {
+            "type": "string",
+            "description": "Title as seen by End User if applicable.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Few sentences long description as seen by End User if applicable.",
+            "nullable": true
+          },
+          "data_type": {
+            "type": "integer",
+            "description": "Numeric value for data type (0 - int, 1 - float, 2 - string, 3 - boolean)",
+            "nullable": true
+          },
+          "is_primary_key": {
+            "type": "boolean",
+            "description": "If the column is primary key in the Table.",
+            "nullable": true,
+            "default": false
+          },
+          "entity_name": {
+            "type": "string",
+            "description": "Name of actual Entity currently assigned to this column.",
+            "nullable": true
+          },
+          "column_num": {
+            "type": "integer",
+            "description": "Numeric position of the Column in the Table.",
+            "nullable": true
+          },
+          "generated": {
+            "type": "boolean",
+            "description": "If column were added by the platform.",
+            "nullable": true,
+            "default": false
+          },
+          "entity_name_candidate_list": {
+            "type": "array",
+            "description": "List of entities which can be chosen for this column in order of best matching to least matching.",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "view_filter": {
+            "$ref": "#/components/schemas/ViewFilter"
+          }
+        },
+        "description": "ColumnMetadata as it is stored in MetadataStore."
+      },
+      "TableMetadata": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "A unique name as referenced by system and in scripts. Subject to regular variable name rules."
+          },
+          "product_name": {
+            "type": "string",
+            "description": "Name of the Product the Table belongs to."
+          },
+          "title": {
+            "type": "string",
+            "description": "Title as seen by End User if applicable.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Few sentences long description as seen by End User if applicable.",
+            "nullable": true
+          },
+          "primary_key_column_name": {
+            "type": "string",
+            "description": "Primary key column name of the Table. Must be consistent with Column's is_primary_key field.",
+            "nullable": true
+          },
+          "popularity": {
+            "type": "integer",
+            "description": "Numeric popularity value. Currentluy not used.",
+            "nullable": true
+          },
+          "data_source": {
+            "$ref": "#/components/schemas/DataSource"
+          }
+        },
+        "description": "TableMetadata as it is stored in MetadataStore."
+      },
+      "ProductMetadata": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "A unique name as referenced by system and in scripts. Subject to regular variable name rules."
+          },
+          "title": {
+            "type": "string",
+            "description": "Title as seen by End User if applicable.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Few sentences long description as seen by End User if applicable.",
+            "nullable": true
+          },
+          "home_page_view_name": {
+            "type": "string",
+            "description": "View which End User will see when visits home page of a Product. This is how End User starts navigating the Product.",
+            "nullable": true
+          },
+          "header_image_url": {
+            "type": "string",
+            "description": "URL of an image which appears in the header of a Product.",
+            "nullable": true
+          },
+          "published": {
+            "type": "boolean",
+            "description": "If Product is published. If True, product is published, can be reached via subdomain and available for End User. If False, Product is in draft state.",
+            "nullable": true,
+            "default": false
+          },
+          "owner_user_id": {
+            "type": "string",
+            "description": "Owner's Obfusticated User Id.",
+            "nullable": true
+          },
+          "monetization": {
+            "$ref": "#/components/schemas/Monetization"
+          },
+          "popularity": {
+            "type": "integer",
+            "description": "Numeric popularity value. Currentluy not used.",
+            "nullable": true
+          }
+        },
+        "description": "ProductMetadata as it is stored in MetadataStore."
+      },
+      "EntityMetadata": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "A unique name as referenced by system and in scripts. Subject to regular variable name rules."
+          },
+          "title": {
+            "type": "string",
+            "description": "Title as seen by End User if applicable.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Few sentences long description as seen by End User if applicable.",
+            "nullable": true
+          }
+        },
+        "description": "EntityMetadata as it is stored in MetadataStore. Entity is used to connect Product, Tables and Columns with each other when they refer or describe same objects in universe."
+      },
+      "EntityTag": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "A unique name as referenced by system and in scripts. Subject to regular variable name rules."
+          },
+          "entity_name": {
+            "type": "string",
+            "description": "<Put Here>",
+            "nullable": true
+          },
+          "tag": {
+            "type": "string",
+            "description": "Tags for search and reference by End User.",
+            "nullable": true
+          }
+        },
+        "description": "EntityTag as it is stored in MetadataStore."
+      },
+      "Monetization": {
+        "type": "object",
+        "properties": {
+          "monetization": {
+            "type": "boolean",
+            "description": "If monetize current Product. If True, Maker can see/enter price."
+          },
+          "price": {
+            "type": "number",
+            "description": "Subscription price for current Product.",
+            "format": "double"
+          }
+        },
+        "description": "Product monetization."
+      },
+      "Location": {
+        "type": "object",
+        "properties": {
+          "lat": {
+            "type": "number",
+            "description": "Latitude",
+            "format": "double"
+          },
+          "long": {
+            "type": "number",
+            "description": "Longitude",
+            "format": "double"
+          }
+        },
+        "description": "Location if physical world."
+      },
+      "IntRangeFilter": {
+        "type": "object",
+        "properties": {
+          "lower_bound": {
+            "type": "integer",
+            "description": "Lowest value End User can select.",
+            "nullable": true
+          },
+          "lower_selected": {
+            "type": "integer",
+            "description": "From value End User has selected.",
+            "nullable": true
+          },
+          "upper_bound": {
+            "type": "integer",
+            "description": "Highest value End User can select.",
+            "nullable": true
+          },
+          "upper_selected": {
+            "type": "integer",
+            "description": "To value End User has selected.",
+            "nullable": true
+          }
+        },
+        "description": "Filter for integer columns."
+      },
+      "FloatRangeFilter": {
+        "type": "object",
+        "properties": {
+          "lower_bound": {
+            "type": "number",
+            "description": "Lowest value End User can select.",
+            "format": "double",
+            "nullable": true
+          },
+          "lower_selected": {
+            "type": "number",
+            "description": "From value End User has selected.",
+            "format": "double",
+            "nullable": true
+          },
+          "upper_bound": {
+            "type": "number",
+            "description": "Highest value End User can select.",
+            "format": "double",
+            "nullable": true
+          },
+          "upper_selected": {
+            "type": "number",
+            "description": "To value End User has selected.",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "description": "Filter for float columns."
+      },
+      "EnumRangeFilter": {
+        "type": "object",
+        "properties": {
+          "all_value_list": {
+            "type": "array",
+            "description": "List of values End User can select.",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "selected_value_list": {
+            "type": "array",
+            "description": "List of values End User has selected.",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "description": "Filter for string and tags columns."
+      },
+      "BooleanFilter": {
+        "type": "object",
+        "properties": {
+          "has_selected": {
+            "type": "boolean",
+            "description": "If user has selected a value.",
+            "nullable": true
+          },
+          "selected_value": {
+            "type": "boolean",
+            "description": "Value if user has selected one.",
+            "nullable": true
+          }
+        },
+        "description": "Filter for boolean columns."
+      },
+      "LocationFilter": {
+        "type": "object",
+        "properties": {
+          "upper_left_bound": {
+            "$ref": "#/components/schemas/Location"
+          },
+          "upper_left_selected": {
+            "$ref": "#/components/schemas/Location"
+          },
+          "lower_right_bound": {
+            "$ref": "#/components/schemas/Location"
+          },
+          "lower_right_selected": {
+            "$ref": "#/components/schemas/Location"
+          }
+        },
+        "description": "Filter for location columns."
+      },
+      "LocationDistanceFilter": {
+        "type": "object",
+        "properties": {
+          "upper_bound": {
+            "type": "number",
+            "description": "Highest value of distance End User can select.",
+            "format": "double",
+            "nullable": true
+          },
+          "selected": {
+            "type": "number",
+            "description": "Current value End User has selected.",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "description": "Filter for location distance."
+      },
+      "ViewFilter": {
+        "type": "object",
+        "properties": {
+          "int_range_view_filter": {
+            "$ref": "#/components/schemas/IntRangeFilter"
+          },
+          "float_range_view_filter": {
+            "$ref": "#/components/schemas/FloatRangeFilter"
+          },
+          "enum_view_filter": {
+            "$ref": "#/components/schemas/EnumRangeFilter"
+          },
+          "boolean_view_filter": {
+            "$ref": "#/components/schemas/BooleanFilter"
+          },
+          "location_view_filter": {
+            "$ref": "#/components/schemas/LocationFilter"
+          },
+          "location_distance_view_filter": {
+            "$ref": "#/components/schemas/LocationDistanceFilter"
+          }
+        },
+        "description": "Specifies possible and applied filter."
+      },
+      "ColumnMetadataViewFilter": {
+        "type": "object",
+        "properties": {
+          "column_metadata": {
+            "$ref": "#/components/schemas/ColumnMetadata"
+          },
+          "view_filter": {
+            "$ref": "#/components/schemas/ViewFilter"
+          }
+        },
+        "description": "For given column specifies possible and applied filters."
+      },
+      "FilterParams": {
+        "type": "object",
+        "properties": {
+          "column_metadata_view_filter_list": {
+            "type": "array",
+            "description": "List of columns and specified possible and applied filter.",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ColumnMetadataViewFilter"
+            }
+          }
+        },
+        "description": "For given table, page or request specifies possible and applied filters."
+      },
+      "OnClickViewMetadata": {
+        "type": "object",
+        "properties": {
+          "product_name": {
+            "type": "string",
+            "description": "Product name to display."
+          },
+          "view_name": {
+            "type": "string",
+            "description": "View name to display within a Product."
+          },
+          "column_name": {
+            "type": "string",
+            "description": "A column which is used to identity what row to display to User. For example, when user clicks on a Movie title and Maker wants to display a Movie card, column_name should be name of the title column in Movies table."
+          }
+        },
+        "description": "Reference to a View to show when User clicks on a displayed value."
+      },
+      "ColumnViewMetadata": {
+        "type": "object",
+        "properties": {
+          "product_name": {
+            "type": "string",
+            "description": "Product name to display."
+          },
+          "table_name": {
+            "type": "string",
+            "description": "Taable name to display."
+          },
+          "column_name": {
+            "type": "string",
+            "description": "Column name to display."
+          },
+          "title": {
+            "type": "string",
+            "description": "Title as seen by End User if applicable.",
+            "nullable": true
+          },
+          "column_name_from": {
+            "type": "string",
+            "description": "Column Name in original displayed Table which is used to connect to this additional table. Only appicable when ColumnViewMetadata references to Table or Product other then original displayed Table.",
+            "nullable": true
+          },
+          "column_name_to": {
+            "type": "string",
+            "description": "Column Name in additional table which is used to connect to original displayed Table. Only appicable when ColumnViewMetadata references to Table or Product other then original displayed Table.",
+            "nullable": true
+          },
+          "add_filter": {
+            "type": "boolean",
+            "description": "If End User can filter by this column in table view.",
+            "nullable": true,
+            "default": false
+          },
+          "on_click_view": {
+            "$ref": "#/components/schemas/OnClickViewMetadata"
+          }
+        },
+        "description": "Reference to a Column to display to User."
+      },
+      "NestedViewMetadata": {
+        "type": "object",
+        "properties": {
+          "product_name": {
+            "type": "string",
+            "description": "Product name to display."
+          },
+          "view_name": {
+            "type": "string",
+            "description": "View name to display."
+          },
+          "column_name_from": {
+            "type": "string",
+            "description": "Column Name in original displayed Table which is used to connect to this Nested View.",
+            "nullable": true
+          },
+          "column_name_to": {
+            "type": "string",
+            "description": "Column Name in Nested View which is used to connect to original displayed Table.",
+            "nullable": true
+          },
+          "limit_rows": {
+            "type": "integer",
+            "description": "Number of rows to display in Nested View.",
+            "nullable": true
+          },
+          "more_button": {
+            "type": "boolean",
+            "description": "If to show a More button if number of rows is more then limit_rows.",
+            "nullable": true
+          }
+        },
+        "description": "Reference to a View which is embedded as Nested Table (only) View on a Card View."
+      },
+      "TableViewMetadata": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title as seen by End User. Not attach to a row, but for overall Table.",
+            "nullable": true,
+            "example": "Movies"
+          },
+          "subtitle": {
+            "type": "string",
+            "description": "Subtitle as seen by End User. Not attach to a row, but for overall Table.",
+            "nullable": true,
+            "example": "Movies with their genres and year release."
+          },
+          "description": {
+            "type": "string",
+            "description": "Few sentences long description as seen by End User.",
+            "nullable": true,
+            "example": "Here we tried to come up with comprehensive list of Movies, their genres and years. Data were taken from Movie Academy."
+          },
+          "image_url": {
+            "type": "string",
+            "description": "Reference to an image to display on top of a Table.",
+            "nullable": true
+          },
+          "top_level_nav": {
+            "type": "boolean",
+            "description": "If End Users are able to navigate to this View from navigation bar.",
+            "nullable": true,
+            "default": true
+          },
+          "column_view_list": {
+            "type": "array",
+            "description": "List of references to Columns to display.",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ColumnViewMetadata"
+            }
+          }
+        },
+        "description": "Describes how to display a Table."
+      },
+      "CardViewMetadata": {
+        "type": "object",
+        "properties": {
+          "title_column": {
+            "type": "string",
+            "description": "Column name to use to display a Card title.",
+            "nullable": true,
+            "example": "movie_name"
+          },
+          "subtitle_column": {
+            "type": "string",
+            "description": "Column name to use to display a Card subtitle.",
+            "nullable": true,
+            "example": "movie_synopsis"
+          },
+          "description_column": {
+            "type": "string",
+            "description": "Column name to use to display a Card subtitle.",
+            "nullable": true,
+            "example": "movie_description"
+          },
+          "image_url_column": {
+            "type": "string",
+            "description": "Column name to use to reference an image to display on left upper corner of a Card.",
+            "nullable": true,
+            "example": "movie_logo_url"
+          },
+          "column_view_list": {
+            "type": "array",
+            "description": "List of references to Columns to display.",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ColumnViewMetadata"
+            }
+          },
+          "nested_view_list": {
+            "type": "array",
+            "description": "List of references to Views which are embedded as Nested Tables. For example, for a Movie, it can diplay Actors, Shooting Locations, Awards.",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/NestedViewMetadata"
+            }
+          }
+        },
+        "description": "Describes how to display a Card."
+      },
+      "ViewMetadata": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "A unique name as referenced by system and in scripts. Subject to regular variable name rules."
+          },
+          "product_name": {
+            "type": "string",
+            "description": "Product name to display."
+          },
+          "table_name": {
+            "type": "string",
+            "description": "Table name to display."
+          },
+          "tag_list": {
+            "type": "array",
+            "description": "Comma-separated list of tags for search and reference by End User.",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "popularity": {
+            "type": "integer",
+            "description": "Numeric popularity value. Currentluy not used.",
+            "nullable": true
+          },
+          "view_type": {
+            "type": "boolean",
+            "description": "Type of view. Can be either 'table' or 'card'.",
+            "nullable": true
+          },
+          "table_view": {
+            "$ref": "#/components/schemas/TableViewMetadata"
+          },
+          "card_view": {
+            "$ref": "#/components/schemas/CardViewMetadata"
+          }
+        },
+        "description": "Describes how to display data from a Table. It can describe how to display a Table or a Card."
+      },
+      "DisplayParams": {
+        "type": "object",
+        "properties": {
+          "offset": {
+            "type": "integer",
+            "description": "Row to start from."
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Number of rows."
+          },
+          "sort_by": {
+            "type": "string",
+            "description": "Column name to sort by.",
+            "nullable": true
+          }
+        },
+        "description": "Specifies range of rows to display in Table. Allows pagination."
+      },
+      "ViewParams": {
+        "type": "object",
+        "properties": {
+          "filter_params": {
+            "$ref": "#/components/schemas/FilterParams"
+          },
+          "display_params": {
+            "$ref": "#/components/schemas/DisplayParams"
+          }
+        },
+        "description": "Specifies all params to display a View."
+      },
+      "NestedViewPage": {
+        "type": "object",
+        "properties": {
+          "view_metadata": {
+            "$ref": "#/components/schemas/ViewMetadata"
+          },
+          "table_metadata": {
+            "$ref": "#/components/schemas/TableMetadata"
+          },
+          "column_metadata_list": {
+            "type": "array",
+            "description": "List of ColumnMetadata of Nested View. OBSOLETE, Use view_metadata instead.",
+            "items": {
+              "$ref": "#/components/schemas/ColumnMetadata"
+            }
+          },
+          "value_list_list": {
+            "type": "array",
+            "description": "Actual values. Outer array is rows, inner array is cells.",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "description": "Data and Metadata for a Nested View."
+      },
+      "Subscription": {
+        "type": "object",
+        "properties": {
+          "subscription_required": {
+            "type": "boolean",
+            "description": "If a Product requies subsription."
+          },
+          "subscribed": {
+            "type": "boolean",
+            "description": "If End User subscribed to the Product."
+          }
+        },
+        "description": "If a Product requies subsription and if End User subscribed to the Product."
+      },
+      "ViewPage": {
+        "type": "object",
+        "properties": {
+          "view_metadata": {
+            "$ref": "#/components/schemas/ViewMetadata"
+          },
+          "table_metadata": {
+            "$ref": "#/components/schemas/TableMetadata"
+          },
+          "column_metadata_list": {
+            "type": "array",
+            "description": "List of ColumnMetadata of displayed View. OBSOLETE, Use view_metadata instead.",
+            "items": {
+              "$ref": "#/components/schemas/ColumnMetadata"
+            }
+          },
+          "title": {
+            "type": "string",
+            "description": "Title as seen by End User."
+          },
+          "subtitle": {
+            "type": "string",
+            "description": "Subtitle as seen by End User."
+          },
+          "description": {
+            "type": "string",
+            "description": "Few sentences long description as seen by End User."
+          },
+          "image_url": {
+            "type": "string",
+            "description": "Reference to an image to display on top of a Table or on left upper corner of a Card."
+          },
+          "value_list": {
+            "type": "array",
+            "description": "Actual values when Card View is display.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "value_list_list": {
+            "type": "array",
+            "description": "Actual values when Table View is display. Outer array is rows, inner array is cells.",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "total_row_count": {
+            "type": "integer",
+            "description": "Total number of row count satisfied the filters. Needed for pagination."
+          },
+          "top_level_nav_view_metadata_list": {
+            "type": "array",
+            "description": "List of Views which End User can navigate from top level navigation bar.",
+            "items": {
+              "$ref": "#/components/schemas/ViewMetadata"
+            }
+          },
+          "filter_params": {
+            "$ref": "#/components/schemas/FilterParams"
+          },
+          "nested_views": {
+            "type": "array",
+            "description": "List of data and metadata of Nested Views.",
+            "items": {
+              "$ref": "#/components/schemas/NestedViewPage"
+            }
+          },
+          "subscription": {
+            "$ref": "#/components/schemas/Subscription"
+          },
+          "user_info": {
+            "$ref": "#/components/schemas/UserInfo"
+          }
+        },
+        "description": "Data and Metadata for a View. This structure is used to actually display data to End User and also to preview in Construction mode."
+      },
+      "ProductMetadataList": {
+        "type": "object",
+        "properties": {
+          "product_metadata_list": {
+            "type": "array",
+            "description": "List of ProductMetadata.",
+            "items": {
+              "$ref": "#/components/schemas/ProductMetadata"
+            }
+          }
+        },
+        "description": "List of ProductMetadata."
+      },
+      "ProductListPage": {
+        "type": "object",
+        "properties": {
+          "product_metadata_list": {
+            "type": "array",
+            "description": "List of ProductMetadata.",
+            "items": {
+              "$ref": "#/components/schemas/ProductMetadata"
+            }
+          },
+          "user_info": {
+            "$ref": "#/components/schemas/UserInfo"
+          }
+        },
+        "description": "List of ProductMetadata."
+      },
+      "TableFullMetadata": {
+        "type": "object",
+        "properties": {
+          "table_metadata": {
+            "$ref": "#/components/schemas/TableMetadata"
+          },
+          "column_metadata_list": {
+            "type": "array",
+            "description": "List of ColumnMetadata of all Columns of the Table.",
+            "items": {
+              "$ref": "#/components/schemas/ColumnMetadata"
+            }
+          }
+        },
+        "description": "TableMetadata with all Columns."
+      },
+      "ProductFullMetadata": {
+        "type": "object",
+        "properties": {
+          "product_metadata": {
+            "$ref": "#/components/schemas/ProductMetadata"
+          },
+          "table_full_metadata_list": {
+            "type": "array",
+            "description": "List of TableFullMetadata of all Tables of the Product.",
+            "items": {
+              "$ref": "#/components/schemas/TableFullMetadata"
+            }
+          },
+          "view_metadata_list": {
+            "type": "array",
+            "description": "List of ViewMetadata of all views of the Products.",
+            "items": {
+              "$ref": "#/components/schemas/ViewMetadata"
+            }
+          }
+        },
+        "description": "Product Metadata with all Tables and all Views."
+      },
+      "EntityFullMetadata": {
+        "type": "object",
+        "properties": {
+          "entity_metadata": {
+            "$ref": "#/components/schemas/EntityMetadata"
+          },
+          "entity_tag_list": {
+            "type": "array",
+            "description": "List of all entity tags.",
+            "items": {
+              "$ref": "#/components/schemas/EntityTag"
+            }
+          }
+        },
+        "description": "Entity Metadata with all tags."
+      },
+      "EntityMetadataCandidateList": {
+        "type": "object",
+        "properties": {
+          "column_metadata": {
+            "$ref": "#/components/schemas/ColumnMetadata"
+          },
+          "entity_metadata_list": {
+            "type": "array",
+            "description": "List of entity candidates.",
+            "items": {
+              "$ref": "#/components/schemas/EntityMetadata"
+            }
+          }
+        },
+        "description": "List of entities which can be chosen for given column in order of best matching to least matching."
+      },
+      "TableConstructor": {
+        "type": "object",
+        "properties": {
+          "table_metadata": {
+            "$ref": "#/components/schemas/TableMetadata"
+          },
+          "column_metadata_list": {
+            "type": "array",
+            "description": "List of ColumnMetadata.",
+            "items": {
+              "$ref": "#/components/schemas/ColumnMetadata"
+            }
+          },
+          "product_full_metadata": {
+            "$ref": "#/components/schemas/ProductFullMetadata"
+          },
+          "table_full_metadata": {
+            "$ref": "#/components/schemas/TableFullMetadata"
+          },
+          "value_list_list": {
+            "type": "array",
+            "description": "Actual values when Table display. Outer array is rows, inner array is cells.",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "entity_metadata_candidate_list_list": {
+            "type": "array",
+            "description": "List of columns and corresponding list of entity candidates.",
+            "items": {
+              "$ref": "#/components/schemas/EntityMetadataCandidateList"
+            }
+          },
+          "user_info": {
+            "$ref": "#/components/schemas/UserInfo"
+          }
+        },
+        "description": "Table Tab in Data Tab in Constructor mode. This tab is used to select Data Types, assign Entities. Data is displayed for preview purposes."
+      },
+      "ViewPossibleColumn": {
+        "type": "object",
+        "properties": {
+          "product_name": {
+            "type": "string",
+            "description": "Product name to display."
+          },
+          "table_name": {
+            "type": "string",
+            "description": "Taable name to display."
+          },
+          "column_name": {
+            "type": "string",
+            "description": "Column name to display."
+          },
+          "title": {
+            "type": "string",
+            "description": "Title as seen by End User if applicable."
+          },
+          "entity_name": {
+            "type": "string",
+            "description": "Name of actual Entity currently assigned to this column."
+          },
+          "possible_on_click_list": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ViewPossibleView"
+            }
+          }
+        },
+        "description": "A possible column to add to a View."
+      },
+      "ViewPossibleTable": {
+        "type": "object",
+        "properties": {
+          "table_metadata": {
+            "$ref": "#/components/schemas/TableMetadata"
+          },
+          "possible_column_list": {
+            "type": "array",
+            "description": "List of possible Columns to add to the View.",
+            "items": {
+              "$ref": "#/components/schemas/ViewPossibleColumn"
+            }
+          },
+          "column_name_from": {
+            "type": "string",
+            "description": "Column Name in original displayed Table which is used to connect to this additional table."
+          },
+          "column_name_to": {
+            "type": "string",
+            "description": "Column Name in additional table which is used to connect to original displayed Table."
+          }
+        },
+        "description": "A possible additional table with additional product to add to a View."
+      },
+      "ViewPossibleProductTable": {
+        "type": "object",
+        "properties": {
+          "product_metadata": {
+            "$ref": "#/components/schemas/ProductMetadata"
+          },
+          "possible_table_list": {
+            "type": "array",
+            "description": "List of possible additional tables to add to the view.",
+            "items": {
+              "$ref": "#/components/schemas/ViewPossibleTable"
+            }
+          }
+        },
+        "description": "A possible additional product and its tables to add to a view."
+      },
+      "ViewPossibleView": {
+        "type": "object",
+        "properties": {
+          "view_metadata": {
+            "$ref": "#/components/schemas/ViewMetadata"
+          },
+          "column_name_from": {
+            "type": "string",
+            "description": "Column Name in original displayed Table which is used to connect to this Nested View."
+          },
+          "column_name_to": {
+            "type": "string",
+            "description": "Column Name in Nested View which is used to connect to original displayed Table."
+          }
+        },
+        "description": "A possible Nested View with additional product view to add to a view."
+      },
+      "ViewPossibleProductView": {
+        "type": "object",
+        "properties": {
+          "product_metadata": {
+            "$ref": "#/components/schemas/ProductMetadata"
+          },
+          "possible_view_list": {
+            "type": "array",
+            "description": "List of possible Nested Views to add to the view.",
+            "items": {
+              "$ref": "#/components/schemas/ViewPossibleView"
+            }
+          }
+        },
+        "description": "A possible product and its Nested Views to add to a view."
+      },
+      "ViewPossibleForView": {
+        "type": "object",
+        "properties": {
+          "possible_column_list": {
+            "type": "array",
+            "description": "List of possible Columns to add to the View.",
+            "items": {
+              "$ref": "#/components/schemas/ViewPossibleColumn"
+            }
+          },
+          "possible_additional_product_table_list": {
+            "type": "array",
+            "description": "List of possible additional products and their tables to add to the view.",
+            "items": {
+              "$ref": "#/components/schemas/ViewPossibleProductTable"
+            }
+          },
+          "possible_product_nested_view_list": {
+            "type": "array",
+            "description": "List of possible products and their Nested Views to add to the view.",
+            "items": {
+              "$ref": "#/components/schemas/ViewPossibleProductView"
+            }
+          }
+        },
+        "description": "All possible columns, additional products and Nested Views."
+      },
+      "ViewConstructor": {
+        "type": "object",
+        "properties": {
+          "product_full_metadata": {
+            "$ref": "#/components/schemas/ProductFullMetadata"
+          },
+          "view_metadata": {
+            "$ref": "#/components/schemas/ViewMetadata"
+          },
+          "preview_view_page": {
+            "$ref": "#/components/schemas/ViewPage"
+          },
+          "view_possible_for_view": {
+            "$ref": "#/components/schemas/ViewPossibleForView"
+          },
+          "user_info": {
+            "$ref": "#/components/schemas/UserInfo"
+          }
+        },
+        "description": "View Tab in Views Tab in Constructor mode. This tab is used to select displayed Columns, Nested Views, titles, etc. Here Maker constructs what End User will actually see."
+      },
+      "ProductConstructor": {
+        "type": "object",
+        "properties": {
+          "product_full_metadata": {
+            "$ref": "#/components/schemas/ProductFullMetadata"
+          },
+          "home_page_view_candidate_list": {
+            "type": "array",
+            "description": "A subset of all Views in product which can can used as home page. Frontend should send back only view name inside home_page_view_name field back to Backend.",
+            "items": {
+              "$ref": "#/components/schemas/ViewMetadata"
+            }
+          },
+          "preview_view_page": {
+            "$ref": "#/components/schemas/ViewPage"
+          },
+          "user_info": {
+            "$ref": "#/components/schemas/UserInfo"
+          }
+        },
+        "description": "Product Tab in Constructor mode and pre-fetched other Tabs. This tab is used to select Product name, title, homepage View, etc. and actually publish the Product."
+      },
+      "FileParams": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "Category of file, possible values are 'image', 'data'."
+          },
+          "filename": {
+            "type": "string",
+            "description": "Filename generated by Backend. By this filename the file should be referenced in future."
+          },
+          "public_link": {
+            "type": "string",
+            "description": "Public link to access the file if requested when called /upload_file."
+          }
+        },
+        "description": "Names and links to file when it's uploaded to Backend file storage."
+      },
+      "StripeAccountLink": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "URL to redirect to to connect a Maker to their Stripe account."
+          }
+        },
+        "description": "URL to redirect to to connect a Maker to their Stripe account."
+      },
+      "StripeCheckoutSession": {
+        "type": "object",
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "description": "Stripe Checkout Session Id to redirect to an End User to subscribe for a Product."
+          },
+          "public_key": {
+            "type": "string",
+            "description": "Platform's Stripe Public Key."
+          },
+          "account_id": {
+            "type": "string",
+            "description": "Stripe Connected Account Id of the Maker of the Product."
+          }
+        },
+        "description": "Stripe Checkout Session for an End User to subscribe for a Product."
+      },
+      "body": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary"
+          }
+        }
+      }
+    }
+  }
+}
