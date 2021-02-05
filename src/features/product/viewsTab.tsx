@@ -8,6 +8,7 @@ import { RootState } from '../../app/rootReducer'
 import { ViewHeader } from './viewHeader'
 import { ViewMetadataSection } from './viewMetadata'
 import { ColumnTypes } from './columnTypes'
+import { CardView } from '../../components/CardView'
 import { TableView } from '../../components/TableView'
 import { fetchView, postViewMetadata } from './viewSlice'
 
@@ -64,18 +65,30 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
       (c) => c.title
     )
 
-  let renderedTable =
-    isLoading ||
-    !currentView ||
-    !currentView.preview_view_page?.value_list_list ? (
-      <h3>Loading...</h3>
-    ) : (
-      <TableView
-        columnHeaders={columnHeaders}
-        data={currentView.preview_view_page?.value_list_list}
-        isPreview={true}
-      />
-    )
+  let renderedTable
+
+  if (isLoading) {
+    renderedTable = <h3>Loading...</h3>
+  } else {
+    if (currentView?.view_metadata?.card_view) {
+      renderedTable = (
+        <CardView
+          columnHeaders={columnHeaders}
+          data={currentView.preview_view_page?.value_list}
+          isPreview={true}
+        />
+      )
+    } else if (currentView?.view_metadata?.table_view) {
+      renderedTable = (
+        <TableView
+          columnHeaders={columnHeaders}
+          data={currentView.preview_view_page?.value_list_list}
+          isPreview={true}
+        />
+      )
+    }
+  }
+
   let renderedMetadata =
     isLoading || !currentView ? (
       <h3>Loading...</h3>

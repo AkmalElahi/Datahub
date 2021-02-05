@@ -4,38 +4,87 @@ import styled from 'styled-components'
 import { Grid } from 'gridjs-react'
 import 'gridjs/dist/theme/mermaid.css'
 
-interface Props {
-  columnHeaders: (string | undefined)[]
-  data: string[][] | undefined
-}
-
-const GridContainer = styled.div`
-  .gridjs-wrapper {
-    border: 1px solid rgba(196, 196, 196, 0.5);
-    box-shadow: none;
-  }
-
-  th.gridjs-th {
-    background-color: #ffffff;
-    text-transform: uppercase;
-    border: none;
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
-  }
-
-  td.gridjs-td {
-    border: none;
-    border-bottom: 1px solid rgba(196, 196, 196, 0.5);
-    border-top: 1px solid rgba(196, 196, 196, 0.5);
-  }
+const FlexRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  flex: 1;
 `
 
-export const CardView = ({ columnHeaders, data }: Props) => {
+const FlexColumn = styled.div`
+  display: flex;
+  flex-basis: 100%;
+  flex: 1;
+`
+
+const LeftColumn = styled(FlexColumn)`
+  flex: 1;
+  padding: 25px;
+`
+
+const RightColumn = styled(FlexColumn)`
+  flex: 3;
+  padding: 25px;
+`
+
+const CardBody = styled.div``
+
+const ImagePlaceholder = styled.div`
+  background-color: #c4c4c4;
+  width: 100%;
+  height: 400px;
+`
+
+const DataWrapper = styled.div`
+  width: 100%;
+`
+
+const DataRow = styled(FlexRow)`
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #cfcfcf;
+`
+
+const DataColumn = styled.div`
+  display: flex;
+  font-weight: bold;
+  padding-right: 0.5rem;
+`
+
+const DataValue = styled.div`
+  display: flex;
+`
+
+interface Props {
+  columnHeaders: (string | undefined)[]
+  data: string[] | undefined
+  isPreview: boolean
+}
+
+export const CardView = ({ columnHeaders, data, isPreview }: Props) => {
+  console.log(columnHeaders)
+  console.log(data)
+
+  let renderedData: JSX.Element[] = []
+
+  for (let x = 0; x < columnHeaders.length; x++) {
+    renderedData.push(
+      <DataRow>
+        <DataColumn>{columnHeaders[x]}</DataColumn>
+        <DataValue>{data?.[x] || ''}</DataValue>
+      </DataRow>
+    )
+  }
   return (
-    <div>
-      <GridContainer>
-        <Grid data={data} columns={columnHeaders} />
-      </GridContainer>
-    </div>
+    <CardBody>
+      <FlexRow>
+        <LeftColumn>
+          <ImagePlaceholder></ImagePlaceholder>
+        </LeftColumn>
+        <RightColumn>
+          <DataWrapper>{renderedData}</DataWrapper>
+        </RightColumn>
+      </FlexRow>
+    </CardBody>
   )
 }
