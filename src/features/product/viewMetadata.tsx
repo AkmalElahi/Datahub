@@ -4,12 +4,6 @@ import styled from 'styled-components'
 
 import { ViewMetadata } from 'typescript-axios'
 
-interface Props {
-  metadata: ViewMetadata | undefined
-  register: ReturnType<typeof useForm>['register']
-  errors: ReturnType<typeof useForm>['errors']
-}
-
 const FlexRow = styled.div`
   display: flex;
   flex-direction: row;
@@ -43,6 +37,8 @@ const Label = styled.label`
   padding: 16px 20px;
 `
 
+const NavLabel = styled.label``
+
 const Input = styled.input`
   flex: 1;
   width: 100%;
@@ -67,6 +63,12 @@ const Dropdown = styled.select`
   border-radius: 0 6px 6px 0;
 `
 
+interface Props {
+  metadata: ViewMetadata | undefined
+  register: ReturnType<typeof useForm>['register']
+  errors: ReturnType<typeof useForm>['errors']
+}
+
 //type InputEvent = ChangeEvent<HTMLInputElement>
 //type ChangeHandler = (event: InputEvent) => void
 
@@ -76,6 +78,90 @@ export const ViewMetadataSection = ({ metadata, register, errors }: Props) => {
   //const handleChange: ChangeHandler = event => {
   //  setCurrentKey(event.target.value)
   //}
+  let renderTitleOptions = metadata?.card_view?.column_view_list?.map((c) => (
+    <option value={c.title || ''} key={c.title}>
+      {c.title}
+    </option>
+  ))
+
+  let renderedMetadata
+
+  if (metadata?.card_view) {
+    renderedMetadata = (
+      <React.Fragment>
+        <FlexRow style={{ paddingBottom: '10px' }}>
+          <Label>Title Column</Label>
+          <Dropdown name="cardMetadata" id="titleDropdown">
+            {renderTitleOptions}
+          </Dropdown>
+        </FlexRow>
+
+        <FlexRow style={{ paddingBottom: '10px' }}>
+          <Label>Subtitle Column</Label>
+          <Dropdown name="cardMetadata" id="subtitleDropdown">
+            {renderTitleOptions}
+          </Dropdown>
+        </FlexRow>
+
+        <FlexRow style={{ paddingBottom: '10px' }}>
+          <Label>Description Column</Label>
+          <Dropdown name="cardMetadata" id="descDropdown">
+            {renderTitleOptions}
+          </Dropdown>
+        </FlexRow>
+
+        <FlexRow style={{ paddingBottom: '10px' }}>
+          <Label>Image Column</Label>
+          <Dropdown name="cardMetadata" id="imgDropdown">
+            {renderTitleOptions}
+          </Dropdown>
+        </FlexRow>
+      </React.Fragment>
+    )
+  } else if (metadata?.table_view) {
+    renderedMetadata = (
+      <FlexRow>
+        <FlexColumn style={{ marginRight: '10px' }}>
+          <UList>
+            <List>
+              <Label>Title</Label>
+              <Input value={metadata?.table_view.title || ''} />
+            </List>
+          </UList>
+        </FlexColumn>
+        <FlexColumn>
+          <UList>
+            <List>
+              <Label>Subtitle</Label>
+              <Input value={metadata?.table_view.subtitle || ''} />
+            </List>
+          </UList>
+        </FlexColumn>
+        <FlexRow>
+          <UList style={{ width: '100%' }}>
+            <List>
+              <Label>Description</Label>
+              <Input
+                name="description"
+                key={metadata?.table_view.description}
+                defaultValue={metadata?.table_view.description || ''}
+              />
+            </List>
+          </UList>
+        </FlexRow>
+        <NavLabel>
+          <input
+            type="checkbox"
+            name="showNav"
+            style={{ marginRight: '10px' }}
+            value="true"
+            defaultChecked={true}
+          />
+          Show in navigation bar
+        </NavLabel>
+      </FlexRow>
+    )
+  }
 
   return (
     <React.Fragment>
@@ -98,6 +184,7 @@ export const ViewMetadataSection = ({ metadata, register, errors }: Props) => {
           </UList>
         </FlexColumn>
       </FlexRow>
+      {renderedMetadata}
     </React.Fragment>
   )
 }
