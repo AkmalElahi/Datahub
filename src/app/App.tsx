@@ -38,8 +38,8 @@ const AppContainer = styled.div`
   font-family: ${(props) => props.theme.fontFamily};
 `
 const user: UserCredentials = {
-  email: process.env.REACT_APP_TEST_EMAIL,
-  password: process.env.REACT_APP_TEST_PW,
+  email: 'test_user1@datahub.com',
+  password: 'test1',
 }
 
 const App: React.FC = () => {
