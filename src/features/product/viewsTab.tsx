@@ -57,8 +57,25 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
     )
   }
 
+  let columnHeaders
+
+  if (currentView?.preview_view_page?.column_metadata_list)
+    columnHeaders = currentView?.preview_view_page?.column_metadata_list?.map(
+      (c) => c.title
+    )
+
   let renderedTable =
-    isLoading || !currentView ? <h3>Loading...</h3> : <div></div>
+    isLoading ||
+    !currentView ||
+    !currentView.preview_view_page?.value_list_list ? (
+      <h3>Loading...</h3>
+    ) : (
+      <TableView
+        columnHeaders={columnHeaders}
+        data={currentView.preview_view_page?.value_list_list}
+        isPreview={true}
+      />
+    )
   let renderedMetadata =
     isLoading || !currentView ? (
       <h3>Loading...</h3>

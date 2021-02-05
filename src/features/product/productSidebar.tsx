@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import styled, { css } from 'styled-components'
 
 import { RootState } from '../../app/rootReducer'
-import { TableFullMetadata } from 'typescript-axios'
+import { TableFullMetadata, ViewMetadata } from 'typescript-axios'
 
 import { currentTab } from './tabDisplaySlice'
 
@@ -47,16 +47,21 @@ const DataSource = styled.li<{ active: boolean }>`
 
 interface Props {
   sources?: TableFullMetadata[]
+  views?: ViewMetadata[]
   setSource: (source: number) => void
   setTab: (tab: currentTab) => void
 }
 
-export const ProductSidebar = ({ sources, setSource, setTab }: Props) => {
+export const ProductSidebar = ({
+  sources,
+  views,
+  setSource,
+  setTab,
+}: Props) => {
   const { tab, source } = useSelector((state: RootState) => state.tabDisplay)
 
   const handleSourceChange = (index) => {
     setSource(index)
-    if (tab !== 'data') setTab({ tab: 'data' })
   }
 
   const renderedSources = sources?.map((s, index) => (
@@ -68,6 +73,17 @@ export const ProductSidebar = ({ sources, setSource, setTab }: Props) => {
       {s?.table_metadata?.title}
     </DataSource>
   ))
+
+  const renderedViews = views?.map((v, index) => (
+    <DataSource
+      active={tab === 'views' && source === index}
+      onClick={() => handleSourceChange(index)}
+      key={v?.name}
+    >
+      {v?.name}
+    </DataSource>
+  ))
+
   return (
     <SidebarGroup>
       <SidebarLink
@@ -76,13 +92,14 @@ export const ProductSidebar = ({ sources, setSource, setTab }: Props) => {
       >
         Data
       </SidebarLink>
-      <DataGroup>{renderedSources}</DataGroup>
+      {tab === 'data' && <DataGroup>{renderedSources}</DataGroup>}
       <SidebarLink
         active={tab === 'views'}
         onClick={() => setTab({ tab: 'views' })}
       >
         Views
       </SidebarLink>
+      {tab === 'views' && <DataGroup>{renderedViews}</DataGroup>}
       <SidebarLink
         active={tab === 'publish'}
         onClick={() => setTab({ tab: 'publish' })}

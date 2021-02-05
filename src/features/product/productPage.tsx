@@ -71,7 +71,7 @@ export const ProductPage = () => {
   let viewMetadataList: ViewMetadata[] | undefined =
     productMetadata?.view_metadata_list
   let tableName = tableMetadataList?.[source].table_metadata?.name
-  let viewName = viewMetadataList?.[0].name
+  let viewName = viewMetadataList?.[source].name
 
   if (ProductError) {
     renderedContent = (
@@ -89,9 +89,7 @@ export const ProductPage = () => {
       />
     )
   } else if (tab === 'views') {
-    renderedContent = (
-      <ViewsTab productName={productSlug} viewName={viewName || ''} />
-    )
+    renderedContent = <ViewsTab productName={productSlug} viewName={viewName} />
   } else if (tab === 'publish') {
     renderedContent = (
       <PublishTab productName={productSlug || ''} tableName={tableName || ''} />
@@ -104,6 +102,7 @@ export const ProductPage = () => {
         <LeftColumn>
           <ProductSidebar
             sources={tableMetadataList}
+            views={viewMetadataList}
             setSource={setSource}
             setTab={setTab}
           />

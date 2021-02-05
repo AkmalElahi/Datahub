@@ -5,7 +5,7 @@ export interface currentTab {
 }
 
 type currentDisplayState = {
-  source: number
+  source: number | string
 } & currentTab
 
 const initialState: currentDisplayState = {
@@ -21,7 +21,7 @@ const tabDisplaySlice = createSlice({
       const { tab } = action.payload
       state.tab = tab
     },
-    setCurrentSource(state, action: PayloadAction<number>) {
+    setCurrentSource(state, action: PayloadAction<number | string>) {
       state.source = action.payload
     },
   },
