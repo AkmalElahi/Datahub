@@ -12,7 +12,7 @@ import {
   UserCredentials,
   ViewConstructor,
   ViewMetadata,
-} from 'typescript-axios'
+} from '../gen/api/api'
 
 const apiService = new DefaultApi()
 

@@ -6,7 +6,7 @@ import {
   TableMetadata,
   ColumnMetadata,
   TableFullMetadata,
-} from 'typescript-axios'
+} from '../../gen/api/api'
 
 interface Props {
   metadata: TableMetadata | undefined

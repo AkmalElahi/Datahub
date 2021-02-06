@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { ProductMetadataList } from 'typescript-axios'
+import { ProductMetadataList } from '../../gen/api/api'
 
 const FlexRow = styled.div`
   display: flex;

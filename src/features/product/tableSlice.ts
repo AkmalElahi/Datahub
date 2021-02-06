@@ -4,7 +4,7 @@ import {
   TableConstructor,
   TableFullMetadata,
   EntityFullMetadata,
-} from 'typescript-axios'
+} from '../../gen/api/api'
 import {
   Table,
   getTableAPI,

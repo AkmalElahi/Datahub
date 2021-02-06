@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import Popup from 'reactjs-popup'
 import 'reactjs-popup/dist/index.css'
 
-import { ColumnMetadata } from 'typescript-axios'
+import { ColumnMetadata } from '../../gen/api/api'
 import { DraftEntity } from './tableSlice'
 import { EntityPopup } from '../../components/EntityPopup'
 

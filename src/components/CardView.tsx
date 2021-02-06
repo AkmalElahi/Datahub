@@ -41,7 +41,7 @@ const DataWrapper = styled.div`
 `
 
 const DataRow = styled(FlexRow)`
-  padding: 0.4rem 0;
+  padding: 0.8rem 0;
   border-bottom: 1px solid #cfcfcf;
 `
 

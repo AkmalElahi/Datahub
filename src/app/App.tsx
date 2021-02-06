@@ -5,7 +5,7 @@ import styled, { createGlobalStyle, ThemeProvider } from 'styled-components'
 
 import { lightTheme } from '../styles/Theme'
 
-import { UserCredentials } from 'typescript-axios'
+import { UserCredentials } from '../gen/api/api'
 import { fetchUser } from '../features/user/userSlice'
 import { LandingPage } from '../features/landing/landingPage'
 import { ProductListPage } from '../features/productList/productListPage'

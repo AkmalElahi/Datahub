@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 
-import { TableFullMetadata } from 'typescript-axios'
+import { TableFullMetadata } from '../../gen/api/api'
 import { RootState } from '../../app/rootReducer'
 
 import { ProductHeader } from './productHeader'

@@ -4,7 +4,7 @@ import {
   FileParams,
   ProductConstructor,
   ProductFullMetadata,
-} from 'typescript-axios'
+} from '../../gen/api/api'
 import {
   Product,
   getProductConstructorAPI,

@@ -5,7 +5,6 @@ import isEmpty from 'lodash/isEmpty'
 import styled from 'styled-components'
 
 import { RootState } from '../../app/rootReducer'
-import {} from 'typescript-axios'
 
 import { ViewNavbar } from '../../components/ViewNavbar'
 import { fetchProductHome, fetchProductView } from './productViewSlice'

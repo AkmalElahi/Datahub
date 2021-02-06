@@ -2,7 +2,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 
-import { ViewMetadata } from 'typescript-axios'
+import { ViewMetadata } from '../../gen/api/api'
 
 const FlexRow = styled.div`
   display: flex;

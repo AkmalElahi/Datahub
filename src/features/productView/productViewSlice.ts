@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { DisplayParams, ViewParams, ViewPage } from 'typescript-axios'
+import { DisplayParams, ViewParams, ViewPage } from '../../gen/api/api'
 import { getProductAPI, getProductViewAPI } from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
 import { setCurrentTab } from '../product/tabDisplaySlice'

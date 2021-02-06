@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import styled, { css } from 'styled-components'
 
 import { RootState } from '../../app/rootReducer'
-import { TableFullMetadata, ViewMetadata } from 'typescript-axios'
+import { TableFullMetadata, ViewMetadata } from '../../gen/api/api'
 
 import { currentTab } from './tabDisplaySlice'
 

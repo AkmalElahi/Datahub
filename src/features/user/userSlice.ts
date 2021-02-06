@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { SessionInfo, UserCredentials } from 'typescript-axios'
+import { SessionInfo, UserCredentials } from '../../gen/api/api'
 import { User, signInAPI } from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
 

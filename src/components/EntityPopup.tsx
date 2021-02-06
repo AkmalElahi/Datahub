@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { WithContext as ReactTags } from 'react-tag-input'
 import { TagsContainer } from '../styles/tags'
 
-import { EntityFullMetadata } from 'typescript-axios'
+import { EntityFullMetadata } from '../gen/api/api'
 import { draftEntityMetadata } from '../features/product/tableSlice'
 
 const Input = styled.input`

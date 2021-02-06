@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import isEmpty from 'lodash/isEmpty'
 
 import { RootState } from '../../app/rootReducer'
-import { TableFullMetadata, ViewMetadata } from 'typescript-axios'
+import { TableFullMetadata, ViewMetadata } from '../../gen/api/api'
 
 import { Navbar } from '../../components/Navbar'
 import { ProductSidebar } from './productSidebar'

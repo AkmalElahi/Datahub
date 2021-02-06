@@ -1,5 +1,5 @@
 import cloneDeep from 'lodash/cloneDeep'
-import { TableFullMetadata } from 'typescript-axios'
+import { TableFullMetadata } from '../gen/api/api'
 import { DraftEntity } from '../features/product/tableSlice'
 
 export const applyEntities = (

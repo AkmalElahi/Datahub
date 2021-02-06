@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { ViewConstructor, ViewMetadata } from 'typescript-axios'
+import { ViewConstructor, ViewMetadata } from '../../gen/api/api'
 import { View, getViewAPI, upsertViewMetadataAPI } from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
 

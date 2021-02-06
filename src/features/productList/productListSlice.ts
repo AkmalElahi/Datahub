@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { ProductMetadata, ProductMetadataList } from 'typescript-axios'
+import { ProductMetadata, ProductMetadataList } from '../../gen/api/api'
 import { ProductList, getProductListAPI } from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
 
