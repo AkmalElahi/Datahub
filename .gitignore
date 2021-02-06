@@ -4,7 +4,11 @@
 /node_modules
 /.pnp
 .pnp.js
-/src/gen
+/src/gen/api/*
+!src/gen/api/api.ts
+!src/gen/api/base.ts
+!src/gen/api/configuration.ts
+
 
 # testing
 /coverage
