@@ -233,9 +233,7 @@ export async function uploadFileAPI(
 ) {
   try {
     if (file)
-      file.forEach((value, key) => {
-        console.log(key + ', ' + value)
-      })
+        console.log("From dropped file")
     console.log(publicLink)
     const response = await apiService.uploadFilePost(
       category,

@@ -181,8 +181,6 @@ export const DataSourcePopup = ({ close, addType }: Props) => {
   const { control, register, errors, handleSubmit } = useForm<FormData>()
   const onSubmit = (data) => {
     console.log(data)
-    const formData = new FormData()
-    formData.append('file', data.file)
     dispatch(
       uploadThenCreateProductThunk(
         data.productName,
@@ -190,7 +188,7 @@ export const DataSourcePopup = ({ close, addType }: Props) => {
         data.fileRadio,
         data.addViews ? 'true' : 'false',
         data.fileRadio === 'link' ? data.newLink : undefined,
-        data.fileRadio === 'upload' ? formData : undefined
+        data.fileRadio === 'upload' ? data.file : undefined
       )
     )
   }
