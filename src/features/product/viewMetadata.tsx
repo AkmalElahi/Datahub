@@ -2,7 +2,11 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 
-import { ViewMetadata } from '../../gen/api/api'
+import Popup from 'reactjs-popup'
+import 'reactjs-popup/dist/index.css'
+
+import { ViewMetadata, ViewPossibleForView } from '../../gen/api/api'
+import { ColumnsPopup } from '../../components/ColumnsPopup'
 
 const FlexRow = styled.div`
   display: flex;
@@ -63,8 +67,68 @@ const Dropdown = styled.select`
   border-radius: 0 6px 6px 0;
 `
 
+const StyledPopup = styled(Popup)`
+  &-content {
+    border: none;
+    border-radius: 8px;
+    max-width: 740px;
+    overflow: auto;
+    max-height: 100%;
+
+    .modal {
+      padding: 2rem;
+
+      >.close {
+        cursor: pointer;
+        position: absolute;
+        display: block;
+        padding: 2px 5px;
+        right: 20px;
+        font-size: 36px;
+        font-weight: 600;
+        border: none;
+        background-color: transparent;
+        outline: none;
+      }
+      >.header {
+        font-size: 2em;
+        font-weight: 500;
+        margin-bottom: 1rem;
+      }
+  }
+`
+
+const Button = styled.button`
+  border-radius: 32px;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  padding: 0.8rem 1rem;
+  border: none;
+  cursor: pointer;
+  outline: none;
+`
+
+const ButtonGroup = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+`
+
+const EditButton = styled(Button)`
+  background: none;
+  border: 1px solid #272d34;
+  max-width: 180px;
+  font-weight: 500;
+  padding: 0.8rem 1.4rem;
+`
+
 interface Props {
   metadata: ViewMetadata | undefined
+  possibleViews: ViewPossibleForView | undefined
   register: ReturnType<typeof useForm>['register']
   errors: ReturnType<typeof useForm>['errors']
 }
@@ -72,7 +136,12 @@ interface Props {
 //type InputEvent = ChangeEvent<HTMLInputElement>
 //type ChangeHandler = (event: InputEvent) => void
 
-export const ViewMetadataSection = ({ metadata, register, errors }: Props) => {
+export const ViewMetadataSection = ({
+  metadata,
+  possibleViews,
+  register,
+  errors,
+}: Props) => {
   //const [currentKey, setCurrentKey] = useState('0')
 
   //const handleChange: ChangeHandler = event => {
@@ -185,6 +254,17 @@ export const ViewMetadataSection = ({ metadata, register, errors }: Props) => {
         </FlexColumn>
       </FlexRow>
       {renderedMetadata}
+      <ButtonGroup>
+        <StyledPopup trigger={<EditButton>Edit</EditButton>} modal lockScroll>
+          {(close) => (
+            <ColumnsPopup
+              close={close}
+              metadata={metadata}
+              possibleViews={possibleViews}
+            />
+          )}
+        </StyledPopup>
+      </ButtonGroup>
     </React.Fragment>
   )
 }

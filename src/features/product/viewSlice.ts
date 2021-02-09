@@ -6,14 +6,21 @@ import { AppThunk } from '../../app/store'
 
 interface ViewState {
   viewsByName: Record<string, ViewConstructor>
+  draftMetadata: DraftMetadata
   isLoading: boolean
   error: string | null
 }
 
 const viewsInitialState: ViewState = {
   viewsByName: {},
+  draftMetadata: { metadata: {}, edited: false },
   isLoading: false,
   error: null,
+}
+
+export interface DraftMetadata {
+  metadata: ViewMetadata
+  edited: boolean
 }
 
 function startLoading(state: ViewState) {
@@ -36,6 +43,8 @@ const views = createSlice({
       state.isLoading = false
       state.error = null
       state.viewsByName[view.view_metadata?.name || 'none'] = view
+      if (view.view_metadata)
+        state.draftMetadata = { metadata: view.view_metadata, edited: false }
     },
     upsertViewMetadataSuccess(
       state,
@@ -43,6 +52,10 @@ const views = createSlice({
     ) {
       state.isLoading = false
       state.error = null
+    },
+    draftMetadata(state, { payload }: PayloadAction<DraftMetadata>) {
+      console.log('payload: ', payload)
+      state.draftMetadata = payload
     },
     getViewFailure: loadingFailed,
     upsertViewMetadataFailure: loadingFailed,
@@ -56,6 +69,7 @@ export const {
   upsertViewMetadataSuccess,
   getViewFailure,
   upsertViewMetadataFailure,
+  draftMetadata,
 } = views.actions
 
 export default views.reducer

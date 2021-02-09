@@ -70,8 +70,11 @@ export const ProductPage = () => {
     productMetadata?.table_full_metadata_list
   let viewMetadataList: ViewMetadata[] | undefined =
     productMetadata?.view_metadata_list
-  let tableName = tableMetadataList?.[source].table_metadata?.name
-  let viewName = viewMetadataList?.[source].name
+  let tableName
+  let viewName
+  if (tab !== 'views')
+    tableName = tableMetadataList?.[source].table_metadata?.name
+  else viewName = viewMetadataList?.[source].name
 
   if (ProductError) {
     renderedContent = (

@@ -35,11 +35,19 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
 
   const { register, errors, handleSubmit } = useForm<FormData>()
 
-  const onSubmit = (data) => {}
+  const onSubmit = (data) => {
+    console.log(draftMetadata)
+    if (draftMetadata.edited) {
+      dispatch(postViewMetadata(draftMetadata.metadata))
+    }
+  }
 
-  const { viewsByName, isLoading, error: viewError } = useSelector(
-    (state: RootState) => state.views
-  )
+  const {
+    viewsByName,
+    draftMetadata,
+    isLoading,
+    error: viewError,
+  } = useSelector((state: RootState) => state.views)
 
   let currentView = viewsByName[viewName]
 
@@ -95,6 +103,7 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
     ) : (
       <ViewMetadataSection
         metadata={currentView.view_metadata}
+        possibleViews={currentView.view_possible_for_view}
         register={register}
         errors={errors}
       />

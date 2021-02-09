@@ -149,7 +149,7 @@ const Dropzone = ({ onChange }: DropzoneProps) => {
     getRootProps,
     getInputProps,
   } = useDropzone({
-    accept: '.csv',
+    accept: '.csv, image/png, image/jpeg',
   })
 
   const acceptedFileItem = acceptedFiles.map((file) => (
@@ -180,7 +180,6 @@ export const DataSourcePopup = ({ close, addType }: Props) => {
 
   const { control, register, errors, handleSubmit } = useForm<FormData>()
   const onSubmit = (data) => {
-    console.log(data)
     dispatch(
       uploadThenCreateProductThunk(
         data.productName,

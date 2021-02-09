@@ -1,9 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { Grid } from 'gridjs-react'
-import 'gridjs/dist/theme/mermaid.css'
-
 const FlexRow = styled.div`
   display: flex;
   flex-direction: row;
@@ -62,14 +59,11 @@ interface Props {
 }
 
 export const CardView = ({ columnHeaders, data, isPreview }: Props) => {
-  console.log(columnHeaders)
-  console.log(data)
-
   let renderedData: JSX.Element[] = []
 
   for (let x = 0; x < columnHeaders.length; x++) {
     renderedData.push(
-      <DataRow>
+      <DataRow key={x}>
         <DataColumn>{columnHeaders[x]}</DataColumn>
         <DataValue>{data?.[x] || ''}</DataValue>
       </DataRow>
