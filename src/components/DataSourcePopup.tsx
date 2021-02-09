@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useForm, Controller } from 'react-hook-form'
 import { useDropzone } from 'react-dropzone'
@@ -174,13 +175,14 @@ export const DataSourcePopup = ({ close, addType }: Props) => {
   const { isLoading, error: ProductError } = useSelector(
     (state: RootState) => state.product
   )
+  let navigate = useNavigate()
 
   let checked
   let renderedError
 
   const { control, register, errors, handleSubmit } = useForm<FormData>()
-  const onSubmit = (data) => {
-    dispatch(
+  const onSubmit = async (data) => {
+    let result = await dispatch(
       uploadThenCreateProductThunk(
         data.productName,
         data.tableName,
@@ -190,6 +192,8 @@ export const DataSourcePopup = ({ close, addType }: Props) => {
         data.fileRadio === 'upload' ? data.file : undefined
       )
     )
+    close()
+    navigate('/' + data.productName)
   }
   if (ProductError) {
     renderedError = (
@@ -214,7 +218,6 @@ export const DataSourcePopup = ({ close, addType }: Props) => {
             <NewLabel>Table Name</NewLabel>
             <Input type="text" name="tableName" ref={register} />
           </TextInputGroup>
-          <NewLabel>CSV File</NewLabel>
           <FlexLabel>
             <input type="radio" name="fileRadio" value="link" ref={register} />
             Link

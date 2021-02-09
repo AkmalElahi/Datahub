@@ -117,6 +117,7 @@ export const uploadThenCreateProductThunk = (
       dataSource
     )
     console.log(product)
+    dispatch(createProductSuccess(product))
   } catch (err) {
     dispatch(getProductFailure(err.toString()))
   }
