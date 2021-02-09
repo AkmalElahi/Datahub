@@ -54,7 +54,10 @@ export const ProductPage = () => {
   }, [dispatch, product, productSlug])
 
   const setTab = useCallback(
-    (tab: currentTab) => dispatch(setCurrentTab(tab)),
+    (tab: currentTab) => {
+      dispatch(setCurrentTab(tab))
+      dispatch(setCurrentSource(0))
+    },
     [dispatch]
   )
 
@@ -95,7 +98,10 @@ export const ProductPage = () => {
     renderedContent = <ViewsTab productName={productSlug} viewName={viewName} />
   } else if (tab === 'publish') {
     renderedContent = (
-      <PublishTab productName={productSlug || ''} tableName={tableName || ''} />
+      <PublishTab
+        productName={productSlug || ''}
+        previewPage={product.preview_view_page}
+      />
     )
   }
   return (

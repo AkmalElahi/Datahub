@@ -114,6 +114,9 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         {currentView && (
           <ViewHeader
+            viewType={
+              currentView.view_metadata?.card_view ? 'Card View' : 'Table View'
+            }
             productTitle={currentView.view_metadata?.product_name || ''}
             register={register}
           />

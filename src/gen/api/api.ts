@@ -74,13 +74,13 @@ export interface CSVDataSource {
      * @type {string}
      * @memberof CSVDataSource
      */
-    filename?: string;
+    filename?: string | null;
     /**
      * Publish ULR link to the file.
      * @type {string}
      * @memberof CSVDataSource
      */
-    file_link?: string;
+    file_link?: string | null;
     /**
      * If CSV file has header. If null, Backend will infer from file.
      * @type {boolean}
@@ -94,6 +94,12 @@ export interface CSVDataSource {
  * @interface CardViewMetadata
  */
 export interface CardViewMetadata {
+    /**
+     * Title of the View. Not attach to a row, but for overall View. In Most cases will be seen by Maker.
+     * @type {string}
+     * @memberof CardViewMetadata
+     */
+    title?: string | null;
     /**
      * Column name to use to display a Card title.
      * @type {string}

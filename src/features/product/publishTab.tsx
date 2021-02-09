@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import { RootState } from '../../app/rootReducer'
 
+import { ViewPage } from '../../gen/api/api'
 import { PublishHeader } from './publishHeader'
 import { PublishMetadataSection } from './publishMetadata'
 import { TableView } from '../../components/TableView'
@@ -20,10 +21,10 @@ const ContentBox = styled.div`
 
 interface Props {
   productName: string
-  tableName: string
+  previewPage: ViewPage | undefined
 }
 
-export const PublishTab = ({ productName, tableName }: Props) => {
+export const PublishTab = ({ productName, previewPage }: Props) => {
   const dispatch = useDispatch()
 
   const { register, errors, handleSubmit } = useForm<FormData>()
@@ -34,27 +35,8 @@ export const PublishTab = ({ productName, tableName }: Props) => {
     (state: RootState) => state.product
   )
 
-  const { tablesByName, error: tableError } = useSelector(
-    (state: RootState) => state.tables
-  )
-
-  let currentTable = tablesByName[tableName]
+  let currentTable = previewPage
   let currentProduct = product
-
-  useEffect(() => {
-    if (!currentTable && tableName !== '') {
-      dispatch(fetchTable(productName, tableName))
-    }
-  }, [dispatch, currentProduct, productName, tableName])
-
-  if (productError) {
-    return (
-      <div>
-        <h1>Something went wrong...</h1>
-        <div>{productError.toString()}</div>
-      </div>
-    )
-  }
 
   let columnHeaders: (string | null | undefined)[] = []
 
