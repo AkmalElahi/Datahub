@@ -246,9 +246,9 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
     </option>
   ))
 
-  let renderedOptions = fields?.map((col) => (
-    <option value={col.column.column_name} key={col.column.column_name}>
-      {col.column.column_name}
+  let renderedOptions = possibleViews?.possible_column_list?.map((col) => (
+    <option value={col.column_name} key={col.column_name}>
+      {col.column_name}
     </option>
   ))
 

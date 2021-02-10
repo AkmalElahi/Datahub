@@ -36,7 +36,6 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
   const { register, errors, handleSubmit } = useForm<FormData>()
 
   const onSubmit = (data) => {
-    console.log(draftMetadata)
     if (draftMetadata.edited) {
       dispatch(postViewMetadata(draftMetadata.metadata))
     }

@@ -63,9 +63,10 @@ export const ProductPage = () => {
     [dispatch]
   )
   const setProductSource = (source: number) => {
-    const name =
+    let name
+    const table =
       product.product_full_metadata?.table_full_metadata_list?.[source]
-        .table_metadata?.name
+    if (table) name = table.table_metadata?.name
     if (name) dispatch(setSource(source, !tablesByName[name], name))
     else dispatch(setSource(source))
   }
