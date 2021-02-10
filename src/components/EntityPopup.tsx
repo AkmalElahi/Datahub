@@ -171,7 +171,7 @@ export const EntityPopup = ({ close, entities, table, index }: Props) => {
       <button className="close" onClick={close}>
         &times;
       </button>
-      <div className="header">New Entity</div>
+      <div className="header">Select Entity</div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="content">
           <FlexLabel>
