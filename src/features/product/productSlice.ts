@@ -6,6 +6,7 @@ import {
   ProductFullMetadata,
   ColumnMetadata,
   TableMetadata,
+  ProductMetadata,
 } from '../../gen/api/api'
 import {
   Product,
@@ -13,6 +14,7 @@ import {
   createProductAPI,
   createTableAPI,
   uploadFileAPI,
+  publishProductAPI,
 } from '../../api/swaggerAPI'
 import {
   createTableStart,
@@ -55,6 +57,7 @@ const product = createSlice({
     getProductStart: startLoading,
     createProductStart: startLoading,
     uploadFileStart: startLoading,
+    publishUnpublishStart: startLoading,
     getProductSuccess(state, { payload }: PayloadAction<Product>) {
       const { product } = payload
       state.isLoading = false
@@ -77,9 +80,19 @@ const product = createSlice({
     ) {
       state.product.product_full_metadata = payload
     },
+    publishUnpublishSuccess(
+      state,
+      { payload }: PayloadAction<ProductMetadata>
+    ) {
+      state.isLoading = false
+      state.error = null
+      if (state.product.product_full_metadata)
+        state.product.product_full_metadata.product_metadata = payload
+    },
     getProductFailure: loadingFailed,
     createProductFailure: loadingFailed,
     uploadFileFailure: loadingFailed,
+    publishUnpublishFailure: loadingFailed,
   },
 })
 
@@ -87,12 +100,15 @@ export const {
   getProductStart,
   createProductStart,
   uploadFileStart,
+  publishUnpublishStart,
   getProductSuccess,
   createProductSuccess,
   uploadFileSuccess,
+  publishUnpublishSuccess,
   getProductFailure,
   createProductFailure,
   uploadFileFailure,
+  publishUnpublishFailure,
   updateProductMetadata,
 } = product.actions
 
@@ -179,5 +195,23 @@ export const fetchProduct = (productName: string): AppThunk => async (
     dispatch(getProductSuccess(product))
   } catch (err) {
     dispatch(getProductFailure(err.toString()))
+  }
+}
+
+export const publishUnpublish = (
+  productName: string,
+  published: boolean
+): AppThunk => async (dispatch) => {
+  try {
+    dispatch(publishUnpublishStart())
+    const sessionId = localStorage.getItem('user') || ''
+    const product = await publishProductAPI(
+      sessionId,
+      productName,
+      published.toString()
+    )
+    dispatch(publishUnpublishSuccess(product))
+  } catch (err) {
+    dispatch(publishUnpublishFailure(err.toString()))
   }
 }

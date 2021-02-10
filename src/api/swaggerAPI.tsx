@@ -273,3 +273,20 @@ export async function uploadFileAPI(
     throw err
   }
 }
+
+export async function publishProductAPI(
+  sessionId: string,
+  productName: string,
+  published: string
+) {
+  try {
+    const response = await apiService.publishProductPost(
+      sessionId,
+      productName,
+      published
+    )
+    return response.data
+  } catch (err) {
+    throw err
+  }
+}

@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { RootState } from '../../app/rootReducer'
 
 import { ViewPage } from '../../gen/api/api'
+import { publishUnpublish } from './productSlice'
 import { PublishHeader } from './publishHeader'
 import { PublishMetadataSection } from './publishMetadata'
 import { TableView } from '../../components/TableView'
@@ -29,7 +30,11 @@ export const PublishTab = ({ productName, previewPage }: Props) => {
 
   const { register, errors, handleSubmit } = useForm<FormData>()
 
-  const onSubmit = (data) => {}
+  const onSubmit = (data) => {
+    const isPublished =
+      currentProduct.product_full_metadata?.product_metadata?.published
+    dispatch(publishUnpublish(productName, !isPublished))
+  }
 
   const { product, isLoading, error: productError } = useSelector(
     (state: RootState) => state.product
@@ -73,7 +78,15 @@ export const PublishTab = ({ productName, previewPage }: Props) => {
   return (
     <React.Fragment>
       <form onSubmit={handleSubmit(onSubmit)}>
-        {currentProduct && <PublishHeader register={register} />}
+        {currentProduct && (
+          <PublishHeader
+            isPublished={
+              currentProduct.product_full_metadata?.product_metadata
+                ?.published || false
+            }
+            register={register}
+          />
+        )}
         <ContentBox>{renderedMetadata}</ContentBox>
       </form>
       <ContentBox>

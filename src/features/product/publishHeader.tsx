@@ -55,10 +55,11 @@ const SaveButton = styled(Button)`
 `
 
 interface Props {
+  isPublished: boolean
   register: ReturnType<typeof useForm>['register']
 }
 
-export const PublishHeader = ({ register }: Props) => {
+export const PublishHeader = ({ isPublished, register }: Props) => {
   return (
     <FlexRow>
       <FlexColumn></FlexColumn>
@@ -66,7 +67,7 @@ export const PublishHeader = ({ register }: Props) => {
         <ButtonGroup>
           <AddDataButton>Save</AddDataButton>
           <SaveButton type="submit" ref={register}>
-            Publish
+            {isPublished ? 'Unpublish' : 'Publish'}
           </SaveButton>
         </ButtonGroup>
       </FlexColumn>
