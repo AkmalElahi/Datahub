@@ -19,7 +19,7 @@ import {
   createTableSuccess,
   createTableFailure,
 } from './tableSlice'
-import { setCurrentSource } from './tabDisplaySlice'
+import { setSource } from './tabDisplaySlice'
 import { AppThunk } from '../../app/store'
 
 interface ProductState {
@@ -156,9 +156,11 @@ export const uploadThenAddThunk = (
         dispatch(updateProductMetadata(table.product_full_metadata))
       if (dataType === 'table')
         dispatch(
-          setCurrentSource(
+          setSource(
             getState().product.product.product_full_metadata
-              .table_full_metadata_list.length - 1
+              .table_full_metadata_list.length - 1,
+            false,
+            tableName
           )
         )
     }

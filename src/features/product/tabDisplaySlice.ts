@@ -1,4 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { AppThunk } from '../../app/store'
+
+import { resetDraftEntities } from './tableSlice'
 
 export interface currentTab {
   tab: string
@@ -30,3 +33,13 @@ const tabDisplaySlice = createSlice({
 export const { setCurrentTab, setCurrentSource } = tabDisplaySlice.actions
 
 export default tabDisplaySlice.reducer
+
+export const setSource = (
+  source: number | string,
+  initialLoad?: boolean,
+  sourceName?: string
+): AppThunk => async (dispatch) => {
+  dispatch(setCurrentSource(source))
+  if (!initialLoad && typeof source === 'number')
+    dispatch(resetDraftEntities(sourceName))
+}

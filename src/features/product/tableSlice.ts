@@ -57,30 +57,6 @@ const tables = createSlice({
       state.isLoading = false
       state.error = null
       state.tablesByName[table.table_metadata?.name || 'none'] = table
-
-      table.column_metadata_list?.forEach((col, i) => {
-        let entity: EntityFullMetadata | null = {}
-        const foundEntity = table.entity_metadata_candidate_list_list?.[
-          i
-        ].entity_metadata_list?.find((e) => e.name === col.entity_name)
-
-        if (col.entity_name !== null) {
-          entity = {
-            entity_metadata: {
-              name: foundEntity?.name,
-              title: foundEntity?.title,
-              description: foundEntity?.description,
-            },
-          }
-        }
-
-        let draft: DraftEntity = {
-          entity: entity,
-          columnIndex: i,
-          edited: false,
-        }
-        state.draftEntities[i] = draft
-      })
     },
     createTableSuccess(state, { payload }: PayloadAction<TableConstructor>) {
       state.isLoading = false
@@ -112,6 +88,40 @@ const tables = createSlice({
     createTableFailure: loadingFailed,
     upsertTableMetadataFailure: loadingFailed,
     upsertEntityMetadataFailure: loadingFailed,
+    resetDraftEntities(
+      state,
+      { payload }: PayloadAction<Table | string | undefined>
+    ) {
+      if (payload) {
+        let table
+        if (typeof payload === 'string') table = state.tablesByName[payload]
+        else table = payload.table
+        state.draftEntities = []
+        table.column_metadata_list?.forEach((col, i) => {
+          let entity: EntityFullMetadata | null = {}
+          const foundEntity = table.entity_metadata_candidate_list_list?.[
+            i
+          ].entity_metadata_list?.find((e) => e.name === col.entity_name)
+
+          if (col.entity_name !== null) {
+            entity = {
+              entity_metadata: {
+                name: foundEntity?.name,
+                title: foundEntity?.title,
+                description: foundEntity?.description,
+              },
+            }
+          }
+
+          let draft: DraftEntity = {
+            entity: entity,
+            columnIndex: i,
+            edited: false,
+          }
+          state.draftEntities[i] = draft
+        })
+      }
+    },
   },
 })
 
@@ -153,6 +163,7 @@ export const {
   upsertTableMetadataFailure,
   upsertEntityMetadataFailure,
   draftEntityMetadata,
+  resetDraftEntities,
 } = tables.actions
 
 export default tables.reducer
@@ -165,6 +176,7 @@ export const fetchTable = (
     dispatch(getTableStart())
     const sessionId = localStorage.getItem('user') || ''
     const table = await getTableAPI(sessionId, productName, tableName)
+    dispatch(resetDraftEntities(table))
     dispatch(getTableSuccess(table))
   } catch (err) {
     dispatch(getTableFailure(err.toString()))

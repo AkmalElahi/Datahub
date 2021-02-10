@@ -13,7 +13,7 @@ import { DataTab } from './dataTab'
 import { ViewsTab } from './viewsTab'
 import { PublishTab } from './publishTab'
 import { fetchProduct } from './productSlice'
-import { currentTab, setCurrentTab, setCurrentSource } from './tabDisplaySlice'
+import { currentTab, setCurrentTab, setSource } from './tabDisplaySlice'
 
 const FlexRow = styled.div`
   display: flex;
@@ -49,22 +49,26 @@ export const ProductPage = () => {
     (state: RootState) => state.product
   )
 
+  const { tablesByName } = useSelector((state: RootState) => state.tables)
+
   useEffect(() => {
     if (isEmpty(product)) dispatch(fetchProduct(productSlug))
   }, [dispatch, product, productSlug])
 
-  const setTab = useCallback(
+  const setProductTab = useCallback(
     (tab: currentTab) => {
       dispatch(setCurrentTab(tab))
-      dispatch(setCurrentSource(0))
+      dispatch(setSource(0, isEmpty(tablesByName)))
     },
     [dispatch]
   )
-
-  const setSource = useCallback(
-    (source: number) => dispatch(setCurrentSource(source)),
-    [dispatch]
-  )
+  const setProductSource = (source: number) => {
+    const name =
+      product.product_full_metadata?.table_full_metadata_list?.[source]
+        .table_metadata?.name
+    if (name) dispatch(setSource(source, !tablesByName[name], name))
+    else dispatch(setSource(source))
+  }
 
   let renderedContent
   //TODO: normalize data?
@@ -112,8 +116,8 @@ export const ProductPage = () => {
           <ProductSidebar
             sources={tableMetadataList}
             views={viewMetadataList}
-            setSource={setSource}
-            setTab={setTab}
+            setSource={setProductSource}
+            setTab={setProductTab}
           />
         </LeftColumn>
         <RightColumn>{renderedContent}</RightColumn>
