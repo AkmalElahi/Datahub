@@ -95,7 +95,13 @@ export const LandingPage = () => {
             }
             modal
           >
-            {(close) => <DataSourcePopup close={close} addType="product" />}
+            {(close) => (
+              <DataSourcePopup
+                close={close}
+                uploadType="data"
+                dataType="product"
+              />
+            )}
           </StyledPopup>
           <Link to="/my-products">
             <ViewDataButton>View My Data Products</ViewDataButton>

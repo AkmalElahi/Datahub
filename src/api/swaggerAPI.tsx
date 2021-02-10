@@ -66,6 +66,33 @@ export async function getTableAPI(
   }
 }
 
+export async function createTableAPI(
+  sessionId: string,
+  productName: string,
+  tableName: string,
+  addDefaultViews: string,
+  filename?: string,
+  fileLink?: string,
+  dataSource?: DataSource,
+  options?: any
+) {
+  try {
+    const response = await apiService.addTableUploadFilePost(
+      sessionId,
+      productName,
+      tableName,
+      addDefaultViews,
+      filename,
+      fileLink,
+      dataSource,
+      options
+    )
+    return response.data
+  } catch (err) {
+    throw err
+  }
+}
+
 export async function getViewAPI(
   sessionId: string,
   productName: string,
@@ -232,8 +259,7 @@ export async function uploadFileAPI(
   options: any = {}
 ) {
   try {
-    if (file)
-        console.log("From dropped file")
+    if (file) console.log('From dropped file')
     console.log(publicLink)
     const response = await apiService.uploadFilePost(
       category,

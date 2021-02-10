@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useForm, Controller } from 'react-hook-form'
 import { useDropzone } from 'react-dropzone'
-import { uploadThenCreateProductThunk } from '../features/product/productSlice'
+import { uploadThenAddThunk } from '../features/product/productSlice'
 import { RootState } from '../app/rootReducer'
 
 const Container = styled.div`
@@ -136,7 +136,9 @@ const RightColumn = styled.div`
 
 interface Props {
   close: any
-  addType: 'product' | 'table'
+  productName?: string
+  uploadType: 'data' | 'image'
+  dataType: 'product' | 'table'
 }
 
 interface DropzoneProps {
@@ -170,7 +172,12 @@ const Dropzone = ({ onChange }: DropzoneProps) => {
   )
 }
 
-export const DataSourcePopup = ({ close, addType }: Props) => {
+export const DataSourcePopup = ({
+  close,
+  uploadType,
+  dataType,
+  productName,
+}: Props) => {
   const dispatch = useDispatch()
   const { isLoading, error: ProductError } = useSelector(
     (state: RootState) => state.product
@@ -180,12 +187,20 @@ export const DataSourcePopup = ({ close, addType }: Props) => {
   let checked
   let renderedError
 
-  const { control, register, errors, handleSubmit } = useForm<FormData>()
-  const onSubmit = async (data) => {
+  const {
+    control: control2,
+    register: register2,
+    errors: errors2,
+    handleSubmit: handleSubmit2,
+  } = useForm<FormData>()
+
+  const onSubmitSource = async (data) => {
     let result = await dispatch(
-      uploadThenCreateProductThunk(
-        data.productName,
+      uploadThenAddThunk(
+        productName ? productName : data.productName,
         data.tableName,
+        uploadType,
+        dataType,
         data.fileRadio,
         data.addViews ? 'true' : 'false',
         data.fileRadio === 'link' ? data.newLink : undefined,
@@ -193,7 +208,7 @@ export const DataSourcePopup = ({ close, addType }: Props) => {
       )
     )
     close()
-    navigate('/' + data.productName)
+    if (!productName) navigate('/' + data.productName)
   }
   if (ProductError) {
     renderedError = (
@@ -210,31 +225,42 @@ export const DataSourcePopup = ({ close, addType }: Props) => {
         &times;
       </button>
       <div className="header">Add Data Source</div>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form key={1} onSubmit={handleSubmit2(onSubmitSource)}>
         <div className="content">
           <TextInputGroup>
-            {addType === 'product' && <NewLabel>Product Name</NewLabel>}
-            <Input type="text" name="productName" ref={register} />
+            {dataType === 'product' && <NewLabel>Product Name</NewLabel>}
+            {productName ? (
+              <Input
+                type="text"
+                name="productName"
+                value={productName}
+                ref={register2}
+                disabled
+              />
+            ) : (
+              <Input type="text" name="productName" ref={register2} />
+            )}
+
             <NewLabel>Table Name</NewLabel>
-            <Input type="text" name="tableName" ref={register} />
+            <Input type="text" name="tableName" ref={register2} />
           </TextInputGroup>
           <FlexLabel>
-            <input type="radio" name="fileRadio" value="link" ref={register} />
+            <input type="radio" name="fileRadio" value="link" ref={register2} />
             Link
-            <InlineInput name="newLink" ref={register} />
+            <InlineInput name="newLink" ref={register2} />
           </FlexLabel>
           <RadioLabel>
             <input
               type="radio"
               name="fileRadio"
               value="upload"
-              ref={register}
+              ref={register2}
             />
             Upload
           </RadioLabel>
           <Controller
             name="file"
-            control={control}
+            control={control2}
             defaultValue=""
             render={({ onChange }) => (
               <Dropzone onChange={(e) => onChange(e.target.files?.[0])} />
@@ -251,7 +277,7 @@ export const DataSourcePopup = ({ close, addType }: Props) => {
                 type="checkbox"
                 name="addViews"
                 style={{ marginRight: '10px' }}
-                ref={register}
+                ref={register2}
                 value="true"
                 defaultChecked={true}
               />
@@ -267,7 +293,7 @@ export const DataSourcePopup = ({ close, addType }: Props) => {
               >
                 Cancel
               </CancelButton>
-              <DoneButton name="entitySubmit" type="submit" ref={register}>
+              <DoneButton name="entitySubmit" type="submit" ref={register2}>
                 Upload
               </DoneButton>
             </ButtonGroup>

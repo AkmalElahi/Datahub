@@ -49,6 +49,7 @@ const tables = createSlice({
   initialState: tablesInitialState,
   reducers: {
     getTableStart: startLoading,
+    createTableStart: startLoading,
     upsertTableMetadataStart: startLoading,
     upsertEntityMetadataStart: startLoading,
     getTableSuccess(state, { payload }: PayloadAction<Table>) {
@@ -81,6 +82,11 @@ const tables = createSlice({
         state.draftEntities[i] = draft
       })
     },
+    createTableSuccess(state, { payload }: PayloadAction<TableConstructor>) {
+      state.isLoading = false
+      state.error = null
+      state.tablesByName[payload.table_metadata?.name || 'none'] = payload
+    },
     upsertTableMetadataSuccess(
       state,
       { payload }: PayloadAction<TableConstructor>
@@ -103,6 +109,7 @@ const tables = createSlice({
       state.draftEntities[payload.columnIndex] = payload
     },
     getTableFailure: loadingFailed,
+    createTableFailure: loadingFailed,
     upsertTableMetadataFailure: loadingFailed,
     upsertEntityMetadataFailure: loadingFailed,
   },
@@ -134,12 +141,15 @@ const updateProductThunk = (metadata: TableConstructor) => {
 
 export const {
   getTableStart,
+  createTableStart,
   upsertTableMetadataStart,
   upsertEntityMetadataStart,
   getTableSuccess,
+  createTableSuccess,
   upsertTableMetadataSuccess,
   upsertEntityMetadataSuccess,
   getTableFailure,
+  createTableFailure,
   upsertTableMetadataFailure,
   upsertEntityMetadataFailure,
   draftEntityMetadata,

@@ -1,6 +1,8 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
+import Popup from 'reactjs-popup'
+import { DataSourcePopup } from '../../components/DataSourcePopup'
 
 const FlexRow = styled.div`
   display: flex;
@@ -54,12 +56,42 @@ const SaveButton = styled(Button)`
   margin-left: 10px;
 `
 
+const StyledPopup = styled(Popup)`
+  &-content {
+    border: none;
+    border-radius: 8px;
+    max-width: 480px;
+
+    .modal {
+      padding: 2rem;
+
+      >.close {
+        cursor: pointer;
+        position: absolute;
+        display: block;
+        padding: 2px 5px;
+        right: 20px;
+        font-size: 36px;
+        font-weight: 600;
+        border: none;
+        background-color: transparent;
+        outline: none;
+      }
+      >.header {
+        font-size: 2em;
+        font-weight: 500;
+        margin-bottom: 1rem;
+      }
+  }
+`
+
 interface Props {
+  productName: string
   tableTitle: string
   register: ReturnType<typeof useForm>['register']
 }
 
-export const ProductHeader = ({ tableTitle, register }: Props) => {
+export const ProductHeader = ({ productName, tableTitle, register }: Props) => {
   return (
     <FlexRow>
       <FlexColumn>
@@ -67,7 +99,19 @@ export const ProductHeader = ({ tableTitle, register }: Props) => {
       </FlexColumn>
       <FlexColumn>
         <ButtonGroup>
-          <AddDataButton>Add Data Source</AddDataButton>
+          <StyledPopup
+            trigger={<AddDataButton>Add Data Source</AddDataButton>}
+            modal
+          >
+            {(close) => (
+              <DataSourcePopup
+                close={close}
+                productName={productName}
+                uploadType="data"
+                dataType="table"
+              />
+            )}
+          </StyledPopup>
           <SaveButton name="submit" type="submit" ref={register}>
             Save
           </SaveButton>

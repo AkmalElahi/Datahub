@@ -4,19 +4,33 @@ import {
   FileParams,
   ProductConstructor,
   ProductFullMetadata,
+  ColumnMetadata,
+  TableMetadata,
 } from '../../gen/api/api'
 import {
   Product,
   getProductConstructorAPI,
   createProductAPI,
+  createTableAPI,
   uploadFileAPI,
 } from '../../api/swaggerAPI'
+import {
+  createTableStart,
+  createTableSuccess,
+  createTableFailure,
+} from './tableSlice'
+import { setCurrentSource } from './tabDisplaySlice'
 import { AppThunk } from '../../app/store'
 
 interface ProductState {
   product: ProductConstructor
   isLoading: boolean
   error: string | null
+}
+
+interface NewTable {
+  column_metadata_list: ColumnMetadata[] | undefined
+  table_metadata: TableMetadata | undefined
 }
 
 const productInitialState = {
@@ -84,42 +98,72 @@ export const {
 
 export default product.reducer
 
-export const uploadThenCreateProductThunk = (
+export const uploadThenAddThunk = (
   productName: string,
   tableName: string,
-  uploadType: 'link' | 'upload',
+  uploadType: 'data' | 'image',
+  dataType: 'product' | 'table',
+  fileType: 'link' | 'upload',
   addViews: string,
   publicLink?: string,
   file?: FormData
-) => async (dispatch) => {
+) => async (dispatch, getState) => {
   let fileParams
   try {
     dispatch(uploadFileStart())
-    fileParams = await uploadFileAPI('data', publicLink, file)
-    console.log(fileParams)
+    fileParams = await uploadFileAPI(uploadType, publicLink, file)
     dispatch(uploadFileSuccess(fileParams))
 
-    dispatch(createProductStart())
-    const sessionId = localStorage.getItem('user') || ''
-    const dataSource = {
-      csv_data_source: {
-        filename: fileParams.filename,
-        file_link: fileParams.public_link,
-      },
+    if (dataType === 'product') {
+      dispatch(createProductStart())
+      const sessionId = localStorage.getItem('user') || ''
+      const dataSource = {
+        csv_data_source: {
+          filename: fileParams.filename,
+          file_link: fileParams.public_link,
+        },
+      }
+      const product = await createProductAPI(
+        sessionId,
+        productName,
+        tableName,
+        addViews,
+        fileParams.filename,
+        fileParams.public_link,
+        dataSource
+      )
+      dispatch(createProductSuccess(product))
+    } else if (dataType === 'table') {
+      dispatch(createTableStart())
+      const sessionId = localStorage.getItem('user') || ''
+      const dataSource = {
+        csv_data_source: {
+          filename: fileParams.filename,
+          file_link: fileParams.public_link,
+        },
+      }
+      const table = await createTableAPI(
+        sessionId,
+        productName,
+        tableName,
+        addViews,
+        fileParams.filename,
+        fileParams.public_link,
+        dataSource
+      )
+      dispatch(createTableSuccess(table))
+      if (table.product_full_metadata)
+        dispatch(updateProductMetadata(table.product_full_metadata))
+      if (dataType === 'table')
+        dispatch(
+          setCurrentSource(
+            getState().product.product.product_full_metadata
+              .table_full_metadata_list.length - 1
+          )
+        )
     }
-    const product = await createProductAPI(
-      sessionId,
-      productName,
-      tableName,
-      addViews,
-      fileParams.filename,
-      fileParams.public_link,
-      dataSource
-    )
-    console.log(product)
-    dispatch(createProductSuccess(product))
   } catch (err) {
-    dispatch(getProductFailure(err.toString()))
+    dispatch(createProductFailure(err.toString()))
   }
 }
 
@@ -134,23 +178,4 @@ export const fetchProduct = (productName: string): AppThunk => async (
   } catch (err) {
     dispatch(getProductFailure(err.toString()))
   }
-}
-
-export const createProduct = (
-  productName: string,
-  tableName: string,
-  uploadType: 'link' | 'upload',
-  addViews: string,
-  publicLink?: string,
-  file?: FormData
-) => {
-  console.log('test')
-  uploadThenCreateProductThunk(
-    productName,
-    tableName,
-    uploadType,
-    addViews,
-    publicLink,
-    file
-  )
 }

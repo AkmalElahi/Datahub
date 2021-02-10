@@ -273,7 +273,7 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
   let renderedForm: JSX.Element[] = []
 
   fields?.forEach((col, key) => {
-    const watchClickable = watch(`columns[${key}].on_click_view`)
+    const watchClickable = watch(`on_click_view${key}`)
     renderedForm.push(
       <ButtonGroup>
         <DeleteButton onClick={() => remove(key)}>Delete</DeleteButton>

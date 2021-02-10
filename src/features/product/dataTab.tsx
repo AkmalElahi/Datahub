@@ -48,6 +48,7 @@ export const DataTab = ({ productName, tableName, fullMetadata }: Props) => {
         ...temp,
       },
     }
+    console.log('test?')
 
     dispatch(postTableMetadata(combinedData, draftEntities, tableName))
   }
@@ -123,6 +124,7 @@ export const DataTab = ({ productName, tableName, fullMetadata }: Props) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         {currentTable && (
           <ProductHeader
+            productName={productName}
             tableTitle={currentTable.table_metadata?.title || ''}
             register={register}
           />
