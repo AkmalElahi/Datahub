@@ -3,6 +3,8 @@ import styled from 'styled-components'
 
 import { OnClickViewMetadata, ViewPage } from '../gen/api/api'
 
+import { TableView } from './TableView'
+
 const FlexRow = styled.div`
   display: flex;
   flex-direction: row;
@@ -80,16 +82,24 @@ export const CardView = ({ currentView, isPreview }: Props) => {
       </DataRow>
     )
   }
+
+  const renderedNestedViews = currentView?.nested_views?.map((view) => (
+    <TableView currentView={view} isPreview={false} />
+  ))
+
   return (
-    <CardBody>
-      <FlexRow>
-        <LeftColumn>
-          <ImagePlaceholder></ImagePlaceholder>
-        </LeftColumn>
-        <RightColumn>
-          <DataWrapper>{renderedData}</DataWrapper>
-        </RightColumn>
-      </FlexRow>
-    </CardBody>
+    <React.Fragment>
+      <CardBody>
+        <FlexRow>
+          <LeftColumn>
+            <ImagePlaceholder></ImagePlaceholder>
+          </LeftColumn>
+          <RightColumn>
+            <DataWrapper>{renderedData}</DataWrapper>
+          </RightColumn>
+        </FlexRow>
+      </CardBody>
+      {currentView?.nested_views && renderedNestedViews}
+    </React.Fragment>
   )
 }
