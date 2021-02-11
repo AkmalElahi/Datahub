@@ -65,14 +65,10 @@ export const PublishTab = ({ productName, previewPage }: Props) => {
     )
 
   let renderedTable =
-    isLoading || !currentTable ? (
+    isLoading || !currentTable || !previewPage ? (
       <h3>Loading...</h3>
     ) : (
-      <TableView
-        columnHeaders={columnHeaders}
-        data={currentTable.value_list_list}
-        isPreview={true}
-      />
+      <TableView currentView={previewPage} isPreview={true} />
     )
 
   return (

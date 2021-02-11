@@ -96,6 +96,7 @@ export const ProductPage = () => {
       <DataTab
         productName={productSlug}
         tableName={tableName || ''}
+        previewPage={product.preview_view_page}
         fullMetadata={tableMetadataList?.[source]}
       />
     )

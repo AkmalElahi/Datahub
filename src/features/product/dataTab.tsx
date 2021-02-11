@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 
-import { TableFullMetadata } from '../../gen/api/api'
+import { TableFullMetadata, ViewPage } from '../../gen/api/api'
 import { RootState } from '../../app/rootReducer'
 
 import { ProductHeader } from './productHeader'
@@ -29,28 +29,23 @@ type FormData = {
 interface Props {
   productName: string
   tableName: string
+  previewPage: ViewPage | undefined
   fullMetadata: TableFullMetadata | undefined
 }
 
-export const DataTab = ({ productName, tableName, fullMetadata }: Props) => {
+export const DataTab = ({
+  productName,
+  tableName,
+  previewPage,
+  fullMetadata,
+}: Props) => {
   const dispatch = useDispatch()
 
   const { register, errors, handleSubmit } = useForm<FormData>()
 
   const onSubmit = (data) => {
-    // TODO: remove when primary key is set
     const newMetadata = applyEntities(fullMetadata, draftEntities)
-    const temp = { ...data, primary_key_column_name: 'move_genre' }
-    const combinedData = {
-      ...newMetadata,
-      table_metadata: {
-        ...newMetadata.table_metadata,
-        ...temp,
-      },
-    }
-    console.log('test?')
-
-    dispatch(postTableMetadata(combinedData, draftEntities, tableName))
+    dispatch(postTableMetadata(newMetadata, draftEntities, tableName))
   }
 
   const {
@@ -100,11 +95,7 @@ export const DataTab = ({ productName, tableName, fullMetadata }: Props) => {
     isLoading || !currentTable ? (
       <h3>Loading...</h3>
     ) : (
-      <TableView
-        columnHeaders={columnHeaders}
-        data={currentTable.value_list_list}
-        isPreview={true}
-      />
+      <TableView currentView={previewPage} isPreview={true} />
     )
   let renderedMetadata =
     isLoading || !currentTable ? (

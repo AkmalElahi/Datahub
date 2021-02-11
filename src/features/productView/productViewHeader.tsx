@@ -84,7 +84,7 @@ export const ProductViewHeader = ({ viewTitles, setTab }: Props) => {
   ))
   return (
     <FlexRow>
-      <ViewsGroup>{renderedViews?.reverse()}</ViewsGroup>
+      <ViewsGroup>{renderedViews}</ViewsGroup>
       <LinksGroup>
         <ViewLink style={{ color: '#181d23' }}>Download as</ViewLink>
         <ViewLink>Embed to website</ViewLink>

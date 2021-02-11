@@ -86,13 +86,7 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
         />
       )
     } else if (currentView?.view_metadata?.table_view) {
-      renderedTable = (
-        <TableView
-          columnHeaders={columnHeaders}
-          data={currentView.preview_view_page?.value_list_list}
-          isPreview={true}
-        />
-      )
+      renderedTable = <TableView currentView={currentView} isPreview={true} />
     }
   }
 

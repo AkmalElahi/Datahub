@@ -10,11 +10,7 @@ import { ViewNavbar } from '../../components/ViewNavbar'
 import { fetchProductHome, fetchProductView } from './productViewSlice'
 import { TableView } from '../../components/TableView'
 import { ProductViewHeader } from './productViewHeader'
-import {
-  currentTab,
-  setCurrentTab,
-  setCurrentSource,
-} from '../product/tabDisplaySlice'
+import { currentTab, setCurrentTab } from '../product/tabDisplaySlice'
 
 const FlexRow = styled.div`
   display: flex;
@@ -91,13 +87,7 @@ export const ProductViewPage = () => {
     columnHeaders = currentView?.view_metadata?.table_view?.column_view_list?.map(
       (c) => c.title
     )
-    renderedContent = (
-      <TableView
-        columnHeaders={columnHeaders}
-        data={currentView.value_list_list}
-        isPreview={false}
-      />
-    )
+    renderedContent = <TableView currentView={currentView} isPreview={false} />
   }
 
   return (
