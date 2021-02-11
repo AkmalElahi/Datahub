@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import { OnClickViewMetadata, ViewPage } from '../gen/api/api'
+
 const FlexRow = styled.div`
   display: flex;
   flex-direction: row;
@@ -53,12 +55,21 @@ const DataValue = styled.div`
 `
 
 interface Props {
-  columnHeaders: (string | undefined)[]
-  data: string[] | undefined
+  currentView: ViewPage | undefined
   isPreview: boolean
 }
 
-export const CardView = ({ columnHeaders, data, isPreview }: Props) => {
+export const CardView = ({ currentView, isPreview }: Props) => {
+  let columnHeaders: string[] = []
+  let clickable: (OnClickViewMetadata | undefined)[] = []
+  const data: string[] | undefined = currentView?.value_list
+
+  if (currentView?.column_metadata_list) {
+    columnHeaders = currentView.column_metadata_list.map(
+      (meta) => meta.title || ''
+    )
+  }
+
   let renderedData: JSX.Element[] = []
 
   for (let x = 0; x < columnHeaders.length; x++) {

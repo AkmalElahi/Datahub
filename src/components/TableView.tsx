@@ -1,9 +1,11 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import cloneDeep from 'lodash/cloneDeep'
 import { Grid, _ } from 'gridjs-react'
 import 'gridjs/dist/theme/mermaid.css'
 import { OnClickViewMetadata, ViewPage } from '../gen/api/api'
+import { fetchProductView } from '../features/productView/productViewSlice'
 
 const GridContainer = styled.div`
   .gridjs-wrapper {
@@ -32,6 +34,7 @@ const GridContainer = styled.div`
 
 const Clickable = styled.div`
   cursor: pointer;
+  color: #4d9ef6;
 `
 
 interface Props {
@@ -40,31 +43,42 @@ interface Props {
 }
 
 export const TableView = ({ currentView, isPreview }: Props) => {
+  const dispatch = useDispatch()
   let columnHeaders: string[] = []
   let clickable: (OnClickViewMetadata | undefined)[] = []
+  let data: any[][] | undefined = []
 
   if (currentView?.column_metadata_list) {
     columnHeaders = currentView.column_metadata_list.map(
       (meta) => meta.title || ''
     )
   }
+  if (!isPreview) {
+    data = cloneDeep(currentView?.value_list_list)
+    currentView?.view_metadata?.table_view?.column_view_list?.forEach((col) => {
+      clickable.push(col.on_click_view)
+    })
+  } else data = currentView?.value_list_list
 
-  const data: any[][] | undefined = cloneDeep(currentView?.value_list_list)
-
-  currentView?.view_metadata?.table_view?.column_view_list?.forEach((col) => {
-    clickable.push(col.on_click_view)
-  })
-
-  const handleClick = (e) => {
-    console.log(e.target.innerText)
+  const handleClick = (e, onClickView) => {
+    dispatch(
+      fetchProductView(
+        onClickView.product_name,
+        onClickView.view_name,
+        onClickView.column_name,
+        e.target.innerText
+      )
+    )
   }
 
-  if (data) {
+  if (data && !isPreview) {
     for (let i = 0; i < data[0].length; i++) {
       for (let j = 0; j < data.length; j++) {
         if (clickable[i]) {
           data[j][i] = _(
-            <Clickable onClick={(e) => handleClick(e)}>{data[j][i]}</Clickable>
+            <Clickable onClick={(e) => handleClick(e, clickable[i])}>
+              {data[j][i]}
+            </Clickable>
           )
         }
       }

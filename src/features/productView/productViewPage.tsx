@@ -8,6 +8,7 @@ import { RootState } from '../../app/rootReducer'
 
 import { ViewNavbar } from '../../components/ViewNavbar'
 import { fetchProductHome, fetchProductView } from './productViewSlice'
+import { CardView } from '../../components/CardView'
 import { TableView } from '../../components/TableView'
 import { ProductViewHeader } from './productViewHeader'
 import { currentTab, setCurrentTab } from '../product/tabDisplaySlice'
@@ -69,7 +70,6 @@ export const ProductViewPage = () => {
   )
 
   let renderedContent
-  let columnHeaders
   let viewTitles
   if (!isEmpty(productViewsByName))
     viewTitles = productViewsByName[
@@ -84,10 +84,9 @@ export const ProductViewPage = () => {
       </div>
     )
   } else if (currentView?.view_metadata?.table_view) {
-    columnHeaders = currentView?.view_metadata?.table_view?.column_view_list?.map(
-      (c) => c.title
-    )
     renderedContent = <TableView currentView={currentView} isPreview={false} />
+  } else if (currentView?.view_metadata?.card_view) {
+    renderedContent = <CardView currentView={currentView} isPreview={false} />
   }
 
   return (

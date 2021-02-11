@@ -65,13 +65,6 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
     )
   }
 
-  let columnHeaders
-
-  if (currentView?.preview_view_page?.column_metadata_list)
-    columnHeaders = currentView?.preview_view_page?.column_metadata_list?.map(
-      (c) => c.title
-    )
-
   let renderedTable
 
   if (isLoading) {
@@ -80,13 +73,17 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
     if (currentView?.view_metadata?.card_view) {
       renderedTable = (
         <CardView
-          columnHeaders={columnHeaders}
-          data={currentView.preview_view_page?.value_list}
+          currentView={currentView.preview_view_page}
           isPreview={true}
         />
       )
     } else if (currentView?.view_metadata?.table_view) {
-      renderedTable = <TableView currentView={currentView} isPreview={true} />
+      renderedTable = (
+        <TableView
+          currentView={currentView.preview_view_page}
+          isPreview={true}
+        />
+      )
     }
   }
 

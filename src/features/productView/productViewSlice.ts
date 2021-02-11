@@ -72,8 +72,8 @@ export const fetchProductHome = (
       displayParams,
       options
     )
-    dispatch(getProductHomeSuccess(productView))
     dispatch(setCurrentTab({ tab: productView.view_metadata?.name || '' }))
+    dispatch(getProductHomeSuccess(productView))
   } catch (err) {
     dispatch(getProductHomeFailure(err.toString()))
   }
@@ -99,6 +99,7 @@ export const fetchProductView = (
       viewParams,
       options
     )
+    dispatch(setCurrentTab({ tab: productView.view_metadata?.name || '' }))
     dispatch(getProductViewSuccess(productView))
   } catch (err) {
     dispatch(getProductViewFailure(err.toString()))
