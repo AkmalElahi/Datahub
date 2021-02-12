@@ -181,8 +181,27 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
   })
 
   const onSubmit = (data) => {
+    // Easiest to pull on click data directly from the <select> string
+    let splitNames = data.columns.map((column) => {
+      const temp = column.on_click_view?.column_name?.split('/')
+      if (temp)
+        return {
+          product_name: temp?.[0],
+          column_name: temp?.[1],
+          view_name: temp?.[2],
+        }
+      else return null
+    })
     let newColumns = fields.map((field, i) => {
-      return { ...field.column, ...data.columns[i] } as ColumnViewMetadata
+      return {
+        ...field.column,
+        ...data.columns[i],
+        on_click_view: splitNames[i]
+          ? {
+              ...splitNames[i],
+            }
+          : null,
+      } as ColumnViewMetadata
     })
     let submitMetadata = {
       ...metadata,
@@ -240,9 +259,11 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
     const title = view?.column_view_list?.find((c) => c.column_name === v)
     setValue(`columnName${i}`, v)
     setValue(`columnTitle${i}`, title?.title)
+    setValue(`on_click_view${i}`, null)
     const temp = cloneDeep(fields[i])
     temp.column.column_name = v
     temp.column.column_title = title?.title
+    temp.column.on_click_view = null
     remove(i)
     insert(i, temp)
   }
