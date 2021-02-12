@@ -276,9 +276,9 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
       renderedClickList = col?.possible_on_click_list.map((column) => {
         return (
           <option
-            value={`${column?.view_metadata?.product_name}/${column?.view_metadata?.table_name}/${column?.view_metadata?.name}`}
+            value={`${column?.view_metadata?.product_name}/${column?.column_name_to}/${column?.view_metadata?.name}`}
             key={column?.view_metadata?.name}
-          >{`${column?.view_metadata?.product_name}/${column?.view_metadata?.table_name}/${column?.view_metadata?.name}`}</option>
+          >{`${column?.view_metadata?.product_name}/${column?.column_name_to}/${column?.view_metadata?.name}`}</option>
         )
       })
     } else renderedClickList = <option></option>
