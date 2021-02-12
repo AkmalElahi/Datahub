@@ -84,7 +84,7 @@ export const CardView = ({ currentView, isPreview }: Props) => {
   }
 
   const renderedNestedViews = currentView?.nested_views?.map((view) => (
-    <TableView currentView={view} isPreview={false} />
+    <TableView currentView={view} isPreview={isPreview} />
   ))
 
   return (

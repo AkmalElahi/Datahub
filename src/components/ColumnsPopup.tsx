@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { useForm, useFieldArray } from 'react-hook-form'
 
 import isEmpty from 'lodash/isEmpty'
+import cloneDeep from 'lodash/cloneDeep'
 
 import {
   ColumnViewMetadata,
@@ -157,6 +158,7 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
   const dispatch = useDispatch()
   const view = metadata?.card_view ? metadata?.card_view : metadata?.table_view
   const possibleProducts = possibleViews?.possible_additional_product_table_list
+  const possibleColumns = possibleViews?.possible_column_list
 
   const dataSetup: Data[] | undefined = view?.column_view_list?.map((col) => ({
     column: col,
@@ -173,7 +175,10 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
     },
   })
 
-  const { fields, append, remove } = useFieldArray({ control, name: 'columns' })
+  const { fields, append, insert, remove } = useFieldArray({
+    control,
+    name: 'columns',
+  })
 
   const onSubmit = (data) => {
     let newColumns = fields.map((field, i) => {
@@ -232,9 +237,31 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
   }
 
   const handleColumnChange = (v, i) => {
-    const title = view?.column_view_list?.find((e) => e.column_name === v)
+    const title = view?.column_view_list?.find((c) => c.column_name === v)
     setValue(`columnName${i}`, v)
     setValue(`columnTitle${i}`, title?.title)
+    const temp = cloneDeep(fields[i])
+    temp.column.column_name = v
+    temp.column.column_title = title?.title
+    remove(i)
+    insert(i, temp)
+  }
+
+  const ClickList = (v) => {
+    let renderedClickList
+    let col = possibleColumns?.find((c) => c.column_name === v.value)
+
+    if (col?.possible_on_click_list) {
+      renderedClickList = col?.possible_on_click_list.map((column) => {
+        return (
+          <option
+            value={`${column?.view_metadata?.product_name}/${column?.view_metadata?.table_name}/${column?.view_metadata?.name}`}
+            key={column?.view_metadata?.name}
+          >{`${column?.view_metadata?.product_name}/${column?.view_metadata?.table_name}/${column?.view_metadata?.name}`}</option>
+        )
+      })
+    } else renderedClickList = <option></option>
+    return renderedClickList
   }
 
   let renderedProducts = possibleProducts?.map((product) => (
@@ -269,14 +296,19 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
   }
 
   const watchColumns = watch('columns')
-
   let renderedForm: JSX.Element[] = []
 
   fields?.forEach((col, key) => {
     const watchClickable = watch(`on_click_view${key}`)
     renderedForm.push(
       <ButtonGroup>
-        <DeleteButton onClick={() => remove(key)}>Delete</DeleteButton>
+        <DeleteButton
+          onClick={() => {
+            if (fields.length > 1) remove(key)
+          }}
+        >
+          Delete
+        </DeleteButton>
       </ButtonGroup>
     )
     col.outside &&
@@ -350,15 +382,6 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
             <CheckLabel>
               <Input
                 type="checkbox"
-                name={`columns[${key}].add_filter`}
-                defaultChecked={col.column.add_filter}
-                ref={register()}
-              />
-              Add Filter by Column
-            </CheckLabel>
-            <CheckLabel>
-              <Input
-                type="checkbox"
                 name={`on_click_view${key}`}
                 defaultChecked={col.column.on_click_view}
                 ref={register()}
@@ -367,11 +390,26 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
             </CheckLabel>
             {watchClickable && (
               <Dropdown
-                name={`columns[${key}].clickToView`}
+                name={`columns[${key}].on_click_view.column_name`}
                 ref={register()}
-              ></Dropdown>
+              >
+                <ClickList value={col.column.column_name} />
+              </Dropdown>
             )}
           </BottomList>
+        </UList>
+        <UList>
+          <List>
+            <CheckLabel>
+              <Input
+                type="checkbox"
+                name={`columns[${key}].add_filter`}
+                defaultChecked={col.column.add_filter}
+                ref={register()}
+              />
+              Add Filter by Column
+            </CheckLabel>
+          </List>
         </UList>
         <Separator />
       </div>
