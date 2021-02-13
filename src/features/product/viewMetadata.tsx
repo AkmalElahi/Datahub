@@ -133,20 +133,12 @@ interface Props {
   errors: ReturnType<typeof useForm>['errors']
 }
 
-//type InputEvent = ChangeEvent<HTMLInputElement>
-//type ChangeHandler = (event: InputEvent) => void
-
 export const ViewMetadataSection = ({
   metadata,
   possibleViews,
   register,
   errors,
 }: Props) => {
-  //const [currentKey, setCurrentKey] = useState('0')
-
-  //const handleChange: ChangeHandler = event => {
-  //  setCurrentKey(event.target.value)
-  //}
   let renderTitleOptions = metadata?.card_view?.column_view_list?.map((c) => (
     <option value={c.title || ''} key={c.title}>
       {c.title}

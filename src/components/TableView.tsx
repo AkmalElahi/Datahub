@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
+import isEmpty from 'lodash/isEmpty'
 import cloneDeep from 'lodash/cloneDeep'
 import { Grid, _ } from 'gridjs-react'
 import 'gridjs/dist/theme/mermaid.css'
@@ -70,8 +71,7 @@ export const TableView = ({ currentView, isPreview }: Props) => {
       )
     )
   }
-
-  if (data && !isPreview) {
+  if (data && !isEmpty(data) && !isPreview) {
     for (let i = 0; i < data[0].length; i++) {
       for (let j = 0; j < data.length; j++) {
         if (clickable[i]) {

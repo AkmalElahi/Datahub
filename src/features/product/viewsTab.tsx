@@ -50,6 +50,8 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
 
   let currentView = viewsByName[viewName]
 
+  console.log(draftMetadata)
+
   useEffect(() => {
     if (!currentView) {
       dispatch(fetchView(productName, viewName))
