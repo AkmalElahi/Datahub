@@ -88,6 +88,7 @@ export const DataTab = ({
       <ColumnTypes
         metadata={currentTable.column_metadata_list}
         entities={draftEntities}
+        entityCandidates={currentTable.entity_metadata_candidate_list_list}
         table={tableName}
       />
     )

@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { WithContext as ReactTags } from 'react-tag-input'
 import { TagsContainer } from '../styles/tags'
 
-import { EntityFullMetadata } from '../gen/api/api'
+import { EntityFullMetadata, EntityMetadata } from '../gen/api/api'
 import { draftEntityMetadata } from '../features/product/tableSlice'
 
 const Input = styled.input`
@@ -116,7 +116,7 @@ const CancelButton = styled.button`
 
 interface Props {
   close: any
-  entities: string[] | null | undefined
+  entities: EntityMetadata[] | undefined
   table: string
   index: number
 }
@@ -130,7 +130,8 @@ export const EntityPopup = ({ close, entities, table, index }: Props) => {
   >([])
   const dispatch = useDispatch()
 
-  const { register, errors, handleSubmit } = useForm<FormData>()
+  const { register, watch, errors, handleSubmit } = useForm<FormData>()
+  const watchRadio = watch('entityRadio')
   const onSubmit = (data) => {
     let entity: EntityFullMetadata | undefined = {}
     if (data.entityRadio === 'new') {
@@ -141,6 +142,14 @@ export const EntityPopup = ({ close, entities, table, index }: Props) => {
           description: data.newDescription,
         },
         entity_tag_list: tags,
+      }
+    } else if (data.entityRadio === 'existing') {
+      const found = entities?.find((entity) => entity.name === data.entity)
+      if (found) {
+        entity = {
+          entity_metadata: found,
+          entity_tag_list: tags,
+        }
       }
     }
     dispatch(
@@ -160,9 +169,9 @@ export const EntityPopup = ({ close, entities, table, index }: Props) => {
   let renderExistingEntities
   let noEntities = false
   if (entities) {
-    renderExistingEntities = entities.map((entity) => (
-      <option value={entity} key={entity}>
-        {entity}
+    renderExistingEntities = entities?.map((entity) => (
+      <option value={entity.name} key={entity.name}>
+        {entity.title}
       </option>
     ))
   } else noEntities = true
@@ -174,7 +183,7 @@ export const EntityPopup = ({ close, entities, table, index }: Props) => {
       <div className="header">Select Entity</div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="content">
-          <FlexLabel>
+          <FlexLabel style={{ height: '33px' }}>
             <input
               type="radio"
               name="entityRadio"
@@ -183,14 +192,16 @@ export const EntityPopup = ({ close, entities, table, index }: Props) => {
               disabled={noEntities}
             />
             Existing
-            <Dropdown
-              name="entity"
-              id="existingDropdown"
-              ref={register}
-              disabled={noEntities}
-            >
-              {renderExistingEntities}
-            </Dropdown>
+            {watchRadio === 'existing' && (
+              <Dropdown
+                name="entity"
+                id="existingDropdown"
+                ref={register}
+                disabled={noEntities}
+              >
+                {renderExistingEntities}
+              </Dropdown>
+            )}
           </FlexLabel>
 
           <RadioLabel>
@@ -199,11 +210,25 @@ export const EntityPopup = ({ close, entities, table, index }: Props) => {
           </RadioLabel>
           <TextInputGroup>
             <NewLabel>Name</NewLabel>
-            <Input type="text" name="newName" ref={register} />
+            <Input
+              type="text"
+              name="newName"
+              ref={register}
+              disabled={watchRadio !== 'new'}
+            />
             <NewLabel>Title</NewLabel>
-            <Input type="text" name="newTitle" ref={register} />
+            <Input
+              type="text"
+              name="newTitle"
+              ref={register}
+              disabled={watchRadio !== 'new'}
+            />
             <NewLabel>Description</NewLabel>
-            <LargeInput name="newDescription" ref={register} />
+            <LargeInput
+              name="newDescription"
+              ref={register}
+              disabled={watchRadio !== 'new'}
+            />
             <NewLabel>Tags</NewLabel>
             <TagsContainer>
               <ReactTags

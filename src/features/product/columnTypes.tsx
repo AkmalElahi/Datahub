@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import Popup from 'reactjs-popup'
 import 'reactjs-popup/dist/index.css'
 
-import { ColumnMetadata } from '../../gen/api/api'
+import { ColumnMetadata, EntityMetadataCandidateList } from '../../gen/api/api'
 import { DraftEntity } from './tableSlice'
 import { EntityPopup } from '../../components/EntityPopup'
 
@@ -96,12 +96,18 @@ const StyledPopup = styled(Popup)`
 interface Props {
   metadata: ColumnMetadata[] | undefined
   entities: DraftEntity[]
+  entityCandidates: EntityMetadataCandidateList[] | undefined
   table: string
 }
 
 const DATA_TYPES = { 0: 'int', 1: 'float', 2: 'string', 3: 'boolean' }
 
-export const ColumnTypes = ({ metadata, entities, table }: Props) => {
+export const ColumnTypes = ({
+  metadata,
+  entities,
+  entityCandidates,
+  table,
+}: Props) => {
   let renderedNames = metadata?.map((meta) => (
     <FlexColumn key={meta.column_num}>
       <ColumnBox>{meta.name}</ColumnBox>
@@ -130,7 +136,7 @@ export const ColumnTypes = ({ metadata, entities, table }: Props) => {
           {(close) => (
             <EntityPopup
               close={close}
-              entities={metadata?.[i].entity_name_candidate_list}
+              entities={entityCandidates?.[i].entity_metadata_list}
               table={table}
               index={i}
             />
