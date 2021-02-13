@@ -192,7 +192,7 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
   )
 
   const [currentNestedProducts, setCurrentNestedProducts] = useState(
-    dataSetup?.map((col) => col.nested?.product_name || null)
+    dataSetup?.map((col) => col.nested || null)
   )
   const { fields, append, insert, remove } = useFieldArray({
     control,
@@ -309,12 +309,17 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
   // Handle adding nested view
   const handleAddNested = () => {
     let newMetadata: NestedViewMetadata | undefined = {}
+    let possibleView = possibleNestedViews?.[0].possible_view_list?.[0]
+    newMetadata = {
+      product_name: possibleView?.view_metadata?.product_name,
+      view_name: possibleView?.view_metadata?.name,
+      column_name_from: possibleView?.column_name_from,
+      column_name_to: possibleView?.column_name_to,
+    }
     const newCol = { nested: newMetadata }
+
     if (currentNestedProducts)
-      setCurrentNestedProducts([
-        ...currentNestedProducts,
-        possibleNestedViews?.[0].product_metadata?.name || null,
-      ])
+      setCurrentNestedProducts([...currentNestedProducts, newMetadata])
     append(newCol)
   }
 
@@ -334,12 +339,27 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
 
   // Nested view handler. Use local state to keep track of each field's selected nested product
   const handleNestedChange = (v, i) => {
+    let newMetadata: NestedViewMetadata | undefined = {}
+    let possibleView = possibleNestedViews?.find(
+      (view) => view.product_metadata?.name === v
+    )?.possible_view_list?.[0]
+    console.log({ possibleView }, v)
+    newMetadata = {
+      product_name: possibleView?.view_metadata?.product_name,
+      view_name: possibleView?.view_metadata?.name,
+      column_name_from: possibleView?.column_name_from,
+      column_name_to: possibleView?.column_name_to,
+    }
+    const newCol = { nested: newMetadata }
+
     if (currentNestedProducts) {
       setCurrentNestedProducts([
-        ...currentNestedProducts.slice(0, currentNestedProducts.length - 1),
-        v,
+        ...currentNestedProducts.slice(0, i),
+        newMetadata,
+        ...currentNestedProducts.slice(i + 1, currentNestedProducts.length),
       ])
     }
+    console.log('currentNestedProducts: ', currentNestedProducts)
   }
 
   // Rendered on click view options for dropdown. Requires column name
@@ -405,7 +425,7 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
   }
 
   // Rendered nested table options for dropdown. Selection is based on product name
-  const selectNestedTables = (product: string) => {
+  const selectNestedTables = (product: string, key: number) => {
     let index = possibleNestedViews?.findIndex(
       (element) => element?.product_metadata?.name === product
     )
@@ -415,6 +435,15 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
           <option
             value={`${table?.view_metadata?.name}/${table?.column_name_from}/${table?.column_name_to}`}
             key={`${table?.view_metadata?.name}/${table?.column_name_from}/${table?.column_name_to}`}
+            selected={
+              currentNestedProducts?.[key]?.product_name === product &&
+              currentNestedProducts?.[key]?.view_name ===
+                table?.view_metadata?.name &&
+              currentNestedProducts?.[key]?.column_name_from ===
+                table?.column_name_from &&
+              currentNestedProducts?.[key]?.column_name_to ===
+                table?.column_name_to
+            }
           >
             {`${table?.view_metadata?.name}/${table?.column_name_from}/${table?.column_name_to}`}
           </option>
@@ -463,7 +492,10 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
                 name={`columns[${key}].nested.view_name`}
                 ref={register()}
               >
-                {selectNestedTables(currentNestedProducts?.[key] || '')}
+                {selectNestedTables(
+                  currentNestedProducts?.[key]?.product_name || '',
+                  key
+                )}
               </Dropdown>
             </List>
           </UList>
