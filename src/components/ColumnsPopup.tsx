@@ -203,7 +203,7 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
     // On click view. Easiest to pull on click data directly from the <select> string
     let splitNames = data.columns.map((column) => {
       const temp = column.on_click_view?.column_name?.split('/')
-      if (temp)
+      if (temp && temp[0] !== '')
         return {
           product_name: temp?.[0],
           column_name: temp?.[1],
@@ -359,10 +359,9 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
   }
 
   // Rendered on click view options for dropdown. Requires column name
-  const ClickList = (v) => {
+  const clickList = (v) => {
     let renderedClickList
-    let col = possibleColumns?.find((c) => c.column_name === v.value)
-
+    let col = possibleColumns?.find((c) => c.column_name === v)
     if (col?.possible_on_click_list) {
       renderedClickList = col?.possible_on_click_list.map((column) => {
         return (
@@ -442,8 +441,9 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
   // Add proper forms to renderedForm based on contents of field array.
   const watchColumns = watch('columns')
   let renderedForm: JSX.Element[] = []
+
   fields?.forEach((col, key) => {
-    const watchClickable = watch(`on_click_view${key}`)
+    const watchClickable = watch(`on_click_view${key}`, '')
     renderedForm.push(
       <ButtonGroup>
         <DeleteButton
@@ -567,6 +567,11 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
                   name={`on_click_view${key}`}
                   defaultChecked={col.column.on_click_view}
                   ref={register()}
+                  disabled={
+                    !possibleColumns?.find(
+                      (c) => c?.column_name === col?.column?.column_name
+                    )?.possible_on_click_list
+                  }
                 />
                 On Click go to View
               </CheckLabel>
@@ -575,7 +580,7 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
                   name={`columns[${key}].on_click_view.column_name`}
                   ref={register()}
                 >
-                  <ClickList value={col.column.column_name} />
+                  {clickList(col.column.column_name)}
                 </Dropdown>
               )}
             </BottomList>
