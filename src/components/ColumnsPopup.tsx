@@ -261,7 +261,6 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
         table_view: { ...metadata.table_view, column_view_list: newColumns },
       }),
     } as ViewMetadata
-    console.log(submitMetadata)
     dispatch(draftMetadata({ metadata: submitMetadata, edited: true }))
     close()
   }
@@ -343,7 +342,6 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
     let possibleView = possibleNestedViews?.find(
       (view) => view.product_metadata?.name === v
     )?.possible_view_list?.[0]
-    console.log({ possibleView }, v)
     newMetadata = {
       product_name: possibleView?.view_metadata?.product_name,
       view_name: possibleView?.view_metadata?.name,
@@ -359,7 +357,6 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
         ...currentNestedProducts.slice(i + 1, currentNestedProducts.length),
       ])
     }
-    console.log('currentNestedProducts: ', currentNestedProducts)
   }
 
   // Rendered on click view options for dropdown. Requires column name
@@ -435,15 +432,6 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
           <option
             value={`${table?.view_metadata?.name}/${table?.column_name_from}/${table?.column_name_to}`}
             key={`${table?.view_metadata?.name}/${table?.column_name_from}/${table?.column_name_to}`}
-            selected={
-              currentNestedProducts?.[key]?.product_name === product &&
-              currentNestedProducts?.[key]?.view_name ===
-                table?.view_metadata?.name &&
-              currentNestedProducts?.[key]?.column_name_from ===
-                table?.column_name_from &&
-              currentNestedProducts?.[key]?.column_name_to ===
-                table?.column_name_to
-            }
           >
             {`${table?.view_metadata?.name}/${table?.column_name_from}/${table?.column_name_to}`}
           </option>
@@ -477,6 +465,7 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
               <Dropdown
                 name={`columns[${key}].nested.product_name`}
                 ref={register()}
+                defaultValue={currentNestedProducts?.[key]?.product_name || ''}
                 onChange={(event) =>
                   handleNestedChange(event.target.value, key)
                 }
@@ -491,6 +480,7 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
               <Dropdown
                 name={`columns[${key}].nested.view_name`}
                 ref={register()}
+                defaultValue={`${currentNestedProducts?.[key]?.view_name}/${currentNestedProducts?.[key]?.column_name_from}/${currentNestedProducts?.[key]?.column_name_to}`}
               >
                 {selectNestedTables(
                   currentNestedProducts?.[key]?.product_name || '',
