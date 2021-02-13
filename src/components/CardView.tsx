@@ -67,9 +67,10 @@ export const CardView = ({ currentView, isPreview }: Props) => {
   const data: string[] | undefined = currentView?.value_list
 
   if (currentView?.column_metadata_list) {
-    columnHeaders = currentView.column_metadata_list.map(
-      (meta) => meta.title || ''
-    )
+    columnHeaders =
+      currentView.view_metadata?.card_view?.column_view_list?.map(
+        (meta) => meta.title || ''
+      ) || []
   }
 
   let renderedData: JSX.Element[] = []

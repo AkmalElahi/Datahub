@@ -50,9 +50,10 @@ export const TableView = ({ currentView, isPreview }: Props) => {
   let data: any[][] | undefined = []
 
   if (currentView?.column_metadata_list) {
-    columnHeaders = currentView.column_metadata_list.map(
-      (meta) => meta.title || ''
-    )
+    columnHeaders =
+      currentView.view_metadata?.table_view?.column_view_list?.map(
+        (meta) => meta.title || ''
+      ) || []
   }
   if (!isPreview) {
     data = cloneDeep(currentView?.value_list_list)

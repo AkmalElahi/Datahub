@@ -11,7 +11,6 @@ import {
   ViewMetadata,
   ViewPossibleForView,
   NestedViewMetadata,
-  CardViewMetadata,
 } from '../gen/api/api'
 import { draftMetadata } from '../features/product/viewSlice'
 
@@ -236,6 +235,7 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
               }
             : null,
         } as ColumnViewMetadata
+      else return null
     })
     // List of nested metadata
     let flattened = splitNestedView.filter((view) => view)
@@ -326,7 +326,7 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
   const handleColumnChange = (v, i) => {
     const title = view?.column_view_list?.find((c) => c.column_name === v)
     setValue(`columnName${i}`, v)
-    setValue(`columnTitle${i}`, title?.title)
+    setValue(`columns[${i}].title`, title?.title)
     setValue(`on_click_view${i}`, null)
     const temp = cloneDeep(fields[i])
     temp.column.column_name = v
@@ -348,7 +348,6 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
       column_name_from: possibleView?.column_name_from,
       column_name_to: possibleView?.column_name_to,
     }
-    const newCol = { nested: newMetadata }
 
     if (currentNestedProducts) {
       setCurrentNestedProducts([
@@ -554,10 +553,9 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
             <List>
               <Label>Title</Label>
               <Input
-                name={`columnTitle${key}`}
+                name={`columns[${key}].title`}
                 defaultValue={watchColumns?.[key].column?.title || ''}
                 ref={register()}
-                disabled
               />
             </List>
           </UList>
