@@ -129,7 +129,7 @@ export const ColumnTypes = ({
   ))
 
   let renderedEntities = entities?.map((ent, i) => (
-    <FlexColumn key={ent.entity?.entity_metadata?.name}>
+    <FlexColumn key={ent.columnIndex}>
       <EntityBox>
         {ent.entity?.entity_metadata?.name || 'none'}
         <StyledPopup trigger={<Ellipses />} modal>

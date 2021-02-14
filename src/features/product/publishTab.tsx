@@ -80,7 +80,6 @@ export const PublishTab = ({ productName, previewPage }: Props) => {
               currentProduct.product_full_metadata?.product_metadata
                 ?.published || false
             }
-            register={register}
           />
         )}
         <ContentBox>{renderedMetadata}</ContentBox>
