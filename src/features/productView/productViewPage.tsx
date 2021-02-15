@@ -71,10 +71,11 @@ export const ProductViewPage = () => {
 
   let renderedContent
   let viewTitles
-  if (!isEmpty(productViewsByName))
+  if (!isEmpty(productViewsByName)) {
     viewTitles = productViewsByName[
       Object.keys(productViewsByName)[0]
-    ].top_level_nav_view_metadata_list?.map((view) => view.name || '')
+    ].top_level_nav_view_metadata_list?.map((view) => view.table_view?.title || '')
+  }
 
   if (ProductViewError) {
     renderedContent = (
