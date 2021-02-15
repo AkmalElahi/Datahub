@@ -51,9 +51,14 @@ export const ProductPage = () => {
 
   const { tablesByName } = useSelector((state: RootState) => state.tables)
 
+  const productName = product?.preview_view_page?.view_metadata?.product_name;
+
   useEffect(() => {
-    if (isEmpty(product)) dispatch(fetchProduct(productSlug))
-  }, [dispatch, product, productSlug])
+    // if product data is empty, or if url slug doesn't match product data
+    if (isEmpty(product) || productSlug !== productName) {
+      dispatch(fetchProduct(productSlug))
+    }
+  }, [dispatch, product, productSlug, productName])
 
   const setProductTab = useCallback(
     (tab: currentTab) => {
