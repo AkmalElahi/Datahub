@@ -136,7 +136,7 @@ export const ColumnTypes = ({
           {(close) => (
             <EntityPopup
               close={close}
-              entities={entityCandidates?.[i].entity_metadata_list}
+              entities={entityCandidates?.[i]?.entity_metadata_list}
               table={table}
               index={i}
             />
