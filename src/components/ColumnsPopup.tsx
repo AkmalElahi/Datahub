@@ -201,7 +201,7 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
   // Submit handler. Rolls up all form data into a ViewMetadata object to be saved to DraftMetadata state
   const onSubmit = (data) => {
     // On click view. Easiest to pull on click data directly from the <select> string
-    let splitNames = data.columns.map((column) => {
+    let onClickViews = data.columns.map((column) => {
       const temp = column.on_click_view?.column_name?.split('/')
       if (temp && temp[0] !== '')
         return {
@@ -223,30 +223,30 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
       else return null
     })
     // List of column metadata
-    let removeNested = fields.filter((field, i) => !data.columns[i].nested)
-    let newColumns = removeNested.map((field, i) => {
+    let newColumns = fields.map((field, i) => {
       if (!data.columns[i].nested)
         return {
           ...field.column,
           ...data.columns[i],
-          on_click_view: splitNames[i]
+          on_click_view: onClickViews[i]
             ? {
-                ...splitNames[i],
+                ...onClickViews[i],
               }
             : null,
         } as ColumnViewMetadata
       else return null
-    })
+    }).filter((column) => column)
     // List of nested metadata
-    let flattened = splitNestedView.filter((view) => view)
-    let newNested = flattened.map((column) => {
-      return {
-        product_name: column.product_name,
-        view_name: column.view_name,
-        column_name_from: column.column_name_from,
-        column_name_to: column.column_name_to,
-      }
-    })
+    let newNested = splitNestedView.map((column) => {
+      if (column) {
+        return {
+          product_name: column.product_name,
+          view_name: column.view_name,
+          column_name_from: column.column_name_from,
+          column_name_to: column.column_name_to,
+        } as NestedViewMetadata
+      } else return null
+    }).filter((view) => view)
     // Combine into ViewMetdata
     let submitMetadata = {
       ...metadata,
@@ -278,8 +278,8 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
         newMetadata = {
           add_filter: false,
           column_name: tempColumn?.column_name,
-          column_name_from: undefined,
-          column_name_to: undefined,
+          column_name_from: possibleProducts?.[0].possible_table_list?.[0].column_name_from,
+          column_name_to: possibleProducts?.[0].possible_table_list?.[0].column_name_to,
           on_click_view: undefined,
           product_name: tempColumn?.product_name,
           table_name: tempColumn?.table_name,
@@ -320,6 +320,58 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
     if (currentNestedProducts)
       setCurrentNestedProducts([...currentNestedProducts, newMetadata])
     append(newCol)
+  }
+
+  // Column dropdown change handler. Update fields array to store correct name and title
+  const handleAdditionalProductChange = (v, i) => {
+    let newMetadata: ColumnViewMetadata | undefined = {}
+
+    let possibleTableList = possibleProducts?.find(
+        (posProd) => posProd.product_metadata?.name === v
+    )?.possible_table_list?.[0]
+
+    const tempColumn = possibleTableList?.possible_column_list?.[0]
+    newMetadata = {
+      add_filter: false,
+      column_name: tempColumn?.column_name,
+      column_name_from: undefined,
+      column_name_to: undefined,
+      on_click_view: undefined,
+      product_name: tempColumn?.product_name,
+      table_name: tempColumn?.table_name,
+      title: tempColumn?.title,
+    }
+
+    if (!isEmpty(currentProducts)) {
+      setCurrentProducts([
+        ...currentProducts.slice(0, i),
+        newMetadata.product_name,
+        ...currentProducts.slice(i + 1, currentProducts.length),
+      ])
+    }
+  }
+
+  // Column dropdown change handler. Update fields array to store correct name and title
+  const handleAdditionalProductTableChange = (v, i) => {
+    let newMetadata: ColumnViewMetadata | undefined = {}
+
+    let product_name = currentProducts[i]
+    let possibleTableList = possibleProducts?.find(
+        (posProd) => posProd.product_metadata?.name === product_name
+    )?.possible_table_list?.find(
+        (posTable) => posTable.table_metadata?.name == v)
+
+    const tempColumn = possibleTableList?.possible_column_list?.[0]
+    newMetadata = {
+      add_filter: false,
+      column_name: tempColumn?.column_name,
+      column_name_from: undefined,
+      column_name_to: undefined,
+      on_click_view: undefined,
+      product_name: tempColumn?.product_name,
+      table_name: tempColumn?.table_name,
+      title: tempColumn?.title,
+    }
   }
 
   // Column dropdown change handler. Update fields array to store correct name and title
@@ -386,11 +438,34 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
   ))
 
   // Rendered column options for dropdown
-  let renderedOptions = possibleViews?.possible_column_list?.map((col) => (
-    <option value={col.column_name} key={col.column_name}>
-      {col.column_name}
-    </option>
-  ))
+  let selectColumns = (i) => {
+    let col = fields[i]
+    if (!col.outside) {
+      return possibleViews?.possible_column_list?.map((col) => (
+          <option value={col.column_name} key={col.column_name}>
+            {col.column_name}
+          </option>
+      ))
+    } else {
+      let product_name = col.column.product_name
+      let indexProd = possibleProducts?.findIndex(
+          (element) => element?.product_metadata?.name === product_name
+      )
+      if (indexProd !== undefined && indexProd !== -1) {
+        let possibleTableList = possibleProducts?.[indexProd].possible_table_list
+        let table_name = col.column.table_name
+        let indexTable = possibleTableList?.findIndex((element) => element?.table_metadata?.name == table_name)
+        if (indexTable !== undefined && indexTable !== -1) {
+          let PossibleColumnList = possibleTableList?.[indexTable].possible_column_list
+          return PossibleColumnList?.map((col) => (
+              <option value={col.column_name} key={col.column_name}>
+                {col.column_name}
+              </option>
+          ))
+        } else return
+      } else return
+    }
+  }
 
   // Rendered nested products options for dropdown
   let renderedNestedProducts = possibleNestedViews?.map((view) => (
@@ -403,9 +478,9 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
   ))
 
   // Rendered table options for dropdown. Selection is based on product name
-  const selectTables = (product: string) => {
+  const selectAdditionalTables = (product_name: string) => {
     let index = possibleProducts?.findIndex(
-      (element) => element?.product_metadata?.name === product
+      (element) => element?.product_metadata?.name === product_name
     )
     if (index !== undefined && index !== -1) {
       return possibleProducts?.[index].possible_table_list?.map((table) => (
@@ -496,11 +571,14 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
         <div key="outsideCol">
           <UList>
             <List>
-              <Label>Data Product</Label>
+              <Label>Product</Label>
               <Dropdown
                 name={`columns[${key}].product`}
                 defaultValue={col.column.product_name}
                 ref={register()}
+                onChange={(event) =>
+                    handleAdditionalProductChange(event.target.value, key)
+                }
               >
                 {renderedProducts}
               </Dropdown>
@@ -513,8 +591,11 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
                 name={`columns[${key}].table`}
                 defaultValue={col.column.table_name}
                 ref={register()}
+                onChange={(event) =>
+                    handleAdditionalProductTableChange(event.target.value, key)
+                }
               >
-                {selectTables(currentProducts[key] || '')}
+                {selectAdditionalTables(currentProducts[key] || '')}
               </Dropdown>
             </List>
           </UList>
@@ -534,7 +615,7 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
                   handleColumnChange(event.target.value, key)
                 }
               >
-                {renderedOptions}
+                {selectColumns(key)}
               </Dropdown>
             </List>
           </UList>
