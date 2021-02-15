@@ -51,7 +51,7 @@ export const ProductPage = () => {
 
   const { tablesByName } = useSelector((state: RootState) => state.tables)
 
-  const productName = product?.preview_view_page?.view_metadata?.product_name;
+  const productName = product?.product_full_metadata?.product_metadata?.name;
 
   useEffect(() => {
     // if product data is empty, or if url slug doesn't match product data
