@@ -95,9 +95,10 @@ export const postViewMetadata = (
   try {
     dispatch(upsertViewMetadataStart())
     const sessionId = localStorage.getItem('user') || ''
-    console.log(fullMetadata)
     const metadata = await upsertViewMetadataAPI(sessionId, fullMetadata)
-    console.log('upsert done', metadata)
+    dispatch(
+      draftMetadata({ metadata: metadata.view_metadata || {}, edited: false })
+    )
     dispatch(upsertViewMetadataSuccess(metadata))
   } catch (err) {
     dispatch(upsertViewMetadataFailure(err.toString()))

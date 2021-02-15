@@ -130,14 +130,12 @@ interface Props {
   metadata: ViewMetadata | undefined
   possibleViews: ViewPossibleForView | undefined
   register: ReturnType<typeof useForm>['register']
-  errors: ReturnType<typeof useForm>['errors']
 }
 
 export const ViewMetadataSection = ({
   metadata,
   possibleViews,
   register,
-  errors,
 }: Props) => {
   let renderTitleOptions = metadata?.card_view?.column_view_list?.map((c) => (
     <option value={c.title || ''} key={c.title}>
@@ -227,25 +225,27 @@ export const ViewMetadataSection = ({
   return (
     <React.Fragment>
       <h1>Data</h1>
-      <FlexRow>
-        <FlexColumn style={{ marginRight: '10px' }}>
-          <UList>
-            <List>
-              <Label>Table</Label>
-              <Input value={metadata?.table_name || 'none'} disabled />
-            </List>
-          </UList>
-        </FlexColumn>
-        <FlexColumn>
-          <UList>
-            <List>
-              <Label>Name</Label>
-              <Input value={metadata?.name || 'none'} disabled />
-            </List>
-          </UList>
-        </FlexColumn>
-      </FlexRow>
-      {renderedMetadata}
+      <form>
+        <FlexRow>
+          <FlexColumn style={{ marginRight: '10px' }}>
+            <UList>
+              <List>
+                <Label>Table</Label>
+                <Input value={metadata?.table_name || 'none'} disabled />
+              </List>
+            </UList>
+          </FlexColumn>
+          <FlexColumn>
+            <UList>
+              <List>
+                <Label>Name</Label>
+                <Input value={metadata?.name || 'none'} disabled />
+              </List>
+            </UList>
+          </FlexColumn>
+        </FlexRow>
+        {renderedMetadata}
+      </form>
       <ButtonGroup>
         <StyledPopup trigger={<EditButton>Edit</EditButton>} modal lockScroll>
           {(close) => (
