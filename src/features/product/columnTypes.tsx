@@ -123,7 +123,7 @@ export const ColumnTypes = ({
   let renderedDataTypes = metadata?.map((meta) => (
     <FlexColumn key={meta.column_num}>
       <ColumnBox>
-        {meta.data_type ? DATA_TYPES[meta.data_type] : 'unknown'}
+        {meta.data_type || meta.data_type === 0 ? DATA_TYPES[meta.data_type] : 'unknown'}
       </ColumnBox>
     </FlexColumn>
   ))
