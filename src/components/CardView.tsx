@@ -67,6 +67,7 @@ export const CardView = ({ currentView, isPreview }: Props) => {
   const data: string[] | undefined = currentView?.value_list
 
   if (currentView?.column_metadata_list) {
+    console.log("CURRENT VIEW", currentView?.view_metadata, currentView?.value_list)
     columnHeaders =
       currentView.view_metadata?.card_view?.column_view_list?.map(
         (meta) => meta.title || ''
@@ -92,9 +93,9 @@ export const CardView = ({ currentView, isPreview }: Props) => {
     <React.Fragment>
       <CardBody>
         <FlexRow>
-          <LeftColumn>
-            <ImagePlaceholder></ImagePlaceholder>
-          </LeftColumn>
+          {currentView?.image_url && <LeftColumn>
+            {<ImagePlaceholder></ImagePlaceholder>}
+          </LeftColumn>}
           <RightColumn>
             <DataWrapper>{renderedData}</DataWrapper>
           </RightColumn>
