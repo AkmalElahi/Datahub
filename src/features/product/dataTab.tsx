@@ -44,7 +44,9 @@ export const DataTab = ({
   const { register, errors, handleSubmit } = useForm<FormData>()
 
   const onSubmit = (data) => {
-    const newMetadata = applyEntities(fullMetadata, draftEntities)
+    let newMetadata = applyEntities(fullMetadata, draftEntities)
+    newMetadata.table_metadata.title = data.title
+    newMetadata.table_metadata.description = data.description
     dispatch(postTableMetadata(newMetadata, draftEntities, tableName))
   }
 

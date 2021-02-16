@@ -133,9 +133,11 @@ export const EntityPopup = ({ close, entities, table, index }: Props) => {
   const { register, watch, errors, handleSubmit } = useForm<FormData>()
   const watchRadio = watch('entityRadio')
   const onSubmit = (data) => {
-    let entity: EntityFullMetadata | undefined = {}
+    let entityName: string | undefined
+    let newEntity: EntityFullMetadata | undefined
     if (data.entityRadio === 'new') {
-      entity = {
+      entityName = data.newName
+      newEntity = {
         entity_metadata: {
           name: data.newName,
           title: data.newTitle,
@@ -144,16 +146,10 @@ export const EntityPopup = ({ close, entities, table, index }: Props) => {
         entity_tag_list: tags,
       }
     } else if (data.entityRadio === 'existing') {
-      const found = entities?.find((entity) => entity.name === data.entity)
-      if (found) {
-        entity = {
-          entity_metadata: found,
-          entity_tag_list: tags,
-        }
-      }
+      entityName = data.existingEntityName
     }
     dispatch(
-      draftEntityMetadata({ entity: entity, columnIndex: index, edited: true })
+      draftEntityMetadata({ entityName: entityName, columnIndex: index, edited: true, newEntity: newEntity })
     )
     close()
   }
@@ -194,7 +190,7 @@ export const EntityPopup = ({ close, entities, table, index }: Props) => {
             Existing
             {watchRadio === 'existing' && (
               <Dropdown
-                name="entity"
+                name="existingEntityName"
                 id="existingDropdown"
                 ref={register}
                 disabled={noEntities}
