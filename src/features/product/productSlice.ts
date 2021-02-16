@@ -121,6 +121,9 @@ export const uploadThenAddThunk = (
   dataType: 'product' | 'table',
   fileType: 'link' | 'upload',
   addViews: string,
+  airTable: string | undefined,
+  baseId: string | undefined,
+  apiKey: string | undefined,
   publicLink?: string,
   file?: FormData
 ) => async (dispatch, getState) => {
@@ -138,6 +141,11 @@ export const uploadThenAddThunk = (
           filename: fileParams.filename,
           file_link: fileParams.public_link,
         },
+        airtable_data_source: {
+          base_id: baseId,
+          table_name: tableName,
+          api_key: apiKey
+        }
       }
       const product = await createProductAPI(
         sessionId,
@@ -157,6 +165,11 @@ export const uploadThenAddThunk = (
           filename: fileParams.filename,
           file_link: fileParams.public_link,
         },
+        airtable_data_source: {
+          base_id: baseId,
+          table_name: tableName,
+          api_key: apiKey
+        }
       }
       const table = await createTableAPI(
         sessionId,

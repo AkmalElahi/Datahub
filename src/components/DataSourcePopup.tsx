@@ -133,6 +133,10 @@ const RightColumn = styled.div`
   justify-content: flex-start;
   flex: 2;
 `
+const AirTableRadioLabel = styled(Label)`
+  display: block;
+  margin:1.5rem 0;
+`
 
 interface Props {
   close: any
@@ -191,9 +195,10 @@ export const DataSourcePopup = ({
     control: control2,
     register: register2,
     errors: errors2,
+    watch,
     handleSubmit: handleSubmit2,
   } = useForm<FormData>()
-
+  const watchAirTable = watch('airTable')
   const onSubmitSource = async (data) => {
     let result = await dispatch(
       uploadThenAddThunk(
@@ -204,7 +209,10 @@ export const DataSourcePopup = ({
         data.fileRadio,
         data.addViews ? 'true' : 'false',
         data.fileRadio === 'link' ? data.newLink : undefined,
-        data.fileRadio === 'upload' ? data.file : undefined
+        data.fileRadio === 'upload' ? data.file : undefined,
+        data.airTable,
+        data.baseId,
+        data.apiKey
       )
     )
     close()
@@ -238,8 +246,8 @@ export const DataSourcePopup = ({
                 disabled
               />
             ) : (
-              <Input type="text" name="productName" ref={register2} />
-            )}
+                <Input type="text" name="productName" ref={register2} />
+              )}
 
             <NewLabel>Table Name</NewLabel>
             <Input type="text" name="tableName" ref={register2} />
@@ -266,6 +274,22 @@ export const DataSourcePopup = ({
               <Dropzone onChange={(e) => onChange(e.target.files?.[0])} />
             )}
           />
+          <AirTableRadioLabel>
+            <input
+              type="radio"
+              name="airTable"
+              value="isAirTable"
+              ref={register2}
+            />
+            Airtable
+          </AirTableRadioLabel>
+          {watchAirTable && (<>
+            <NewLabel>Base ID</NewLabel>
+            <Input type="text" name="baseId" ref={register2} />
+            <NewLabel>API Key</NewLabel>
+            <Input type="text" name="apiKey" ref={register2} />
+          </>)}
+
         </div>
 
         {renderedError}
