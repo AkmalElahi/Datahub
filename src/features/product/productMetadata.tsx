@@ -97,7 +97,7 @@ export const ProductMetadataSection = ({
 
   return (
     <React.Fragment>
-      <h1>Product Table</h1>
+      <h2>Table</h2>
       <FlexRow>
         <FlexColumn style={{ marginRight: '10px' }}>
           <UList>
@@ -110,17 +110,31 @@ export const ProductMetadataSection = ({
         <FlexColumn>
           <UList>
             <List>
-              <Label>Title</Label>
-              <Input
+              <Label>Primary Key</Label>
+              <Dropdown
+                  name="primary"
+                  id="primary"
+                  defaultValue={columns ? columns[0].toString() : 'none'}
+              >
+                {renderedOptions}
+              </Dropdown>
+            </List>
+          </UList>
+        </FlexColumn>
+      </FlexRow>
+      <FlexRow>
+        <UList style={{ width: '100%' }}>
+          <List>
+            <Label>Title</Label>
+            <Input
                 name="title"
                 key={metadata?.title}
                 defaultValue={metadata?.title || 'none'}
                 ref={register}
-              />
-              {errors.title}
-            </List>
-          </UList>
-        </FlexColumn>
+            />
+            {errors.title}
+          </List>
+        </UList>
       </FlexRow>
       <FlexRow>
         <UList style={{ width: '100%' }}>
@@ -133,20 +147,6 @@ export const ProductMetadataSection = ({
               ref={register}
             />
             {errors.description}
-          </List>
-        </UList>
-      </FlexRow>
-      <FlexRow>
-        <UList style={{ width: '100%' }}>
-          <List>
-            <Label>Primary Key</Label>
-            <Dropdown
-              name="primary"
-              id="primary"
-              defaultValue={columns ? columns[0].toString() : 'none'}
-            >
-              {renderedOptions}
-            </Dropdown>
           </List>
         </UList>
       </FlexRow>
