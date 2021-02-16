@@ -175,7 +175,6 @@ export const uploadThenAddThunk = (
           setSource(
             getState().product.product.product_full_metadata
               .table_full_metadata_list.length - 1,
-            false,
             tableName
           )
         )

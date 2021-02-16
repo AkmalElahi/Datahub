@@ -92,6 +92,7 @@ const tables = createSlice({
       state,
       { payload }: PayloadAction<Table | string | undefined>
     ) {
+      console.log(payload)
       if (payload) {
         let table
         if (typeof payload === 'string') table = state.tablesByName[payload]

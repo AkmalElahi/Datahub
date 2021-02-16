@@ -42,8 +42,6 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
 
   let currentView = viewsByName[viewName]
 
-  console.log(draftMetadata)
-
   useEffect(() => {
     if (!currentView) {
       dispatch(fetchView(productName, viewName))
@@ -86,7 +84,7 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
       <h3>Loading...</h3>
     ) : (
       <ViewMetadataSection
-        metadata={currentView.view_metadata}
+        metadata={draftMetadata.metadata}
         possibleViews={currentView.view_possible_for_view}
         register={register}
       />

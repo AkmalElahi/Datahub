@@ -51,7 +51,18 @@ export const ProductPage = () => {
 
   const { tablesByName } = useSelector((state: RootState) => state.tables)
 
-  const productName = product?.product_full_metadata?.product_metadata?.name;
+  //TODO: normalize data?
+  let productMetadata = product?.product_full_metadata
+  let tableMetadataList: TableFullMetadata[] | undefined =
+    productMetadata?.table_full_metadata_list
+  let viewMetadataList: ViewMetadata[] | undefined =
+    productMetadata?.view_metadata_list
+  const productName = productMetadata?.product_metadata?.name
+  let tableName
+  let viewName
+  if (tab !== 'views')
+    tableName = tableMetadataList?.[source].table_metadata?.name
+  else viewName = viewMetadataList?.[source].name
 
   useEffect(() => {
     // if product data is empty, or if url slug doesn't match product data
@@ -68,26 +79,16 @@ export const ProductPage = () => {
     [dispatch]
   )
   const setProductSource = (source: number) => {
-    let name
-    const table =
-      product.product_full_metadata?.table_full_metadata_list?.[source]
-    if (table) name = table.table_metadata?.name
-    if (name) dispatch(setSource(source, !tablesByName[name], name))
-    else dispatch(setSource(source))
+    if (tab === 'data') {
+      dispatch(
+        setSource(source, tableMetadataList?.[source]?.table_metadata?.name)
+      )
+    } else if (tab === 'views') {
+      dispatch(setSource(source, viewMetadataList?.[source]?.name))
+    } else dispatch(setSource(source))
   }
 
   let renderedContent
-  //TODO: normalize data?
-  let productMetadata = product?.product_full_metadata
-  let tableMetadataList: TableFullMetadata[] | undefined =
-    productMetadata?.table_full_metadata_list
-  let viewMetadataList: ViewMetadata[] | undefined =
-    productMetadata?.view_metadata_list
-  let tableName
-  let viewName
-  if (tab !== 'views')
-    tableName = tableMetadataList?.[source].table_metadata?.name
-  else viewName = viewMetadataList?.[source].name
 
   if (ProductError) {
     renderedContent = (
