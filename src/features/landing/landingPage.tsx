@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import Popup from 'reactjs-popup'
+
 import { Navbar } from '../../components/Navbar'
 import { DataSourcePopup } from '../../components/DataSourcePopup'
 
@@ -83,25 +84,25 @@ const RightColumn = styled(FlexColumn)`
 `
 
 export const LandingPage = () => {
-  const [open, setOpen] = useState(false);
-  const closeModal = () => setOpen(false);
-  const openModal = () => setOpen(o => !o)
   return (
     <React.Fragment>
-      <Navbar openModal={openModal} isHome={true}/>
+      <Navbar />
       <FlexRow>
         <LeftColumn></LeftColumn>
         <RightColumn>
-          <CreateDataButton onClick={openModal}>Create a New Data Product</CreateDataButton>
           <StyledPopup
+            trigger={
+              <CreateDataButton>Create a New Data Product</CreateDataButton>
+            }
             modal
-            open={open}
           >
-            <DataSourcePopup
-              close={closeModal}
-              uploadType="data"
-              dataType="product"
-            />
+            {(close) => (
+              <DataSourcePopup
+                close={close}
+                uploadType="data"
+                dataType="product"
+              />
+            )}
           </StyledPopup>
           <Link to="/my-products">
             <ViewDataButton>View My Data Products</ViewDataButton>
