@@ -78,9 +78,9 @@ export const ProductSidebar = ({
     <DataSource
       active={tab === 'views' && source === index}
       onClick={() => handleSourceChange(index)}
-      key={v?.table_name}
+      key={v?.card_view?.title}
     >
-      {v?.table_name}
+      {v?.card_view?.title}
     </DataSource>
   ))
 
