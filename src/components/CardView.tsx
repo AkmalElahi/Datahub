@@ -31,10 +31,11 @@ const RightColumn = styled(FlexColumn)`
 
 const CardBody = styled.div``
 
-const ImagePlaceholder = styled.div<{ image: string }>`
+const CardImage = styled.div<{ image: string }>`
   background-color: #c4c4c4;
   width: 100%;
   height: 400px;
+  background-size: cover;
   ${(props) =>
     props.image &&
     css`
@@ -72,8 +73,13 @@ export const CardView = ({ currentView, isPreview }: Props) => {
   const data: string[] | undefined = currentView?.value_list
   let image
   if (currentView?.column_metadata_list) {
-    console.log("CURRENT VIEW", currentView?.view_metadata?.card_view?.column_view_list,)
-    const imageIndex = currentView?.view_metadata?.card_view?.column_view_list?.findIndex(meta => meta.title === "image_url")
+    console.log(
+      'CURRENT VIEW',
+      currentView?.view_metadata?.card_view?.column_view_list
+    )
+    const imageIndex = currentView?.view_metadata?.card_view?.column_view_list?.findIndex(
+      (meta) => meta.title === 'image_url'
+    )
     image = data && imageIndex && data[imageIndex]
     columnHeaders =
       currentView.view_metadata?.card_view?.column_view_list?.map(
@@ -100,9 +106,9 @@ export const CardView = ({ currentView, isPreview }: Props) => {
     <React.Fragment>
       <CardBody>
         <FlexRow>
-          {columnHeaders?.includes('image_url') && <LeftColumn>
-            {<ImagePlaceholder image={image}></ImagePlaceholder>}
-          </LeftColumn>}
+          {columnHeaders?.includes('image_url') && (
+            <LeftColumn>{<CardImage image={image}></CardImage>}</LeftColumn>
+          )}
           <RightColumn>
             <DataWrapper>{renderedData}</DataWrapper>
           </RightColumn>
