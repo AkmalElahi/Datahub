@@ -83,11 +83,11 @@ export const PublishMetadataSection = ({
   //}
 
   let renderedViews = homeCandidates?.map((c) => (
-    <option value={c.name || 'none'} key={c.name}>
+    <option value={c.name || ''} key={c.name}>
       {c.name}
     </option>
   ))
-
+  console.log("PRODUCT META DATA", metadata)
   return (
     <React.Fragment>
       <h1>Product</h1>
@@ -96,7 +96,7 @@ export const PublishMetadataSection = ({
           <UList>
             <List>
               <Label>Name</Label>
-              <Input value={metadata?.name || 'none'} disabled />
+              <Input value={metadata?.name || ''} disabled />
             </List>
           </UList>
         </FlexColumn>
@@ -107,7 +107,7 @@ export const PublishMetadataSection = ({
               <Input
                 name="title"
                 key={metadata?.title}
-                defaultValue={metadata?.title || 'none'}
+                defaultValue={metadata?.title || ''}
                 ref={register}
               />
               {errors.title}
@@ -122,7 +122,7 @@ export const PublishMetadataSection = ({
             <Input
               name="description"
               key={metadata?.description}
-              defaultValue={metadata?.description || 'none'}
+              defaultValue={metadata?.description || ''}
               ref={register}
             />
             {errors.description}
