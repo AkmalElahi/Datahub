@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 const FlexRow = styled.div`
   display: flex;
@@ -32,16 +32,33 @@ const RightColumn = styled(FlexColumn)`
   padding-right: 120px;
 `
 
-const CreateText = styled.span`
+const CreateText = styled.span<{ active: boolean }>`
   font-size: 18px;
-  font-weight: 500;
   padding-right: 1.5rem;
   border-right: 1px solid #3e4651;
+  cursor:pointer;
+  opacity: 0.4;
+  color:#000000
+  ${(props) =>
+    props.active &&
+    css`
+      color: ${props.theme.primaryColor};
+      font-weight: 500;
+      opacity:1
+    `}
 `
 
-const MyText = styled.span`
+const MyText = styled.span<{ active: boolean }>`
   opacity: 0.4;
   padding-left: 1.5rem;
+  cursor:pointer
+  ${(props) =>
+    props.active &&
+    css`
+      color: ${props.theme.primaryColor};
+      font-weight: 500;
+      opacity: 1;
+    `}
 `
 
 const SignUpText = styled.span`
@@ -62,7 +79,7 @@ const LogoPlaceholder = styled.span`
   }
 `
 
-export const Navbar = () => {
+export const Navbar = (props) => {
   return (
     <FlexRow>
       <LeftColumn></LeftColumn>
@@ -77,8 +94,10 @@ export const Navbar = () => {
           </FlexColumn>
           <FlexColumn style={{ justifyContent: 'center' }}>
             <div style={{ display: 'flex' }}>
-              <CreateText>Create Data Product</CreateText>
-              <MyText>My Data Products</MyText>
+              <CreateText active={props.isHome} onClick={() => props.openModal && props.openModal()}>Create Data Product</CreateText>
+              <Link to="/my-products" style={{ color: '#000000' }}>
+                <MyText active={!props.isHome}>My Data Products</MyText>
+              </Link>
             </div>
           </FlexColumn>
           <FlexColumn style={{ justifyContent: 'flex-end' }}>
