@@ -73,10 +73,6 @@ export const CardView = ({ currentView, isPreview }: Props) => {
   const data: string[] | undefined = currentView?.value_list
   let image
   if (currentView?.column_metadata_list) {
-    console.log(
-      'CURRENT VIEW',
-      currentView?.view_metadata?.card_view?.column_view_list
-    )
     const imageIndex = currentView?.view_metadata?.card_view?.column_view_list?.findIndex(
       (meta) => meta.title === 'image_url'
     )
