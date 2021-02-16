@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { RootState } from '../../app/rootReducer'
 
 import { ViewPage } from '../../gen/api/api'
-import { publishUnpublish } from './productSlice'
+import { postProductMetadata, publishUnpublish } from './productSlice'
 import { PublishHeader } from './publishHeader'
 import { PublishMetadataSection } from './publishMetadata'
 import { TableView } from '../../components/TableView'
@@ -31,9 +31,24 @@ export const PublishTab = ({ productName, previewPage }: Props) => {
   const { register, errors, handleSubmit } = useForm<FormData>()
 
   const onSubmit = (data) => {
-    const isPublished =
-      currentProduct.product_full_metadata?.product_metadata?.published
-    dispatch(publishUnpublish(productName, !isPublished))
+    if (data.title !== currentProduct.product_full_metadata?.product_metadata?.title || data.description !== currentProduct.product_full_metadata?.product_metadata?.description) {
+      let monetization = currentProduct?.product_full_metadata?.product_metadata?.monetization
+      // This is because api sends error if monetization.price goes null
+      if (monetization) {
+        const price = monetization?.price === null ? 0 : monetization?.price;
+        monetization = { ...monetization, price }
+        console.log("MONITIZATION DATA", monetization, price)
+      }
+      console.log("FORM DATA", currentProduct.product_full_metadata?.product_metadata, data)
+      const postData = { ...currentProduct.product_full_metadata?.product_metadata, ...data, monetization }
+      dispatch(postProductMetadata(postData))
+
+    }
+    else {
+      const isPublished =
+        currentProduct.product_full_metadata?.product_metadata?.published
+      dispatch(publishUnpublish(productName, !isPublished))
+    }
   }
 
   const { product, isLoading, error: productError } = useSelector(
@@ -56,20 +71,20 @@ export const PublishTab = ({ productName, previewPage }: Props) => {
     isLoading || !currentProduct || !currentTable ? (
       <h3>Loading...</h3>
     ) : (
-      <PublishMetadataSection
-        metadata={currentProduct.product_full_metadata?.product_metadata}
-        homeCandidates={currentProduct.home_page_view_candidate_list}
-        register={register}
-        errors={errors}
-      />
-    )
+        <PublishMetadataSection
+          metadata={currentProduct.product_full_metadata?.product_metadata}
+          homeCandidates={currentProduct.home_page_view_candidate_list}
+          register={register}
+          errors={errors}
+        />
+      )
 
   let renderedTable =
     isLoading || !currentTable || !previewPage ? (
       <h3>Loading...</h3>
     ) : (
-      <TableView currentView={previewPage} isPreview={true} />
-    )
+        <TableView currentView={previewPage} isPreview={true} />
+      )
 
   return (
     <React.Fragment>
