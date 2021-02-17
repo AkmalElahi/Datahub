@@ -114,7 +114,7 @@ export const ProductMetadataSection = ({
               <Dropdown
                   name="primary"
                   id="primary"
-                  defaultValue={columns ? columns[0].toString() : 'none'} disabled
+                  defaultValue={columns?.find((col) => col.is_primary_key)?.name || 'none'} disabled
               >
                 {renderedOptions}
               </Dropdown>
