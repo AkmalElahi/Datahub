@@ -1423,6 +1423,12 @@ export interface ViewMetadata {
 export interface ViewPage {
     /**
      * 
+     * @type {ProductFullMetadata}
+     * @memberof ViewPage
+     */
+    product_full_metadata?: ProductFullMetadata;
+    /**
+     * 
      * @type {ViewMetadata}
      * @memberof ViewPage
      */

@@ -2505,6 +2505,9 @@
       "ViewPage": {
         "type": "object",
         "properties": {
+          "product_full_metadata": {
+            "$ref": "#/components/schemas/ProductFullMetadata"
+          },
           "view_metadata": {
             "$ref": "#/components/schemas/ViewMetadata"
           },
