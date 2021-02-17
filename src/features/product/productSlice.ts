@@ -15,6 +15,7 @@ import {
   createTableAPI,
   uploadFileAPI,
   publishProductAPI,
+  upsertProductMetadataAPI
 } from '../../api/swaggerAPI'
 import {
   createTableStart,
@@ -28,6 +29,7 @@ interface ProductState {
   product: ProductConstructor
   isLoading: boolean
   error: string | null
+  
 }
 
 interface NewTable {
@@ -89,6 +91,12 @@ const product = createSlice({
       if (state.product.product_full_metadata)
         state.product.product_full_metadata.product_metadata = payload
     },
+    upsertProductSuccess(state, { payload }: PayloadAction<ProductMetadata>) {
+      state.isLoading = false
+      state.error = null
+      if (state.product.product_full_metadata)
+        state.product.product_full_metadata.product_metadata = payload
+    },
     getProductFailure: loadingFailed,
     createProductFailure: loadingFailed,
     uploadFileFailure: loadingFailed,
@@ -110,6 +118,7 @@ export const {
   uploadFileFailure,
   publishUnpublishFailure,
   updateProductMetadata,
+  upsertProductSuccess
 } = product.actions
 
 export default product.reducer
@@ -220,5 +229,21 @@ export const publishUnpublish = (
     dispatch(publishUnpublishSuccess(product))
   } catch (err) {
     dispatch(publishUnpublishFailure(err.toString()))
+  }
+}
+
+export const postProductMetadata = (
+  productMetadata:ProductMetadata
+): AppThunk => async (dispatch) => {
+  try {
+    dispatch(createProductStart())
+    const sessionId = localStorage.getItem('user') || ''
+    const response = await upsertProductMetadataAPI(
+      sessionId,
+      productMetadata
+    )
+    dispatch(upsertProductSuccess(response))
+  } catch (err) {
+    dispatch(createProductFailure(err.toString()))
   }
 }
