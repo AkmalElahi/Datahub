@@ -198,7 +198,6 @@ export const DataSourcePopup = ({
     watch,
     handleSubmit: handleSubmit2,
   } = useForm<FormData>()
-  const watchAirTable = watch('fileRadio')
   const onSubmitSource = async (data) => {
     let result = await dispatch(
       uploadThenAddThunk(
@@ -208,10 +207,11 @@ export const DataSourcePopup = ({
         dataType,
         data.fileRadio,
         data.addViews ? 'true' : 'false',
+        data.airtableName,
         data.baseId,
         data.apiKey,
-        data.fileRadio === 'link' ? data.newLink : undefined,
-        data.fileRadio === 'upload' ? data.file : undefined
+        data.newLink,
+        data.file
       )
     )
     if (!ProductError) {
@@ -284,14 +284,12 @@ export const DataSourcePopup = ({
             />
             Airtable
           </AirTableRadioLabel>
-          {watchAirTable === 'airtable' && (
-            <>
-              <NewLabel>Base ID</NewLabel>
-              <Input type="text" name="baseId" ref={register2} />
-              <NewLabel>API Key</NewLabel>
-              <Input type="text" name="apiKey" ref={register2} />
-            </>
-          )}
+          <NewLabel>Table Name</NewLabel>
+          <Input type="text" name="airtableName" ref={register2} />
+          <NewLabel>Base ID</NewLabel>
+          <Input type="text" name="baseId" ref={register2} />
+          <NewLabel>API Key</NewLabel>
+          <Input type="text" name="apiKey" ref={register2} />
         </div>
 
         {renderedError}

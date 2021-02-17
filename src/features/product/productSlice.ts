@@ -121,6 +121,7 @@ export const uploadThenAddThunk = (
   dataType: 'product' | 'table',
   fileType: 'link' | 'upload' | 'airtable',
   addViews: string,
+  airtableName?: string,
   baseId?: string,
   apiKey?: string,
   publicLink?: string,
@@ -138,7 +139,7 @@ export const uploadThenAddThunk = (
       ...(fileType === 'airtable' && {
         airtable_data_source: {
           base_id: baseId,
-          table_name: tableName,
+          table_name: airtableName,
           api_key: apiKey,
         },
       }),
