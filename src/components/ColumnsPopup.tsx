@@ -261,7 +261,7 @@ export const ColumnsPopup = ({ close, metadata, possibleViews }: Props) => {
         table_view: { ...metadata.table_view, column_view_list: newColumns },
       }),
     } as ViewMetadata
-    dispatch(draftMetadata({ metadata: submitMetadata, edited: true }))
+    dispatch(draftMetadata({ metadata: submitMetadata }))
     close()
   }
 

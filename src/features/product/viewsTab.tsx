@@ -23,6 +23,11 @@ type FormData = {
   title: string
   subtitle: string
   description: string
+  title_column: string
+  subtitle_column: string
+  description_column: string
+  image_url_column: string
+  top_level_nav: boolean
 }
 
 interface Props {
@@ -36,6 +41,7 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
   const {
     viewsByName,
     draftMetadata,
+    table_full_metadata,
     isLoading,
     error: viewError,
   } = useSelector((state: RootState) => state.views)
@@ -86,6 +92,7 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
       <ViewMetadataSection
         metadata={draftMetadata.metadata}
         possibleViews={currentView.view_possible_for_view}
+        table_full_metadata={table_full_metadata}
         register={register}
       />
     )

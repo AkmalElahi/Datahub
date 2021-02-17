@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import { DraftMetadata } from './viewSlice'
 import { postViewMetadata } from './viewSlice'
+import cloneDeep from "lodash/cloneDeep";
 
 const FlexRow = styled.div`
   display: flex;
@@ -97,9 +98,20 @@ export const ViewHeader = ({
   const dispatch = useDispatch()
   const onSubmitView = (data) => {
     console.log('test')
-    if (draftMetadata.edited) {
-      dispatch(postViewMetadata(draftMetadata.metadata))
+    let fullMetadata = cloneDeep(draftMetadata.metadata)
+    if (fullMetadata?.card_view) {
+      fullMetadata.card_view.title = data.title
+      fullMetadata.card_view.title_column = (data.title_column != '')?data.title_column:null
+      fullMetadata.card_view.subtitle_column = (data.subtitle_column != '')?data.subtitle_column:null
+      fullMetadata.card_view.description_column = (data.description_column != '')?data.description_column:null
+      fullMetadata.card_view.image_url_column = (data.image_url_column != '')?data.image_url_column:null
+    } else if (fullMetadata?.table_view) {
+      fullMetadata.table_view.title = data.title
+      fullMetadata.table_view.subtitle = data.subtitle
+      fullMetadata.table_view.description = data.description
+      fullMetadata.table_view.top_level_nav = data.top_level_nav
     }
+    dispatch(postViewMetadata(fullMetadata))
   }
 
   return (
