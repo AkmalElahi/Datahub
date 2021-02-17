@@ -54,9 +54,20 @@ const views = createSlice({
       state.error = null
       state.viewsByName[payload.view_metadata?.name || 'none'] = payload
     },
-    draftMetadata(state, { payload }: PayloadAction<DraftMetadata>) {
-      console.log('payload: ', payload)
-      state.draftMetadata = payload
+    draftMetadata(
+      state,
+      { payload }: PayloadAction<DraftMetadata | string | undefined>
+    ) {
+      if (payload) {
+        if (typeof payload === 'string') {
+          state.draftMetadata = {
+            metadata: state.viewsByName[payload || 'none']?.view_metadata || {},
+            edited: false,
+          }
+        } else {
+          state.draftMetadata = payload
+        }
+      }
     },
     getViewFailure: loadingFailed,
     upsertViewMetadataFailure: loadingFailed,
@@ -95,9 +106,10 @@ export const postViewMetadata = (
   try {
     dispatch(upsertViewMetadataStart())
     const sessionId = localStorage.getItem('user') || ''
-    console.log(fullMetadata)
     const metadata = await upsertViewMetadataAPI(sessionId, fullMetadata)
-    console.log('upsert done', metadata)
+    dispatch(
+      draftMetadata({ metadata: metadata.view_metadata || {}, edited: false })
+    )
     dispatch(upsertViewMetadataSuccess(metadata))
   } catch (err) {
     dispatch(upsertViewMetadataFailure(err.toString()))

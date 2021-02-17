@@ -30,9 +30,10 @@ const tablesInitialState: TablesState = {
 }
 
 export interface DraftEntity {
-  entity: EntityFullMetadata | undefined
+  entityName: string | undefined
   columnIndex: number
   edited: boolean
+  newEntity: EntityFullMetadata | undefined
 }
 
 function startLoading(state: TablesState) {
@@ -76,10 +77,12 @@ const tables = createSlice({
     },
     upsertEntityMetadataSuccess(
       state,
-      { payload }: PayloadAction<EntityFullMetadata>
+      { payload }: PayloadAction<DraftEntity>
     ) {
       state.isLoading = false
       state.error = null
+      state.draftEntities[payload.columnIndex].edited = false
+      state.draftEntities[payload.columnIndex].newEntity = undefined
     },
     draftEntityMetadata(state, { payload }: PayloadAction<DraftEntity>) {
       state.draftEntities[payload.columnIndex] = payload
@@ -92,31 +95,18 @@ const tables = createSlice({
       state,
       { payload }: PayloadAction<Table | string | undefined>
     ) {
+      console.log(payload)
       if (payload) {
         let table
         if (typeof payload === 'string') table = state.tablesByName[payload]
         else table = payload.table
         state.draftEntities = []
         table.column_metadata_list?.forEach((col, i) => {
-          let entity: EntityFullMetadata | null = {}
-          const foundEntity = table.entity_metadata_candidate_list_list?.[
-            i
-          ].entity_metadata_list?.find((e) => e.name === col.entity_name)
-
-          if (col.entity_name !== null) {
-            entity = {
-              entity_metadata: {
-                name: foundEntity?.name,
-                title: foundEntity?.title,
-                description: foundEntity?.description,
-              },
-            }
-          }
-
           let draft: DraftEntity = {
-            entity: entity,
+            entityName: col.entity_name,
             columnIndex: i,
             edited: false,
+            newEntity: undefined,
           }
           state.draftEntities[i] = draft
         })
@@ -126,15 +116,14 @@ const tables = createSlice({
 })
 
 const postEntityThunk = (
-  draftEntities: DraftEntity[],
-  tableName: string
+  draftEntities: DraftEntity[]
 ): AppThunk => async (dispatch) => {
   for (let entity of draftEntities) {
-    if (entity.edited) {
+    if (entity.newEntity !== undefined) {
       try {
         dispatch(upsertEntityMetadataStart())
-        const metadata = await upsertEntityMetadataAPI(entity.entity)
-        dispatch(upsertEntityMetadataSuccess(metadata))
+        const metadata = await upsertEntityMetadataAPI(entity.newEntity)
+        dispatch(upsertEntityMetadataSuccess(entity))
       } catch (err) {
         dispatch(upsertEntityMetadataFailure(err.toString()))
       }
@@ -189,7 +178,7 @@ export const postTableMetadata = (
   tableName: string
 ): AppThunk => async (dispatch) => {
   try {
-    await dispatch(postEntityThunk(draftEntities, tableName))
+    await dispatch(postEntityThunk(draftEntities))
 
     dispatch(upsertTableMetadataStart())
     const sessionId = localStorage.getItem('user') || ''
