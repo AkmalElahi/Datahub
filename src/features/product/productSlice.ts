@@ -119,52 +119,60 @@ export const uploadThenAddThunk = (
   tableName: string,
   uploadType: 'data' | 'image',
   dataType: 'product' | 'table',
-  fileType: 'link' | 'upload',
+  fileType: 'link' | 'upload' | 'airtable',
   addViews: string,
+  airtableName?: string,
+  baseId?: string,
+  apiKey?: string,
   publicLink?: string,
   file?: FormData
 ) => async (dispatch, getState) => {
   let fileParams
   try {
-    dispatch(uploadFileStart())
-    fileParams = await uploadFileAPI(uploadType, publicLink, file)
-    dispatch(uploadFileSuccess(fileParams))
+    const dataSource = {
+      ...(fileType !== 'airtable' && {
+        csv_data_source: {
+          filename: fileParams?.filename,
+          file_link: fileParams?.public_link,
+        },
+      }),
+      ...(fileType === 'airtable' && {
+        airtable_data_source: {
+          base_id: baseId,
+          table_name: airtableName,
+          api_key: apiKey,
+        },
+      }),
+    }
+    if (fileType !== 'airtable') {
+      dispatch(uploadFileStart())
+      fileParams = await uploadFileAPI(uploadType, publicLink, file)
+      dispatch(uploadFileSuccess(fileParams))
+    }
 
     if (dataType === 'product') {
       dispatch(createProductStart())
       const sessionId = localStorage.getItem('user') || ''
-      const dataSource = {
-        csv_data_source: {
-          filename: fileParams.filename,
-          file_link: fileParams.public_link,
-        },
-      }
       const product = await createProductAPI(
         sessionId,
         productName,
         tableName,
         addViews,
-        fileParams.filename,
-        fileParams.public_link,
+        fileParams?.filename,
+        fileParams?.public_link,
         dataSource
       )
       dispatch(createProductSuccess(product))
     } else if (dataType === 'table') {
       dispatch(createTableStart())
       const sessionId = localStorage.getItem('user') || ''
-      const dataSource = {
-        csv_data_source: {
-          filename: fileParams.filename,
-          file_link: fileParams.public_link,
-        },
-      }
       const table = await createTableAPI(
         sessionId,
         productName,
         tableName,
         addViews,
-        fileParams.filename,
-        fileParams.public_link,
+        fileParams?.filename,
+        fileParams?.public_link,
         dataSource
       )
       dispatch(createTableSuccess(table))
@@ -178,6 +186,7 @@ export const uploadThenAddThunk = (
             tableName
           )
         )
+      )
     }
   } catch (err) {
     dispatch(createProductFailure(err.toString()))
