@@ -2415,7 +2415,7 @@
             "nullable": true
           },
           "view_type": {
-            "type": "boolean",
+            "type": "string",
             "description": "Type of view. Can be either 'table' or 'card'.",
             "nullable": true
           },
@@ -2505,6 +2505,9 @@
       "ViewPage": {
         "type": "object",
         "properties": {
+          "product_full_metadata": {
+            "$ref": "#/components/schemas/ProductFullMetadata"
+          },
           "view_metadata": {
             "$ref": "#/components/schemas/ViewMetadata"
           },
