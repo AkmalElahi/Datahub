@@ -129,6 +129,11 @@ export const uploadThenAddThunk = (
 ) => async (dispatch, getState) => {
   let fileParams
   try {
+    if (fileType !== 'airtable') {
+      dispatch(uploadFileStart())
+      fileParams = await uploadFileAPI(uploadType, publicLink, file)
+      dispatch(uploadFileSuccess(fileParams))
+    }
     const dataSource = {
       ...(fileType !== 'airtable' && {
         csv_data_source: {
@@ -143,11 +148,6 @@ export const uploadThenAddThunk = (
           api_key: apiKey,
         },
       }),
-    }
-    if (fileType !== 'airtable') {
-      dispatch(uploadFileStart())
-      fileParams = await uploadFileAPI(uploadType, publicLink, file)
-      dispatch(uploadFileSuccess(fileParams))
     }
 
     if (dataType === 'product') {
