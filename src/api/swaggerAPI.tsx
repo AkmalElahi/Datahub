@@ -162,7 +162,9 @@ export async function addViewAPI(
         sessionId,
         metadata
     )
-    return response.data
+    return {
+      view: response.data,
+    }
   } catch (err) {
     throw err
   }

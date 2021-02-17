@@ -7,7 +7,7 @@ import {
   upsertViewMetadataAPI,
   uploadFileAPI,
   createProductAPI,
-  createTableAPI
+  createTableAPI, addViewAPI
 } from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
 import {createTableStart, createTableSuccess} from "./tableSlice";
@@ -104,82 +104,25 @@ export const {
 export default views.reducer
 
 export const addView = (
+    name: string,
     productName: string,
     tableName: string,
-    name: string,
     viewType: 'table' | 'card',
-) => async (dispatch, getState) => {
+): AppThunk => async (dispatch) => {
   try {
-    dispatch(uploadFileStart())
-    fileParams = await uploadFileAPI(uploadType, publicLink, file)
-    dispatch(uploadFileSuccess(fileParams))
-
-    if (dataType === 'product') {
-      dispatch(createProductStart())
-      const sessionId = localStorage.getItem('user') || ''
-      const dataSource = {
-        csv_data_source: {
-          filename: fileParams.filename,
-          file_link: fileParams.public_link,
-        },
-        airtable_data_source: {
-          base_id: baseId,
-          table_name: tableName,
-          api_key: apiKey
-        }
-      }
-      const product = await createProductAPI(
-          sessionId,
-          productName,
-          tableName,
-          addViews,
-          fileParams.filename,
-          fileParams.public_link,
-          dataSource
-      )
-      dispatch(createProductSuccess(product))
-    } else if (dataType === 'table') {
-      dispatch(createTableStart())
-      const sessionId = localStorage.getItem('user') || ''
-      const dataSource = {
-        csv_data_source: {
-          filename: fileParams.filename,
-          file_link: fileParams.public_link,
-        },
-        airtable_data_source: {
-          base_id: baseId,
-          table_name: tableName,
-          api_key: apiKey
-        }
-      }
-      const table = await createTableAPI(
-          sessionId,
-          productName,
-          tableName,
-          addViews,
-          fileParams.filename,
-          fileParams.public_link,
-          dataSource
-      )
-      dispatch(createTableSuccess(table))
-      if (table.product_full_metadata)
-        dispatch(updateProductMetadata(table.product_full_metadata))
-      if (dataType === 'table')
-        dispatch(
-            setSource(
-                getState().product.product.product_full_metadata
-                    .table_full_metadata_list.length - 1,
-                false,
-                tableName
-            )
-        )
-    }
+    dispatch(getViewStart())
+    const sessionId = localStorage.getItem('user') || ''
+    let viewMetadata = {} as ViewMetadata
+    viewMetadata.name = name
+    viewMetadata.product_name = productName
+    viewMetadata.table_name = tableName
+    viewMetadata.view_type = viewType
+    const viewConstructor = await addViewAPI(sessionId, viewMetadata)
+    dispatch(getViewSuccess(viewConstructor))
   } catch (err) {
-    dispatch(createProductFailure(err.toString()))
+    dispatch(getViewFailure(err.toString()))
   }
 }
-
-
 
 export const fetchView = (
   productName: string,
