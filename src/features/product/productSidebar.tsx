@@ -74,15 +74,18 @@ export const ProductSidebar = ({
     </DataSource>
   ))
 
-  const renderedViews = views?.map((v, index) => (
-    <DataSource
+  const renderedViews = views?.map((v, index) => {
+
+    const title = v?.card_view ? v?.card_view?.title : v?.table_view?.title
+
+    return (<DataSource
       active={tab === 'views' && source === index}
       onClick={() => handleSourceChange(index)}
       key={v?.card_view?.title}
     >
-      {v?.card_view?.title}
-    </DataSource>
-  ))
+      {title}
+    </DataSource>)
+  })
 
   return (
     <SidebarGroup>
