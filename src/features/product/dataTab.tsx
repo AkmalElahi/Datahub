@@ -126,7 +126,7 @@ export const DataTab = ({
         <ContentBox>{renderedMetadata}</ContentBox>
       </form>
       <ContentBox>
-        <h1>Columns</h1>
+        <h2>Columns</h2>
         {renderedColumns}
         {renderedTable}
       </ContentBox>
