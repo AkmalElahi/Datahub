@@ -62,7 +62,7 @@ const View = styled.li<{ active: boolean }>`
 `
 
 interface Props {
-  viewTitles: (string | null | undefined)[] | undefined
+  viewTitles: ({ title: string | null | undefined, name: string | null | undefined, })[] | undefined
   setTab: (tab: currentTab) => void
 }
 
@@ -75,11 +75,11 @@ export const ProductViewHeader = ({ viewTitles, setTab }: Props) => {
 
   const renderedViews = viewTitles?.map((view, i) => (
     <View
-      active={tab === view}
-      onClick={() => handleTabChange(view)}
-      key={view}
+      active={tab === view.name}
+      onClick={() => handleTabChange(view.name)}
+      key={view?.title}
     >
-      {view}
+      {view?.title}
     </View>
   ))
   return (

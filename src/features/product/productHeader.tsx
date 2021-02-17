@@ -41,15 +41,15 @@ const ButtonGroup = styled.div`
   flex-wrap: wrap;
 `
 
-const AddDataButton = styled(Button)`
+const SaveButton = styled(Button)`
   background: none;
   border: 1px solid #272d34;
-  max-width: 180px;
+  min-width: 110px;
   font-weight: 500;
   padding: 0.8rem 1.4rem;
 `
 
-const SaveButton = styled(Button)`
+const AddDataButton = styled(Button)`
   color: #f8f8f8;
   background: #4d9ef6;
   min-width: 110px;
@@ -99,8 +99,11 @@ export const ProductHeader = ({ productName, tableTitle, register }: Props) => {
       </FlexColumn>
       <FlexColumn>
         <ButtonGroup>
+          <SaveButton name="submit" type="submit" ref={register}>
+              Save
+          </SaveButton>
           <StyledPopup
-            trigger={<AddDataButton>Add Data Source</AddDataButton>}
+            trigger={<AddDataButton>Add Data</AddDataButton>}
             modal
           >
             {(close) => (
@@ -112,9 +115,6 @@ export const ProductHeader = ({ productName, tableTitle, register }: Props) => {
               />
             )}
           </StyledPopup>
-          <SaveButton name="submit" type="submit" ref={register}>
-            Save
-          </SaveButton>
         </ButtonGroup>
       </FlexColumn>
     </FlexRow>
