@@ -119,79 +119,72 @@ export const uploadThenAddThunk = (
   tableName: string,
   uploadType: 'data' | 'image',
   dataType: 'product' | 'table',
-  fileType: 'link' | 'upload',
+  fileType: 'link' | 'upload' | 'airtable',
   addViews: string,
-  airTable: string | undefined,
-  baseId: string | undefined,
-  apiKey: string | undefined,
+  baseId?: string,
+  apiKey?: string,
   publicLink?: string,
   file?: FormData
 ) => async (dispatch, getState) => {
   let fileParams
   try {
-    dispatch(uploadFileStart())
-    fileParams = await uploadFileAPI(uploadType, publicLink, file)
-    dispatch(uploadFileSuccess(fileParams))
+    const dataSource = {
+      ...(fileType !== 'airtable' && {
+        csv_data_source: {
+          filename: fileParams?.filename,
+          file_link: fileParams?.public_link,
+        },
+      }),
+      ...(fileType === 'airtable' && {
+        airtable_data_source: {
+          base_id: baseId,
+          table_name: tableName,
+          api_key: apiKey,
+        },
+      }),
+    }
+    if (fileType !== 'airtable') {
+      dispatch(uploadFileStart())
+      fileParams = await uploadFileAPI(uploadType, publicLink, file)
+      dispatch(uploadFileSuccess(fileParams))
+    }
 
     if (dataType === 'product') {
       dispatch(createProductStart())
       const sessionId = localStorage.getItem('user') || ''
-      const dataSource = {
-        csv_data_source: {
-          filename: fileParams.filename,
-          file_link: fileParams.public_link,
-        },
-        airtable_data_source: {
-          base_id: baseId,
-          table_name: tableName,
-          api_key: apiKey
-        }
-      }
       const product = await createProductAPI(
         sessionId,
         productName,
         tableName,
         addViews,
-        fileParams.filename,
-        fileParams.public_link,
+        fileParams?.filename,
+        fileParams?.public_link,
         dataSource
       )
       dispatch(createProductSuccess(product))
     } else if (dataType === 'table') {
       dispatch(createTableStart())
       const sessionId = localStorage.getItem('user') || ''
-      const dataSource = {
-        csv_data_source: {
-          filename: fileParams.filename,
-          file_link: fileParams.public_link,
-        },
-        airtable_data_source: {
-          base_id: baseId,
-          table_name: tableName,
-          api_key: apiKey
-        }
-      }
       const table = await createTableAPI(
         sessionId,
         productName,
         tableName,
         addViews,
-        fileParams.filename,
-        fileParams.public_link,
+        fileParams?.filename,
+        fileParams?.public_link,
         dataSource
       )
       dispatch(createTableSuccess(table))
       if (table.product_full_metadata)
         dispatch(updateProductMetadata(table.product_full_metadata))
-      if (dataType === 'table')
-        dispatch(
-          setSource(
-            getState().product.product.product_full_metadata
-              .table_full_metadata_list.length - 1,
-            false,
-            tableName
-          )
+      dispatch(
+        setSource(
+          getState().product.product.product_full_metadata
+            .table_full_metadata_list.length - 1,
+          false,
+          tableName
         )
+      )
     }
   } catch (err) {
     dispatch(createProductFailure(err.toString()))

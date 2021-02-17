@@ -135,7 +135,7 @@ const RightColumn = styled.div`
 `
 const AirTableRadioLabel = styled(Label)`
   display: block;
-  margin:1.5rem 0;
+  margin: 1.5rem 0;
 `
 
 interface Props {
@@ -198,7 +198,7 @@ export const DataSourcePopup = ({
     watch,
     handleSubmit: handleSubmit2,
   } = useForm<FormData>()
-  const watchAirTable = watch('airTable')
+  const watchAirTable = watch('fileRadio')
   const onSubmitSource = async (data) => {
     let result = await dispatch(
       uploadThenAddThunk(
@@ -208,15 +208,16 @@ export const DataSourcePopup = ({
         dataType,
         data.fileRadio,
         data.addViews ? 'true' : 'false',
-        data.fileRadio === 'link' ? data.newLink : undefined,
-        data.fileRadio === 'upload' ? data.file : undefined,
-        data.airTable,
         data.baseId,
-        data.apiKey
+        data.apiKey,
+        data.fileRadio === 'link' ? data.newLink : undefined,
+        data.fileRadio === 'upload' ? data.file : undefined
       )
     )
-    close()
-    if (!productName) navigate('/' + data.productName)
+    if (!ProductError) {
+      close()
+      if (!productName) navigate('/' + data.productName)
+    }
   }
   if (ProductError) {
     renderedError = (
@@ -246,8 +247,8 @@ export const DataSourcePopup = ({
                 disabled
               />
             ) : (
-                <Input type="text" name="productName" ref={register2} />
-              )}
+              <Input type="text" name="productName" ref={register2} />
+            )}
 
             <NewLabel>Table Name</NewLabel>
             <Input type="text" name="tableName" ref={register2} />
@@ -277,19 +278,20 @@ export const DataSourcePopup = ({
           <AirTableRadioLabel>
             <input
               type="radio"
-              name="airTable"
-              value="isAirTable"
+              name="fileRadio"
+              value="airtable"
               ref={register2}
             />
             Airtable
           </AirTableRadioLabel>
-          {watchAirTable && (<>
-            <NewLabel>Base ID</NewLabel>
-            <Input type="text" name="baseId" ref={register2} />
-            <NewLabel>API Key</NewLabel>
-            <Input type="text" name="apiKey" ref={register2} />
-          </>)}
-
+          {watchAirTable === 'airtable' && (
+            <>
+              <NewLabel>Base ID</NewLabel>
+              <Input type="text" name="baseId" ref={register2} />
+              <NewLabel>API Key</NewLabel>
+              <Input type="text" name="apiKey" ref={register2} />
+            </>
+          )}
         </div>
 
         {renderedError}
