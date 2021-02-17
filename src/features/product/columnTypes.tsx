@@ -123,20 +123,20 @@ export const ColumnTypes = ({
   let renderedDataTypes = metadata?.map((meta) => (
     <FlexColumn key={meta.column_num}>
       <ColumnBox>
-        {meta.data_type ? DATA_TYPES[meta.data_type] : 'unknown'}
+        {meta.data_type || meta.data_type === 0 ? DATA_TYPES[meta.data_type] : 'unknown'}
       </ColumnBox>
     </FlexColumn>
   ))
 
   let renderedEntities = entities?.map((ent, i) => (
-    <FlexColumn key={ent.entity?.entity_metadata?.name}>
+    <FlexColumn key={ent.columnIndex}>
       <EntityBox>
-        {ent.entity?.entity_metadata?.name || 'none'}
+        {ent.entityName || 'none'}
         <StyledPopup trigger={<Ellipses />} modal>
           {(close) => (
             <EntityPopup
               close={close}
-              entities={entityCandidates?.[i].entity_metadata_list}
+              entities={entityCandidates?.[i]?.entity_metadata_list}
               table={table}
               index={i}
             />

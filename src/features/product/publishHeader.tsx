@@ -1,5 +1,4 @@
 import React from 'react'
-import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 
 const FlexRow = styled.div`
@@ -56,17 +55,16 @@ const SaveButton = styled(Button)`
 
 interface Props {
   isPublished: boolean
-  register: ReturnType<typeof useForm>['register']
 }
 
-export const PublishHeader = ({ isPublished, register }: Props) => {
+export const PublishHeader = ({ isPublished }: Props) => {
   return (
     <FlexRow>
       <FlexColumn></FlexColumn>
       <FlexColumn>
         <ButtonGroup>
           <AddDataButton>Save</AddDataButton>
-          <SaveButton type="submit" ref={register}>
+          <SaveButton type="submit">
             {isPublished ? 'Unpublish' : 'Publish'}
           </SaveButton>
         </ButtonGroup>

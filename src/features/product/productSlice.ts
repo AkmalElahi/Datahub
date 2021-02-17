@@ -178,12 +178,13 @@ export const uploadThenAddThunk = (
       dispatch(createTableSuccess(table))
       if (table.product_full_metadata)
         dispatch(updateProductMetadata(table.product_full_metadata))
-      dispatch(
-        setSource(
-          getState().product.product.product_full_metadata
-            .table_full_metadata_list.length - 1,
-          false,
-          tableName
+      if (dataType === 'table')
+        dispatch(
+          setSource(
+            getState().product.product.product_full_metadata
+              .table_full_metadata_list.length - 1,
+            tableName
+          )
         )
       )
     }

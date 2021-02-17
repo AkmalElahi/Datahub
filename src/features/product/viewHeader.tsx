@@ -1,6 +1,10 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
+
+import { DraftMetadata } from './viewSlice'
+import { postViewMetadata } from './viewSlice'
 
 const FlexRow = styled.div`
   display: flex;
@@ -80,10 +84,24 @@ const ToggleLabel = styled.label``
 interface Props {
   viewType: string
   productTitle: string
-  register: ReturnType<typeof useForm>['register']
+  draftMetadata: DraftMetadata
+  handleSubmit: ReturnType<typeof useForm>['handleSubmit']
 }
 
-export const ViewHeader = ({ viewType, productTitle, register }: Props) => {
+export const ViewHeader = ({
+  viewType,
+  productTitle,
+  draftMetadata,
+  handleSubmit,
+}: Props) => {
+  const dispatch = useDispatch()
+  const onSubmitView = (data) => {
+    console.log('test')
+    if (draftMetadata.edited) {
+      dispatch(postViewMetadata(draftMetadata.metadata))
+    }
+  }
+
   return (
     <FlexRow>
       <ProductHeader>{productTitle}</ProductHeader>
@@ -91,7 +109,11 @@ export const ViewHeader = ({ viewType, productTitle, register }: Props) => {
       <FlexColumn>
         <ButtonGroup>
           <AddDataButton>Add View</AddDataButton>
-          <SaveButton type="submit" name="submit" ref={register}>
+          <SaveButton
+            type="submit"
+            name="submit"
+            onClick={handleSubmit(onSubmitView)}
+          >
             Save
           </SaveButton>
         </ButtonGroup>

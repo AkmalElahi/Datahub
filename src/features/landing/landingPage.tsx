@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import Popup from 'reactjs-popup'
+
 import { Navbar } from '../../components/Navbar'
 import { DataSourcePopup } from '../../components/DataSourcePopup'
 
@@ -38,7 +39,7 @@ const StyledPopup = styled(Popup)`
 
     .modal {
       padding: 2rem;
-
+      
       >.close {
         cursor: pointer;
         position: absolute;

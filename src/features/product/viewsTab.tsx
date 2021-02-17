@@ -32,15 +32,7 @@ interface Props {
 
 export const ViewsTab = ({ productName, viewName }: Props) => {
   const dispatch = useDispatch()
-
   const { register, errors, handleSubmit } = useForm<FormData>()
-
-  const onSubmit = (data) => {
-    if (draftMetadata.edited) {
-      dispatch(postViewMetadata(draftMetadata.metadata))
-    }
-  }
-
   const {
     viewsByName,
     draftMetadata,
@@ -49,8 +41,6 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
   } = useSelector((state: RootState) => state.views)
 
   let currentView = viewsByName[viewName]
-
-  console.log(draftMetadata)
 
   useEffect(() => {
     if (!currentView) {
@@ -94,27 +84,25 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
       <h3>Loading...</h3>
     ) : (
       <ViewMetadataSection
-        metadata={currentView.view_metadata}
+        metadata={draftMetadata.metadata}
         possibleViews={currentView.view_possible_for_view}
         register={register}
-        errors={errors}
       />
     )
 
   return (
     <React.Fragment>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        {currentView && (
-          <ViewHeader
-            viewType={
-              currentView.view_metadata?.card_view ? 'Card View' : 'Table View'
-            }
-            productTitle={currentView.view_metadata?.product_name || ''}
-            register={register}
-          />
-        )}
-        <ContentBox>{renderedMetadata}</ContentBox>
-      </form>
+      {currentView && (
+        <ViewHeader
+          viewType={
+            currentView.view_metadata?.card_view ? 'Card View' : 'Table View'
+          }
+          productTitle={currentView.view_metadata?.product_name || ''}
+          draftMetadata={draftMetadata}
+          handleSubmit={handleSubmit}
+        />
+      )}
+      <ContentBox>{renderedMetadata}</ContentBox>
       <ContentBox>{renderedTable}</ContentBox>
     </React.Fragment>
   )
