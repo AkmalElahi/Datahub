@@ -186,7 +186,6 @@ export const uploadThenAddThunk = (
             tableName
           )
         )
-      )
     }
   } catch (err) {
     dispatch(createProductFailure(err.toString()))
