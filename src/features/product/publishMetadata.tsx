@@ -83,7 +83,7 @@ export const PublishMetadataSection = ({
   //}
 
   let renderedViews = homeCandidates?.map((c) => (
-    <option value={c.name || 'none'} key={c.name}>
+    <option value={c.name || ''} key={c.name} selected={c.name === metadata?.home_page_view_name}>
       {c.name}
     </option>
   ))
