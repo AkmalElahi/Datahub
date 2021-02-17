@@ -205,6 +205,7 @@ export const AddViewPopup = ({close, productFullMetadata}: Props) => {
                                 name="viewTypeRadio"
                                 value="table"
                                 style={{ marginTop: '15px' }}
+                                defaultChecked={true}
                                 ref={register}
                             />
                             Table View
