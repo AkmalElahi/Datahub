@@ -1,8 +1,25 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { ViewConstructor, ViewMetadata } from '../../gen/api/api'
-import { View, getViewAPI, upsertViewMetadataAPI } from '../../api/swaggerAPI'
+import {
+  View,
+  getViewAPI,
+  upsertViewMetadataAPI,
+  uploadFileAPI,
+  createProductAPI,
+  createTableAPI
+} from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
+import {createTableStart, createTableSuccess} from "./tableSlice";
+import {setSource} from "./tabDisplaySlice";
+import {
+  createProductFailure,
+  createProductStart,
+  createProductSuccess,
+  updateProductMetadata,
+  uploadFileStart,
+  uploadFileSuccess
+} from "./productSlice";
 
 interface ViewState {
   viewsByName: Record<string, ViewConstructor>
@@ -85,6 +102,84 @@ export const {
 } = views.actions
 
 export default views.reducer
+
+export const addView = (
+    productName: string,
+    tableName: string,
+    name: string,
+    viewType: 'table' | 'card',
+) => async (dispatch, getState) => {
+  try {
+    dispatch(uploadFileStart())
+    fileParams = await uploadFileAPI(uploadType, publicLink, file)
+    dispatch(uploadFileSuccess(fileParams))
+
+    if (dataType === 'product') {
+      dispatch(createProductStart())
+      const sessionId = localStorage.getItem('user') || ''
+      const dataSource = {
+        csv_data_source: {
+          filename: fileParams.filename,
+          file_link: fileParams.public_link,
+        },
+        airtable_data_source: {
+          base_id: baseId,
+          table_name: tableName,
+          api_key: apiKey
+        }
+      }
+      const product = await createProductAPI(
+          sessionId,
+          productName,
+          tableName,
+          addViews,
+          fileParams.filename,
+          fileParams.public_link,
+          dataSource
+      )
+      dispatch(createProductSuccess(product))
+    } else if (dataType === 'table') {
+      dispatch(createTableStart())
+      const sessionId = localStorage.getItem('user') || ''
+      const dataSource = {
+        csv_data_source: {
+          filename: fileParams.filename,
+          file_link: fileParams.public_link,
+        },
+        airtable_data_source: {
+          base_id: baseId,
+          table_name: tableName,
+          api_key: apiKey
+        }
+      }
+      const table = await createTableAPI(
+          sessionId,
+          productName,
+          tableName,
+          addViews,
+          fileParams.filename,
+          fileParams.public_link,
+          dataSource
+      )
+      dispatch(createTableSuccess(table))
+      if (table.product_full_metadata)
+        dispatch(updateProductMetadata(table.product_full_metadata))
+      if (dataType === 'table')
+        dispatch(
+            setSource(
+                getState().product.product.product_full_metadata
+                    .table_full_metadata_list.length - 1,
+                false,
+                tableName
+            )
+        )
+    }
+  } catch (err) {
+    dispatch(createProductFailure(err.toString()))
+  }
+}
+
+
 
 export const fetchView = (
   productName: string,

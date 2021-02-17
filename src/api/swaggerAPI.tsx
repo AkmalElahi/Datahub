@@ -153,6 +153,21 @@ export async function upsertViewMetadataAPI(
   }
 }
 
+export async function addViewAPI(
+    sessionId: string,
+    metadata: ViewMetadata
+) {
+  try {
+    const response = await apiService.addViewPost(
+        sessionId,
+        metadata
+    )
+    return response.data
+  } catch (err) {
+    throw err
+  }
+}
+
 export async function getProductConstructorAPI(
   sessionId: string,
   productName: string
