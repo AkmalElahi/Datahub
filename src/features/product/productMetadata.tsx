@@ -103,7 +103,7 @@ export const ProductMetadataSection = ({
           <UList>
             <List>
               <Label>Name</Label>
-              <Input value={metadata?.name || 'none'} disabled />
+              <Input value={metadata?.name || ''} disabled />
             </List>
           </UList>
         </FlexColumn>
@@ -129,7 +129,7 @@ export const ProductMetadataSection = ({
             <Input
                 name="title"
                 key={metadata?.title}
-                defaultValue={metadata?.title || 'none'}
+                defaultValue={metadata?.title || ''}
                 ref={register}
             />
             {errors.title}
@@ -143,7 +143,7 @@ export const ProductMetadataSection = ({
             <Input
               name="description"
               key={metadata?.description}
-              defaultValue={metadata?.description || 'none'}
+              defaultValue={metadata?.description || ''}
               ref={register}
             />
             {errors.description}
