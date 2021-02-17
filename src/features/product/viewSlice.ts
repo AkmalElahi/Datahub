@@ -5,20 +5,11 @@ import {
   View,
   getViewAPI,
   upsertViewMetadataAPI,
-  uploadFileAPI,
-  createProductAPI,
-  createTableAPI, addViewAPI
+  addViewAPI
 } from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
-import {createTableStart, createTableSuccess} from "./tableSlice";
-import {setSource} from "./tabDisplaySlice";
 import {
-  createProductFailure,
-  createProductStart,
-  createProductSuccess,
   updateProductMetadata,
-  uploadFileStart,
-  uploadFileSuccess
 } from "./productSlice";
 
 interface ViewState {
@@ -117,8 +108,10 @@ export const addView = (
     viewMetadata.product_name = productName
     viewMetadata.table_name = tableName
     viewMetadata.view_type = viewType
-    const viewConstructor = await addViewAPI(sessionId, viewMetadata)
-    dispatch(getViewSuccess(viewConstructor))
+    const viewConstructorResponse = await addViewAPI(sessionId, viewMetadata)
+    dispatch(getViewSuccess(viewConstructorResponse))
+    if (viewConstructorResponse.view.product_full_metadata)
+      dispatch(updateProductMetadata(viewConstructorResponse.view.product_full_metadata))
   } catch (err) {
     dispatch(getViewFailure(err.toString()))
   }

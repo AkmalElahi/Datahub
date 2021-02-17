@@ -63,6 +63,11 @@ const Dropdown = styled.select`
   margin-bottom: 15px;
 `
 
+const RadioLabel = styled(Label)`
+  display: block;
+  margin-bottom: 1.5rem;
+`
+
 const ButtonGroup = styled.div`
   display: flex;
   flex-direction: row;
@@ -147,7 +152,7 @@ export const AddViewPopup = ({close, productFullMetadata}: Props) => {
                 data.name,
                 productName,
                 data.tableName,
-                'table'//data.viewType
+                data.viewTypeRadio
             )
         )
         close()
@@ -194,6 +199,25 @@ export const AddViewPopup = ({close, productFullMetadata}: Props) => {
                         </Dropdown>
                         <NewLabel>Name</NewLabel>
                         <Input type="text" name="name" ref={register} />
+                        <RadioLabel>
+                            <input
+                                type="radio"
+                                name="viewTypeRadio"
+                                value="table"
+                                style={{ marginTop: '15px' }}
+                                ref={register}
+                            />
+                            Table View
+                        </RadioLabel>
+                        <RadioLabel>
+                            <input
+                                type="radio"
+                                name="viewTypeRadio"
+                                value="card"
+                                ref={register}
+                            />
+                            Card View
+                        </RadioLabel>
                     </TextInputGroup>
                 </div>
 
