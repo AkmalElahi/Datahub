@@ -1398,10 +1398,10 @@ export interface ViewMetadata {
     popularity?: number | null;
     /**
      * Type of view. Can be either \'table\' or \'card\'.
-     * @type {boolean}
+     * @type {string}
      * @memberof ViewMetadata
      */
-    view_type?: boolean | null;
+    view_type?: string | null;
     /**
      * 
      * @type {TableViewMetadata}
@@ -1421,6 +1421,12 @@ export interface ViewMetadata {
  * @interface ViewPage
  */
 export interface ViewPage {
+    /**
+     * 
+     * @type {ProductFullMetadata}
+     * @memberof ViewPage
+     */
+    product_full_metadata?: ProductFullMetadata;
     /**
      * 
      * @type {ViewMetadata}

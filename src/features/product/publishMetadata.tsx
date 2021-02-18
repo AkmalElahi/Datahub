@@ -60,11 +60,26 @@ const Dropdown = styled.select`
   box-sizing: border-box;
   border-radius: 0 6px 6px 0;
 `
+const UploadButton = styled.span`
+border-radius: 10px;
+font-style: normal;
+font-weight: bold;
+font-size: 16px;
+line-height: 24px;
+text-align: center;
+padding: 0.8rem 1rem;
+border:1px solid lightgrey;
+cursor: pointer;
+background-color:#ffffff;
+position:relative
+`
 interface Props {
   metadata: ProductMetadata | undefined
   homeCandidates: ViewMetadata[] | undefined
   register: ReturnType<typeof useForm>['register']
   errors: ReturnType<typeof useForm>['errors']
+  image_public_link: string | null | undefined,
+  uploadFile: (file: any) => void
 }
 
 //type InputEvent = ChangeEvent<HTMLInputElement>
@@ -75,6 +90,8 @@ export const PublishMetadataSection = ({
   homeCandidates,
   register,
   errors,
+  image_public_link,
+  uploadFile
 }: Props) => {
   //const [currentKey, setCurrentKey] = useState('0')
 
@@ -83,11 +100,10 @@ export const PublishMetadataSection = ({
   //}
 
   let renderedViews = homeCandidates?.map((c) => (
-    <option value={c.name || ''} key={c.name}>
+    <option value={c.name || ''} key={c.name} selected={c.name === metadata?.home_page_view_name}>
       {c.name}
     </option>
   ))
-  console.log("PRODUCT META DATA", metadata)
   return (
     <React.Fragment>
       <h1>Product</h1>
@@ -144,6 +160,19 @@ export const PublishMetadataSection = ({
             </Dropdown>
           </List>
         </UList>
+      </FlexRow>
+      <FlexRow>
+        <FlexColumn style={{ marginRight: '10px', flex: '4' }}>
+          <UList>
+            <List>
+              <Label>Header Image URL</Label>
+              <Input defaultValue={image_public_link || metadata?.header_image_url || ''} />
+            </List>
+          </UList>
+        </FlexColumn>
+        <FlexColumn>
+          <UploadButton ><input onChange={(e) => uploadFile(e.target.files?.[0])} type="file" style={{ opacity: 0, position: 'absolute', left: 0, right: 0, height: "100%", width: "100%" }} /><label>Upload Image</label></UploadButton>
+        </FlexColumn>
       </FlexRow>
     </React.Fragment>
   )

@@ -12,6 +12,7 @@ import {
   UserCredentials,
   ViewConstructor,
   ViewMetadata,
+  ProductMetadata
 } from '../gen/api/api'
 
 const apiService = new DefaultApi()
@@ -153,6 +154,23 @@ export async function upsertViewMetadataAPI(
   }
 }
 
+export async function addViewAPI(
+    sessionId: string,
+    metadata: ViewMetadata
+) {
+  try {
+    const response = await apiService.addViewPost(
+        sessionId,
+        metadata
+    )
+    return {
+      view: response.data,
+    }
+  } catch (err) {
+    throw err
+  }
+}
+
 export async function getProductConstructorAPI(
   sessionId: string,
   productName: string
@@ -284,6 +302,21 @@ export async function publishProductAPI(
       sessionId,
       productName,
       published
+    )
+    return response.data
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function upsertProductMetadataAPI(
+  sessionId: string,
+  productMetadata: ProductMetadata,
+) {
+  try {
+    const response = await apiService.upsertProductMetadataPost(
+      sessionId,
+      productMetadata,
     )
     return response.data
   } catch (err) {
