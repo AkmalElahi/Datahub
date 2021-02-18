@@ -168,56 +168,74 @@ export const ViewMetadataSection = ({
             </UList>
         </FlexRow>
 
-        <FlexRow style={{ paddingBottom: '10px' }}>
-          <Label>Title Column</Label>
-          <Dropdown
-              name="title_column"
-              key={metadata?.card_view.title_column}
-              defaultValue={metadata?.card_view.title_column || ''}
-              ref={register}
-          >
-            <option value='' key=''></option>
-            {renderColumnOptions}
-          </Dropdown>
+        <FlexRow>
+          <FlexColumn style={{ marginRight: '10px' }}>
+            <UList>
+              <List>
+                <Label>Title Column</Label>
+                <Dropdown
+                    name="title_column"
+                    key={metadata?.card_view.title_column}
+                    defaultValue={metadata?.card_view.title_column || ''}
+                    ref={register}
+                >
+                  <option value='' key=''></option>
+                  {renderColumnOptions}
+                </Dropdown>
+              </List>
+            </UList>
+          </FlexColumn>
+          <FlexColumn>
+            <UList>
+              <List>
+                <Label>Subtitle Column</Label>
+                <Dropdown
+                    name="subtitle_column"
+                    key={metadata?.card_view.subtitle_column}
+                    defaultValue={metadata?.card_view.subtitle_column || ''}
+                    ref={register}
+                >
+                  <option value='' key=''></option>
+                  {renderColumnOptions}
+                </Dropdown>
+              </List>
+            </UList>
+          </FlexColumn>
         </FlexRow>
 
-        <FlexRow style={{ paddingBottom: '10px' }}>
-          <Label>Subtitle Column</Label>
-          <Dropdown
-              name="subtitle_column"
-              key={metadata?.card_view.subtitle_column}
-              defaultValue={metadata?.card_view.subtitle_column || ''}
-              ref={register}
-          >
-            <option value='' key=''></option>
-            {renderColumnOptions}
-          </Dropdown>
-        </FlexRow>
-
-        <FlexRow style={{ paddingBottom: '10px' }}>
-          <Label>Description Column</Label>
-          <Dropdown
-              name="description_column"
-              key={metadata?.card_view.description_column}
-              defaultValue={metadata?.card_view.description_column || ''}
-              ref={register}
-          >
-            <option value='' key=''></option>
-            {renderColumnOptions}
-          </Dropdown>
-        </FlexRow>
-
-        <FlexRow style={{ paddingBottom: '10px' }}>
-          <Label>Image Column</Label>
-          <Dropdown
-              name="image_url_column"
-              key={metadata?.card_view.image_url_column}
-              defaultValue={metadata?.card_view.image_url_column || ''}
-              ref={register}
-          >
-            <option value='' key=''></option>
-            {renderColumnOptions}
-          </Dropdown>
+        <FlexRow>
+          <FlexColumn style={{ marginRight: '10px' }}>
+            <UList>
+              <List>
+                <Label>Description Column</Label>
+                <Dropdown
+                    name="description_column"
+                    key={metadata?.card_view.description_column}
+                    defaultValue={metadata?.card_view.description_column || ''}
+                    ref={register}
+                >
+                  <option value='' key=''></option>
+                  {renderColumnOptions}
+                </Dropdown>
+              </List>
+            </UList>
+          </FlexColumn>
+          <FlexColumn>
+            <UList>
+              <List>
+                <Label>Image Column</Label>
+                <Dropdown
+                    name="image_url_column"
+                    key={metadata?.card_view.image_url_column}
+                    defaultValue={metadata?.card_view.image_url_column || ''}
+                    ref={register}
+                >
+                  <option value='' key=''></option>
+                  {renderColumnOptions}
+                </Dropdown>
+              </List>
+            </UList>
+          </FlexColumn>
         </FlexRow>
       </React.Fragment>
     )
@@ -279,22 +297,22 @@ export const ViewMetadataSection = ({
 
   return (
     <React.Fragment>
-      <h1>Data</h1>
+      <h2>Data</h2>
       <form>
         <FlexRow>
           <FlexColumn style={{ marginRight: '10px' }}>
             <UList>
               <List>
-                <Label>Table</Label>
-                <Input value={metadata?.table_name || 'none'} disabled />
+                <Label>Name</Label>
+                <Input value={metadata?.name || 'none'} disabled />
               </List>
             </UList>
           </FlexColumn>
           <FlexColumn>
             <UList>
               <List>
-                <Label>Name</Label>
-                <Input value={metadata?.name || 'none'} disabled />
+                <Label>Table</Label>
+                <Input value={metadata?.table_name || 'none'} disabled />
               </List>
             </UList>
           </FlexColumn>

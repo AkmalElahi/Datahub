@@ -47,15 +47,15 @@ const ButtonGroup = styled.div`
   flex-wrap: wrap;
 `
 
-const AddDataButton = styled(Button)`
+const SaveButton = styled(Button)`
   background: none;
   border: 1px solid #272d34;
-  max-width: 180px;
+  min-width: 110px;
   font-weight: 500;
   padding: 0.8rem 1.4rem;
 `
 
-const SaveButton = styled(Button)`
+const AddDataButton = styled(Button)`
   color: #f8f8f8;
   background: #4d9ef6;
   min-width: 110px;
@@ -154,6 +154,13 @@ export const ViewHeader = ({
       <ViewTypeBox>{viewType}</ViewTypeBox>
       <FlexColumn>
         <ButtonGroup>
+          <SaveButton
+              type="submit"
+              name="submit"
+              onClick={handleSubmit(onSubmitView)}
+          >
+            Save
+          </SaveButton>
           <StyledPopup
               trigger={<AddDataButton>Add View</AddDataButton>}
               modal
@@ -165,13 +172,6 @@ export const ViewHeader = ({
                 />
             )}
           </StyledPopup>
-          <SaveButton
-            type="submit"
-            name="submit"
-            onClick={handleSubmit(onSubmitView)}
-          >
-            Save
-          </SaveButton>
         </ButtonGroup>
       </FlexColumn>
     </FlexRow>

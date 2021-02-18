@@ -233,7 +233,7 @@ export const DataSourcePopup = ({
       <button className="close" onClick={close}>
         &times;
       </button>
-      <div className="header">Add Data Source</div>
+      <div className="header">Add Data</div>
       <form key={1} onSubmit={handleSubmit2(onSubmitSource)}>
         <div className="content">
           <TextInputGroup>
