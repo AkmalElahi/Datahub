@@ -224,7 +224,7 @@ export const ViewMetadataSection = ({
 
   return (
     <React.Fragment>
-      <h1>Data</h1>
+      <h2>Data</h2>
       <form>
         <FlexRow>
           <FlexColumn style={{ marginRight: '10px' }}>

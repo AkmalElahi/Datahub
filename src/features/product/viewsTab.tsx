@@ -110,7 +110,10 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
         />
       )}
       <ContentBox>{renderedMetadata}</ContentBox>
-      <ContentBox>{renderedTable}</ContentBox>
+      <ContentBox>
+        <h2>Preview</h2>
+        {renderedTable}
+      </ContentBox>
     </React.Fragment>
   )
 }
