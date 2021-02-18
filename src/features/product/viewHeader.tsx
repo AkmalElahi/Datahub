@@ -5,6 +5,9 @@ import styled from 'styled-components'
 
 import { DraftMetadata } from './viewSlice'
 import { postViewMetadata } from './viewSlice'
+import { ProductFullMetadata } from '../../gen/api/api'
+import { AddViewPopup } from "../../components/AddViewPopup";
+import Popup from "reactjs-popup";
 
 const FlexRow = styled.div`
   display: flex;
@@ -58,6 +61,35 @@ const SaveButton = styled(Button)`
   margin-left: 10px;
 `
 
+const StyledPopup = styled(Popup)`
+  &-content {
+    border: none;
+    border-radius: 8px;
+    max-width: 480px;
+
+    .modal {
+      padding: 2rem;
+
+      >.close {
+        cursor: pointer;
+        position: absolute;
+        display: block;
+        padding: 2px 5px;
+        right: 20px;
+        font-size: 36px;
+        font-weight: 600;
+        border: none;
+        background-color: transparent;
+        outline: none;
+      }
+      >.header {
+        font-size: 2em;
+        font-weight: 500;
+        margin-bottom: 1rem;
+      }
+  }
+`
+
 const ProductHeader = styled.h1`
   margin: 0;
   padding-right: 1.5rem;
@@ -84,6 +116,7 @@ const ToggleLabel = styled.label``
 interface Props {
   viewType: string
   productTitle: string
+  productFullMetadata: ProductFullMetadata
   draftMetadata: DraftMetadata
   handleSubmit: ReturnType<typeof useForm>['handleSubmit']
 }
@@ -91,6 +124,7 @@ interface Props {
 export const ViewHeader = ({
   viewType,
   productTitle,
+  productFullMetadata,
   draftMetadata,
   handleSubmit,
 }: Props) => {
@@ -108,7 +142,17 @@ export const ViewHeader = ({
       <ViewTypeBox>{viewType}</ViewTypeBox>
       <FlexColumn>
         <ButtonGroup>
-          <AddDataButton>Add View</AddDataButton>
+          <StyledPopup
+              trigger={<AddDataButton>Add View</AddDataButton>}
+              modal
+          >
+            {(close) => (
+                <AddViewPopup
+                    close={close}
+                    productFullMetadata={productFullMetadata}
+                />
+            )}
+          </StyledPopup>
           <SaveButton
             type="submit"
             name="submit"

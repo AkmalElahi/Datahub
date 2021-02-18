@@ -1,8 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { ViewConstructor, ViewMetadata } from '../../gen/api/api'
-import { View, getViewAPI, upsertViewMetadataAPI } from '../../api/swaggerAPI'
+import {
+  View,
+  getViewAPI,
+  upsertViewMetadataAPI,
+  addViewAPI
+} from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
+import {
+  updateProductMetadata,
+} from "./productSlice";
 
 interface ViewState {
   viewsByName: Record<string, ViewConstructor>
@@ -85,6 +93,29 @@ export const {
 } = views.actions
 
 export default views.reducer
+
+export const addView = (
+    name: string,
+    productName: string,
+    tableName: string,
+    viewType: 'table' | 'card',
+): AppThunk => async (dispatch) => {
+  try {
+    dispatch(getViewStart())
+    const sessionId = localStorage.getItem('user') || ''
+    let viewMetadata = {} as ViewMetadata
+    viewMetadata.name = name
+    viewMetadata.product_name = productName
+    viewMetadata.table_name = tableName
+    viewMetadata.view_type = viewType
+    const viewConstructorResponse = await addViewAPI(sessionId, viewMetadata)
+    dispatch(getViewSuccess(viewConstructorResponse))
+    if (viewConstructorResponse.view.product_full_metadata)
+      dispatch(updateProductMetadata(viewConstructorResponse.view.product_full_metadata))
+  } catch (err) {
+    dispatch(getViewFailure(err.toString()))
+  }
+}
 
 export const fetchView = (
   productName: string,
