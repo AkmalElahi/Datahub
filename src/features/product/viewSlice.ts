@@ -21,14 +21,13 @@ interface ViewState {
 
 const viewsInitialState: ViewState = {
   viewsByName: {},
-  draftMetadata: { metadata: {}, edited: false },
+  draftMetadata: { metadata: {} },
   isLoading: false,
   error: null,
 }
 
 export interface DraftMetadata {
   metadata: ViewMetadata
-  edited: boolean
 }
 
 function startLoading(state: ViewState) {
@@ -52,7 +51,7 @@ const views = createSlice({
       state.error = null
       state.viewsByName[view.view_metadata?.name || 'none'] = view
       if (view.view_metadata)
-        state.draftMetadata = { metadata: view.view_metadata, edited: false }
+        state.draftMetadata = { metadata: view.view_metadata }
     },
     upsertViewMetadataSuccess(
       state,
@@ -70,7 +69,6 @@ const views = createSlice({
         if (typeof payload === 'string') {
           state.draftMetadata = {
             metadata: state.viewsByName[payload || 'none']?.view_metadata || {},
-            edited: false,
           }
         } else {
           state.draftMetadata = payload
@@ -139,7 +137,7 @@ export const postViewMetadata = (
     const sessionId = localStorage.getItem('user') || ''
     const metadata = await upsertViewMetadataAPI(sessionId, fullMetadata)
     dispatch(
-      draftMetadata({ metadata: metadata.view_metadata || {}, edited: false })
+      draftMetadata({ metadata: metadata.view_metadata || {} })
     )
     dispatch(upsertViewMetadataSuccess(metadata))
   } catch (err) {

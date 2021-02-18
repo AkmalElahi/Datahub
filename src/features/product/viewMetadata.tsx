@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 
 import Popup from 'reactjs-popup'
 import 'reactjs-popup/dist/index.css'
 
-import { ViewMetadata, ViewPossibleForView } from '../../gen/api/api'
+import {ProductFullMetadata, ViewMetadata, ViewPossibleForView} from '../../gen/api/api'
 import { ColumnsPopup } from '../../components/ColumnsPopup'
 
 const FlexRow = styled.div`
@@ -129,16 +129,22 @@ const EditButton = styled(Button)`
 interface Props {
   metadata: ViewMetadata | undefined
   possibleViews: ViewPossibleForView | undefined
+  product_full_metadata: ProductFullMetadata | undefined
+  reset: ReturnType<typeof useForm>['reset']
   register: ReturnType<typeof useForm>['register']
 }
 
 export const ViewMetadataSection = ({
   metadata,
   possibleViews,
+  product_full_metadata,
+  reset,
   register,
 }: Props) => {
-  let renderTitleOptions = metadata?.card_view?.column_view_list?.map((c) => (
-    <option value={c.title || ''} key={c.title}>
+  useEffect(() => { reset() }, [reset, metadata])
+  let renderColumnOptions = product_full_metadata?.table_full_metadata_list?.find(
+      (tblFllMtd) => tblFllMtd.table_metadata?.name === metadata?.table_name)?.column_metadata_list?.map((c) => (
+    <option value={c.name || ''} key={c.name}>
       {c.title}
     </option>
   ))
@@ -148,31 +154,69 @@ export const ViewMetadataSection = ({
   if (metadata?.card_view) {
     renderedMetadata = (
       <React.Fragment>
+        <FlexRow>
+            <UList style={{ width: '100%' }}>
+                <List>
+                    <Label>Title</Label>
+                    <Input
+                        name="title"
+                        key={metadata?.card_view.title}
+                        defaultValue={metadata?.card_view.title || ''}
+                        ref={register}
+                    />
+                </List>
+            </UList>
+        </FlexRow>
+
         <FlexRow style={{ paddingBottom: '10px' }}>
           <Label>Title Column</Label>
-          <Dropdown name="cardMetadata" id="titleDropdown">
-            {renderTitleOptions}
+          <Dropdown
+              name="title_column"
+              key={metadata?.card_view.title_column}
+              defaultValue={metadata?.card_view.title_column || ''}
+              ref={register}
+          >
+            <option value='' key=''></option>
+            {renderColumnOptions}
           </Dropdown>
         </FlexRow>
 
         <FlexRow style={{ paddingBottom: '10px' }}>
           <Label>Subtitle Column</Label>
-          <Dropdown name="cardMetadata" id="subtitleDropdown">
-            {renderTitleOptions}
+          <Dropdown
+              name="subtitle_column"
+              key={metadata?.card_view.subtitle_column}
+              defaultValue={metadata?.card_view.subtitle_column || ''}
+              ref={register}
+          >
+            <option value='' key=''></option>
+            {renderColumnOptions}
           </Dropdown>
         </FlexRow>
 
         <FlexRow style={{ paddingBottom: '10px' }}>
           <Label>Description Column</Label>
-          <Dropdown name="cardMetadata" id="descDropdown">
-            {renderTitleOptions}
+          <Dropdown
+              name="description_column"
+              key={metadata?.card_view.description_column}
+              defaultValue={metadata?.card_view.description_column || ''}
+              ref={register}
+          >
+            <option value='' key=''></option>
+            {renderColumnOptions}
           </Dropdown>
         </FlexRow>
 
         <FlexRow style={{ paddingBottom: '10px' }}>
           <Label>Image Column</Label>
-          <Dropdown name="cardMetadata" id="imgDropdown">
-            {renderTitleOptions}
+          <Dropdown
+              name="image_url_column"
+              key={metadata?.card_view.image_url_column}
+              defaultValue={metadata?.card_view.image_url_column || ''}
+              ref={register}
+          >
+            <option value='' key=''></option>
+            {renderColumnOptions}
           </Dropdown>
         </FlexRow>
       </React.Fragment>
@@ -184,7 +228,12 @@ export const ViewMetadataSection = ({
           <UList>
             <List>
               <Label>Title</Label>
-              <Input value={metadata?.table_view.title || ''} />
+              <Input
+                  name="title"
+                  key={metadata?.table_view.title}
+                  defaultValue={metadata?.table_view.title || ''}
+                  ref={register}
+              />
             </List>
           </UList>
         </FlexColumn>
@@ -192,7 +241,12 @@ export const ViewMetadataSection = ({
           <UList>
             <List>
               <Label>Subtitle</Label>
-              <Input value={metadata?.table_view.subtitle || ''} />
+              <Input
+                  name="subtitle"
+                  key={metadata?.table_view.subtitle}
+                  defaultValue={metadata?.table_view.subtitle || ''}
+                  ref={register}
+              />
             </List>
           </UList>
         </FlexColumn>
@@ -204,6 +258,7 @@ export const ViewMetadataSection = ({
                 name="description"
                 key={metadata?.table_view.description}
                 defaultValue={metadata?.table_view.description || ''}
+                ref={register}
               />
             </List>
           </UList>
@@ -211,10 +266,10 @@ export const ViewMetadataSection = ({
         <NavLabel>
           <input
             type="checkbox"
-            name="showNav"
+            name="top_level_nav"
             style={{ marginRight: '10px' }}
-            value="true"
-            defaultChecked={true}
+            defaultChecked={metadata?.table_view.top_level_nav === true}
+            ref={register}
           />
           Show in navigation bar
         </NavLabel>
