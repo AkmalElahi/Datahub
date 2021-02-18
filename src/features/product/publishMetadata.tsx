@@ -61,25 +61,21 @@ const Dropdown = styled.select`
   border-radius: 0 6px 6px 0;
 `
 
-const Button = styled.button`
+const UploadButton = styled.span`
   border-radius: 32px;
   font-style: normal;
-  font-weight: bold;
   font-size: 16px;
   line-height: 24px;
   text-align: center;
-  padding: 0.8rem 1rem;
   border: none;
   cursor: pointer;
   outline: none;
-`
-
-const UploadButton = styled(Button)`
   background: none;
   border: 1px solid #272d34;
   min-width: 110px;
   font-weight: 500;
   padding: 0.8rem 1.4rem;
+  position:relative
 `
 
 interface Props {
