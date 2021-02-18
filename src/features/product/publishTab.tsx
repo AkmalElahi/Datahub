@@ -31,15 +31,13 @@ export const PublishTab = ({ productName, previewPage }: Props) => {
   const { register, errors, handleSubmit } = useForm<FormData>()
 
   const onSubmit = (data) => {
-    if (data.title !== currentProduct.product_full_metadata?.product_metadata?.title || data.description !== currentProduct.product_full_metadata?.product_metadata?.description || image_public_link !== null || image_public_link !== undefined) {
+    if (data.title !== currentProduct.product_full_metadata?.product_metadata?.title || data.description !== currentProduct.product_full_metadata?.product_metadata?.description || !!image_public_link) {
       let monetization = currentProduct?.product_full_metadata?.product_metadata?.monetization
       // This is because api sends error if monetization.price goes null
       if (monetization) {
         const price = monetization?.price === null ? 0 : monetization?.price;
         monetization = { ...monetization, price }
-        console.log("MONITIZATION DATA", monetization, price)
       }
-      console.log("FORM DATA", currentProduct.product_full_metadata?.product_metadata, data)
       const postData = { ...currentProduct.product_full_metadata?.product_metadata, ...data, monetization, header_image_url: image_public_link }
       dispatch(postProductMetadata(postData))
 
