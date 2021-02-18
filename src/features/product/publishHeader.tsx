@@ -30,6 +30,18 @@ const Button = styled.button`
   cursor: pointer;
   outline: none;
 `
+const PublishButtonSpan = styled.span`
+  border-radius: 32px;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  padding: 0.8rem 1rem;
+  border: none;
+  cursor: pointer;
+  outline: none;
+`
 
 const ButtonGroup = styled.div`
   display: flex;
@@ -46,7 +58,7 @@ const SaveButton = styled(Button)`
   padding: 0.8rem 1.4rem;
 `
 
-const PublishButton = styled(Button)`
+const PublishButton = styled(PublishButtonSpan)`
   color: #f8f8f8;
   background: #4d9ef6;
   min-width: 110px;
@@ -56,9 +68,10 @@ const PublishButton = styled(Button)`
 interface Props {
   productTitle: string
   isPublished: boolean
+  publishProduct: () => void
 }
 
-export const PublishHeader = ({ productTitle, isPublished }: Props) => {
+export const PublishHeader = ({ productTitle, isPublished, publishProduct }: Props) => {
   return (
     <FlexRow>
       <FlexColumn>
@@ -67,7 +80,7 @@ export const PublishHeader = ({ productTitle, isPublished }: Props) => {
       <FlexColumn>
         <ButtonGroup>
           <SaveButton type="submit">Save</SaveButton>
-          <PublishButton type="submit">
+          <PublishButton onClick={publishProduct}>
             {isPublished ? 'Unpublish' : 'Publish'}
           </PublishButton>
         </ButtonGroup>

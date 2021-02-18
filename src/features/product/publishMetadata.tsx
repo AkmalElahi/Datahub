@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 
@@ -84,7 +84,9 @@ interface Props {
   register: ReturnType<typeof useForm>['register']
   errors: ReturnType<typeof useForm>['errors']
   image_public_link: string | null | undefined,
-  uploadFile: (file: any) => void
+  uploadFile: (file: any) => void,
+  isUploading: boolean
+
 }
 
 //type InputEvent = ChangeEvent<HTMLInputElement>
@@ -96,13 +98,22 @@ export const PublishMetadataSection = ({
   register,
   errors,
   image_public_link,
-  uploadFile
+  uploadFile,
+  isUploading
 }: Props) => {
-  //const [currentKey, setCurrentKey] = useState('0')
+
+  const [imageUrl, setImageUrl] = useState<string | undefined | null>(null)
 
   //const handleChange: ChangeHandler = event => {
   //  setCurrentKey(event.target.value)
   //}
+  useEffect(() => {
+    setImageUrl(metadata?.header_image_url)
+  }, [])
+
+  useEffect(() => {
+    setImageUrl(image_public_link || metadata?.header_image_url)
+  }, [image_public_link])
 
   let renderedViews = homeCandidates?.map((c) => (
     <option value={c.name || ''} key={c.name} selected={c.name === metadata?.home_page_view_name}>
@@ -155,11 +166,13 @@ export const PublishMetadataSection = ({
           <List>
             <Label>Home Page View</Label>
             <Dropdown
-              name="candidates"
-              id="candidates"
+              name="home_page_view_name"
+              id="home_page_view_name"
+              ref={register}
               defaultValue={
                 homeCandidates ? homeCandidates[0].toString() : 'none'
               }
+
             >
               {renderedViews}
             </Dropdown>
@@ -170,9 +183,15 @@ export const PublishMetadataSection = ({
         <UList style={{ width: '100%' }}>
           <List>
             <Label>Header Image URL</Label>
-            <Input defaultValue={image_public_link || metadata?.header_image_url || ''} />
+            <Input
+              name="header_image"
+              key={metadata?.header_image_url}
+              ref={register}
+              defaultValue={imageUrl || ''}
+            />
             <UploadButton style={{ marginLeft: '10px' }}>
               <input
+                disabled={!!isUploading}
                 onChange={(e) => uploadFile(e.target.files?.[0])}
                 type="file"
                 style={{ opacity: 0, position: 'absolute', left: 0, right: 0, height: "100%", width: "100%" }} />

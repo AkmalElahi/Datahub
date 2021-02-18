@@ -30,6 +30,7 @@ interface ProductState {
   isLoading: boolean
   error: string | null
   image_public_link: string | null | undefined
+  isUploading:boolean
 }
 
 interface NewTable {
@@ -41,11 +42,24 @@ const productInitialState = {
   product: {},
   isLoading: false,
   error: null,
-  image_public_link: null
+  image_public_link: null,
+  isUploading:false
+  
 } as ProductState
 
 function startLoading(state: ProductState) {
   state.isLoading = true
+  state.image_public_link = null
+}
+
+function startUploading(state: ProductState) {
+  state.isUploading = true
+  state.image_public_link = null
+}
+
+function uploadingFailed(state: ProductState, action: PayloadAction<string>) {
+  state.isLoading = false
+  state.error = action.payload
 }
 
 function loadingFailed(state: ProductState, action: PayloadAction<string>) {
@@ -59,7 +73,7 @@ const product = createSlice({
   reducers: {
     getProductStart: startLoading,
     createProductStart: startLoading,
-    uploadFileStart: startLoading,
+    uploadFileStart: startUploading,
     publishUnpublishStart: startLoading,
     getProductSuccess(state, { payload }: PayloadAction<Product>) {
       const { product } = payload
@@ -77,6 +91,7 @@ const product = createSlice({
       state.isLoading = false
       state.error = null
       state.image_public_link = payload.public_link
+      state.isUploading=false
     },
     updateProductMetadata(
       state,
@@ -101,7 +116,7 @@ const product = createSlice({
     },
     getProductFailure: loadingFailed,
     createProductFailure: loadingFailed,
-    uploadFileFailure: loadingFailed,
+    uploadFileFailure: uploadingFailed,
     publishUnpublishFailure: loadingFailed,
   },
 })

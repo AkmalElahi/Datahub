@@ -30,26 +30,32 @@ export const PublishTab = ({ productName, previewPage }: Props) => {
 
   const { register, errors, handleSubmit } = useForm<FormData>()
 
+  const publishProduct = () => {
+    const isPublished = currentProduct.product_full_metadata?.product_metadata?.published
+    dispatch(publishUnpublish(productName, !isPublished))
+  }
   const onSubmit = (data) => {
-    if (data.title !== currentProduct.product_full_metadata?.product_metadata?.title || data.description !== currentProduct.product_full_metadata?.product_metadata?.description || !!image_public_link) {
-      let monetization = currentProduct?.product_full_metadata?.product_metadata?.monetization
-      // This is because api sends error if monetization.price goes null
-      if (monetization) {
-        const price = monetization?.price === null ? 0 : monetization?.price;
-        monetization = { ...monetization, price }
-      }
-      const postData = { ...currentProduct.product_full_metadata?.product_metadata, ...data, monetization, header_image_url: image_public_link }
-      dispatch(postProductMetadata(postData))
+    // if (data.title !== currentProduct.product_full_metadata?.product_metadata?.title || data.description !== currentProduct.product_full_metadata?.product_metadata?.description || !!image_public_link) {
 
+    // }
+    // else {
+    //   console.log("INSIDE ELSE")
+
+    // }
+    const header_image_url = data.header_image ? data.header_image : image_public_link
+    let monetization = currentProduct?.product_full_metadata?.product_metadata?.monetization
+    // This is because api sends error if monetization.price goes null
+    console.log("INSIDE IF", data)
+    if (monetization) {
+      const price = monetization?.price === null ? 0 : monetization?.price;
+      monetization = { ...monetization, price }
     }
-    else {
-      const isPublished =
-        currentProduct.product_full_metadata?.product_metadata?.published
-      dispatch(publishUnpublish(productName, !isPublished))
-    }
+    const postData = { ...currentProduct.product_full_metadata?.product_metadata, ...data, monetization, header_image_url }
+    dispatch(postProductMetadata(postData))
+    return null
   }
 
-  const { product, isLoading, image_public_link, error: productError } = useSelector(
+  const { product, isLoading, image_public_link, error: productError, isUploading } = useSelector(
     (state: RootState) => state.product
   )
   const uploadFile = (file) => {
@@ -73,6 +79,7 @@ export const PublishTab = ({ productName, previewPage }: Props) => {
       <h3>Loading...</h3>
     ) : (
         <PublishMetadataSection
+          isUploading={isUploading}
           uploadFile={uploadFile}
           image_public_link={image_public_link}
           metadata={currentProduct.product_full_metadata?.product_metadata}
@@ -94,6 +101,7 @@ export const PublishTab = ({ productName, previewPage }: Props) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         {currentProduct && (
           <PublishHeader
+            publishProduct={publishProduct}
             productTitle={currentProduct.product_full_metadata?.product_metadata?.title || ''}
             isPublished={
               currentProduct.product_full_metadata?.product_metadata
