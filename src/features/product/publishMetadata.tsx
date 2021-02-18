@@ -116,10 +116,11 @@ export const PublishMetadataSection = ({
   }, [image_public_link])
 
   let renderedViews = homeCandidates?.map((c) => (
-    <option value={c.name || ''} key={c.name} selected={c.name === metadata?.home_page_view_name}>
+    <option value={c.name || ''} key={c.name}>
       {c.name}
     </option>
   ))
+  console.log("UPLOADING", isUploading, image_public_link)
   return (
     <React.Fragment>
       <h2>Product</h2>
@@ -169,10 +170,7 @@ export const PublishMetadataSection = ({
               name="home_page_view_name"
               id="home_page_view_name"
               ref={register}
-              defaultValue={
-                homeCandidates ? homeCandidates[0].toString() : 'none'
-              }
-
+              defaultValue={metadata?.home_page_view_name || 'none'}
             >
               {renderedViews}
             </Dropdown>
