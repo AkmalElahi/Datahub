@@ -63,7 +63,7 @@ export const PublishHeader = ({ isPublished }: Props) => {
       <FlexColumn></FlexColumn>
       <FlexColumn>
         <ButtonGroup>
-          <AddDataButton>Save</AddDataButton>
+          <AddDataButton type="submit">Save</AddDataButton>
           <SaveButton type="submit">
             {isPublished ? 'Unpublish' : 'Publish'}
           </SaveButton>

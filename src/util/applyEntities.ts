@@ -10,10 +10,7 @@ export const applyEntities = (
 
   entities.forEach((entity, i) => {
     if (entity.edited) {
-      const entityName =
-        entity !== null ? entity.entity?.entity_metadata?.name : null
-
-      metadata_copy.column_metadata_list[i].entity_name = entityName
+      metadata_copy.column_metadata_list[i].entity_name = entity !== null ? entity.entityName : null
     }
   })
   return metadata_copy

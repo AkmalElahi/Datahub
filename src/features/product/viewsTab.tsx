@@ -37,6 +37,12 @@ interface Props {
 export const ViewsTab = ({ productName, viewName }: Props) => {
   const dispatch = useDispatch()
   const { register, reset, errors, handleSubmit } = useForm<FormData>()
+
+  const { product, error: productError } = useSelector(
+      (state: RootState) => state.product
+  )
+  let currentProduct = product
+
   const {
     viewsByName,
     draftMetadata,
@@ -104,6 +110,7 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
             currentView.view_metadata?.card_view ? 'Card View' : 'Table View'
           }
           productTitle={currentView.view_metadata?.product_name || ''}
+          productFullMetadata={currentProduct.product_full_metadata || {}}
           draftMetadata={draftMetadata}
           handleSubmit={handleSubmit}
         />
