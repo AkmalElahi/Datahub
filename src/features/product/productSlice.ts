@@ -29,7 +29,7 @@ interface ProductState {
   product: ProductConstructor
   isLoading: boolean
   error: string | null
-  
+  image_public_link: string | null | undefined
 }
 
 interface NewTable {
@@ -41,6 +41,7 @@ const productInitialState = {
   product: {},
   isLoading: false,
   error: null,
+  image_public_link: null
 } as ProductState
 
 function startLoading(state: ProductState) {
@@ -75,6 +76,7 @@ const product = createSlice({
     uploadFileSuccess(state, { payload }: PayloadAction<FileParams>) {
       state.isLoading = false
       state.error = null
+      state.image_public_link = payload.public_link
     },
     updateProductMetadata(
       state,
@@ -233,7 +235,7 @@ export const publishUnpublish = (
 }
 
 export const postProductMetadata = (
-  productMetadata:ProductMetadata
+  productMetadata: ProductMetadata
 ): AppThunk => async (dispatch) => {
   try {
     dispatch(createProductStart())
@@ -245,5 +247,20 @@ export const postProductMetadata = (
     dispatch(upsertProductSuccess(response))
   } catch (err) {
     dispatch(createProductFailure(err.toString()))
+  }
+}
+
+export const uploadHeaderImage = (
+  uploadType: 'image',
+  publicLink?: string,
+  file?: FormData,
+): AppThunk => async (dispatch) => {
+  let fileParams
+  try {
+    dispatch(uploadFileStart())
+    fileParams = await uploadFileAPI(uploadType, publicLink, file)
+    dispatch(uploadFileSuccess(fileParams))
+  } catch (err) {
+    dispatch(uploadFileFailure(err.toString()))
   }
 }

@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { RootState } from '../../app/rootReducer'
 
 import { ViewPage } from '../../gen/api/api'
-import { postProductMetadata, publishUnpublish } from './productSlice'
+import { postProductMetadata, publishUnpublish, uploadHeaderImage } from './productSlice'
 import { PublishHeader } from './publishHeader'
 import { PublishMetadataSection } from './publishMetadata'
 import { TableView } from '../../components/TableView'
@@ -31,7 +31,7 @@ export const PublishTab = ({ productName, previewPage }: Props) => {
   const { register, errors, handleSubmit } = useForm<FormData>()
 
   const onSubmit = (data) => {
-    if (data.title !== currentProduct.product_full_metadata?.product_metadata?.title || data.description !== currentProduct.product_full_metadata?.product_metadata?.description) {
+    if (data.title !== currentProduct.product_full_metadata?.product_metadata?.title || data.description !== currentProduct.product_full_metadata?.product_metadata?.description || image_public_link !== null || image_public_link !== undefined) {
       let monetization = currentProduct?.product_full_metadata?.product_metadata?.monetization
       // This is because api sends error if monetization.price goes null
       if (monetization) {
@@ -40,7 +40,7 @@ export const PublishTab = ({ productName, previewPage }: Props) => {
         console.log("MONITIZATION DATA", monetization, price)
       }
       console.log("FORM DATA", currentProduct.product_full_metadata?.product_metadata, data)
-      const postData = { ...currentProduct.product_full_metadata?.product_metadata, ...data, monetization }
+      const postData = { ...currentProduct.product_full_metadata?.product_metadata, ...data, monetization, header_image_url: image_public_link }
       dispatch(postProductMetadata(postData))
 
     }
@@ -51,9 +51,12 @@ export const PublishTab = ({ productName, previewPage }: Props) => {
     }
   }
 
-  const { product, isLoading, error: productError } = useSelector(
+  const { product, isLoading, image_public_link, error: productError } = useSelector(
     (state: RootState) => state.product
   )
+  const uploadFile = (file) => {
+    dispatch(uploadHeaderImage('image', 'true', file))
+  }
 
   let currentTable = previewPage
   let currentProduct = product
@@ -72,6 +75,8 @@ export const PublishTab = ({ productName, previewPage }: Props) => {
       <h3>Loading...</h3>
     ) : (
         <PublishMetadataSection
+          uploadFile={uploadFile}
+          image_public_link={image_public_link}
           metadata={currentProduct.product_full_metadata?.product_metadata}
           homeCandidates={currentProduct.home_page_view_candidate_list}
           register={register}
