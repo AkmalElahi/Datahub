@@ -38,15 +38,15 @@ const ButtonGroup = styled.div`
   flex-wrap: wrap;
 `
 
-const AddDataButton = styled(Button)`
+const SaveButton = styled(Button)`
   background: none;
   border: 1px solid #272d34;
-  max-width: 180px;
+  min-width: 110px;
   font-weight: 500;
   padding: 0.8rem 1.4rem;
 `
 
-const SaveButton = styled(Button)`
+const PublishButton = styled(Button)`
   color: #f8f8f8;
   background: #4d9ef6;
   min-width: 110px;
@@ -54,19 +54,22 @@ const SaveButton = styled(Button)`
 `
 
 interface Props {
+  productTitle: string
   isPublished: boolean
 }
 
-export const PublishHeader = ({ isPublished }: Props) => {
+export const PublishHeader = ({ productTitle, isPublished }: Props) => {
   return (
     <FlexRow>
-      <FlexColumn></FlexColumn>
+      <FlexColumn>
+        <h1 style={{ margin: '0' }}>{productTitle}</h1>
+      </FlexColumn>
       <FlexColumn>
         <ButtonGroup>
-          <AddDataButton type="submit">Save</AddDataButton>
-          <SaveButton type="submit">
+          <SaveButton type="submit">Save</SaveButton>
+          <PublishButton type="submit">
             {isPublished ? 'Unpublish' : 'Publish'}
-          </SaveButton>
+          </PublishButton>
         </ButtonGroup>
       </FlexColumn>
     </FlexRow>

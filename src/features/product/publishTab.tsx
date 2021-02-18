@@ -96,6 +96,7 @@ export const PublishTab = ({ productName, previewPage }: Props) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         {currentProduct && (
           <PublishHeader
+            productTitle={currentProduct.product_full_metadata?.product_metadata?.title || ''}
             isPublished={
               currentProduct.product_full_metadata?.product_metadata
                 ?.published || false

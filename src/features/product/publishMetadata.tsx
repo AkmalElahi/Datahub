@@ -60,19 +60,28 @@ const Dropdown = styled.select`
   box-sizing: border-box;
   border-radius: 0 6px 6px 0;
 `
-const UploadButton = styled.span`
-border-radius: 10px;
-font-style: normal;
-font-weight: bold;
-font-size: 16px;
-line-height: 24px;
-text-align: center;
-padding: 0.8rem 1rem;
-border:1px solid lightgrey;
-cursor: pointer;
-background-color:#ffffff;
-position:relative
+
+const Button = styled.button`
+  border-radius: 32px;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  padding: 0.8rem 1rem;
+  border: none;
+  cursor: pointer;
+  outline: none;
 `
+
+const UploadButton = styled(Button)`
+  background: none;
+  border: 1px solid #272d34;
+  min-width: 110px;
+  font-weight: 500;
+  padding: 0.8rem 1.4rem;
+`
+
 interface Props {
   metadata: ProductMetadata | undefined
   homeCandidates: ViewMetadata[] | undefined
@@ -106,7 +115,7 @@ export const PublishMetadataSection = ({
   ))
   return (
     <React.Fragment>
-      <h1>Product</h1>
+      <h2>Product</h2>
       <FlexRow>
         <FlexColumn style={{ marginRight: '10px' }}>
           <UList>
@@ -162,17 +171,19 @@ export const PublishMetadataSection = ({
         </UList>
       </FlexRow>
       <FlexRow>
-        <FlexColumn style={{ marginRight: '10px', flex: '4' }}>
-          <UList>
-            <List>
-              <Label>Header Image URL</Label>
-              <Input defaultValue={image_public_link || metadata?.header_image_url || ''} />
-            </List>
-          </UList>
-        </FlexColumn>
-        <FlexColumn>
-          <UploadButton ><input onChange={(e) => uploadFile(e.target.files?.[0])} type="file" style={{ opacity: 0, position: 'absolute', left: 0, right: 0, height: "100%", width: "100%" }} /><label>Upload Image</label></UploadButton>
-        </FlexColumn>
+        <UList style={{ width: '100%' }}>
+          <List>
+            <Label>Header Image URL</Label>
+            <Input defaultValue={image_public_link || metadata?.header_image_url || ''} />
+            <UploadButton style={{ marginLeft: '10px' }}>
+              <input
+                onChange={(e) => uploadFile(e.target.files?.[0])}
+                type="file"
+                style={{ opacity: 0, position: 'absolute', left: 0, right: 0, height: "100%", width: "100%" }} />
+              <label>Upload</label>
+            </UploadButton>
+          </List>
+        </UList>
       </FlexRow>
     </React.Fragment>
   )
