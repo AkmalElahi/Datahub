@@ -102,6 +102,13 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
       />
     )
 
+  let productTitle = ''
+  if (currentView?.view_metadata?.card_view) {
+    productTitle = currentView.view_metadata?.card_view.title || ''
+  } else if (currentView?.view_metadata?.table_view) {
+    productTitle = currentView.view_metadata?.table_view?.title || ''
+  }
+
   return (
     <React.Fragment>
       {currentView && (
@@ -109,7 +116,7 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
           viewType={
             currentView.view_metadata?.card_view ? 'Card View' : 'Table View'
           }
-          productTitle={currentView.view_metadata?.product_name || ''}
+          productTitle={productTitle}
           productFullMetadata={currentProduct.product_full_metadata || {}}
           draftMetadata={draftMetadata}
           handleSubmit={handleSubmit}
