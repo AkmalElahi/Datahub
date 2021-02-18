@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 
 import Popup from 'reactjs-popup'
 import 'reactjs-popup/dist/index.css'
 
-import {TableFullMetadata, TableMetadata, ViewMetadata, ViewPossibleForView} from '../../gen/api/api'
+import {ProductFullMetadata, ViewMetadata, ViewPossibleForView} from '../../gen/api/api'
 import { ColumnsPopup } from '../../components/ColumnsPopup'
 
 const FlexRow = styled.div`
@@ -129,17 +129,21 @@ const EditButton = styled(Button)`
 interface Props {
   metadata: ViewMetadata | undefined
   possibleViews: ViewPossibleForView | undefined
-  table_full_metadata: TableFullMetadata | undefined
+  product_full_metadata: ProductFullMetadata | undefined
+  reset: ReturnType<typeof useForm>['reset']
   register: ReturnType<typeof useForm>['register']
 }
 
 export const ViewMetadataSection = ({
   metadata,
   possibleViews,
-  table_full_metadata,
+  product_full_metadata,
+  reset,
   register,
 }: Props) => {
-  let renderColumnOptions = table_full_metadata?.column_metadata_list?.map((c) => (
+  useEffect(() => { reset() }, [reset, metadata])
+  let renderColumnOptions = product_full_metadata?.table_full_metadata_list?.find(
+      (tblFllMtd) => tblFllMtd.table_metadata?.name === metadata?.table_name)?.column_metadata_list?.map((c) => (
     <option value={c.name || ''} key={c.name}>
       {c.title}
     </option>

@@ -7,7 +7,6 @@ import { AppThunk } from '../../app/store'
 interface ViewState {
   viewsByName: Record<string, ViewConstructor>
   draftMetadata: DraftMetadata
-  table_full_metadata: TableFullMetadata
   isLoading: boolean
   error: string | null
 }
@@ -15,7 +14,6 @@ interface ViewState {
 const viewsInitialState: ViewState = {
   viewsByName: {},
   draftMetadata: { metadata: {} },
-  table_full_metadata: {},
   isLoading: false,
   error: null,
 }
@@ -46,8 +44,6 @@ const views = createSlice({
       state.viewsByName[view.view_metadata?.name || 'none'] = view
       if (view.view_metadata)
         state.draftMetadata = { metadata: view.view_metadata }
-        state.table_full_metadata = view.product_full_metadata?.table_full_metadata_list?.find(
-            (tabFllMtd) => tabFllMtd.table_metadata?.name == view.view_metadata?.table_name) || {}
     },
     upsertViewMetadataSuccess(
       state,

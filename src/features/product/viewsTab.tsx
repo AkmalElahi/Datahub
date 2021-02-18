@@ -7,10 +7,9 @@ import { RootState } from '../../app/rootReducer'
 
 import { ViewHeader } from './viewHeader'
 import { ViewMetadataSection } from './viewMetadata'
-import { ColumnTypes } from './columnTypes'
 import { CardView } from '../../components/CardView'
 import { TableView } from '../../components/TableView'
-import { fetchView, postViewMetadata } from './viewSlice'
+import { fetchView } from './viewSlice'
 
 const ContentBox = styled.div`
   background: #ffffff;
@@ -37,11 +36,10 @@ interface Props {
 
 export const ViewsTab = ({ productName, viewName }: Props) => {
   const dispatch = useDispatch()
-  const { register, errors, handleSubmit } = useForm<FormData>()
+  const { register, reset, errors, handleSubmit } = useForm<FormData>()
   const {
     viewsByName,
     draftMetadata,
-    table_full_metadata,
     isLoading,
     error: viewError,
   } = useSelector((state: RootState) => state.views)
@@ -92,7 +90,8 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
       <ViewMetadataSection
         metadata={draftMetadata.metadata}
         possibleViews={currentView.view_possible_for_view}
-        table_full_metadata={table_full_metadata}
+        product_full_metadata={currentView.product_full_metadata}
+        reset={reset}
         register={register}
       />
     )
