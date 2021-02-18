@@ -39,7 +39,7 @@ export const ProductList = ({ products }: Props) => {
   for (const [k, product] of Object.entries(products)) {
     renderedProducts.push(
       <FlexColumn>
-        <Link to={'/' + product.name || ''} key={product.name || ''}>
+        <Link to={'/constructor/' + product.name || ''} key={product.name || ''}>
           <ProductBox>{product.title}</ProductBox>
         </Link>
       </FlexColumn>

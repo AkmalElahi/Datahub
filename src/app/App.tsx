@@ -58,8 +58,8 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/my-products" element={<ProductListPage />} />
-          <Route path="/:productSlug" element={<ProductPage />} />
-          <Route path="/view/:productSlug" element={<ProductViewPage />} />
+          <Route path="/constructor/:productSlug" element={<ProductPage />} />
+          <Route path="/:productSlug" element={<ProductViewPage />} />
         </Routes>
       </AppContainer>
     </ThemeProvider>

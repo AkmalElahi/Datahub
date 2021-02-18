@@ -216,7 +216,7 @@ export const DataSourcePopup = ({
     )
     if (!ProductError) {
       close()
-      if (!productName) navigate('/' + data.productName)
+      if (!productName) navigate('/constructor/' + data.productName)
     }
   }
   if (ProductError) {
