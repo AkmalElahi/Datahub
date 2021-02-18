@@ -15,6 +15,7 @@ import {
   createTableAPI,
   uploadFileAPI,
   publishProductAPI,
+  upsertProductMetadataAPI
 } from '../../api/swaggerAPI'
 import {
   createTableStart,
@@ -28,6 +29,7 @@ interface ProductState {
   product: ProductConstructor
   isLoading: boolean
   error: string | null
+  image_public_link: string | null | undefined
 }
 
 interface NewTable {
@@ -39,6 +41,7 @@ const productInitialState = {
   product: {},
   isLoading: false,
   error: null,
+  image_public_link: null
 } as ProductState
 
 function startLoading(state: ProductState) {
@@ -73,6 +76,7 @@ const product = createSlice({
     uploadFileSuccess(state, { payload }: PayloadAction<FileParams>) {
       state.isLoading = false
       state.error = null
+      state.image_public_link = payload.public_link
     },
     updateProductMetadata(
       state,
@@ -84,6 +88,12 @@ const product = createSlice({
       state,
       { payload }: PayloadAction<ProductMetadata>
     ) {
+      state.isLoading = false
+      state.error = null
+      if (state.product.product_full_metadata)
+        state.product.product_full_metadata.product_metadata = payload
+    },
+    upsertProductSuccess(state, { payload }: PayloadAction<ProductMetadata>) {
       state.isLoading = false
       state.error = null
       if (state.product.product_full_metadata)
@@ -110,6 +120,7 @@ export const {
   uploadFileFailure,
   publishUnpublishFailure,
   updateProductMetadata,
+  upsertProductSuccess
 } = product.actions
 
 export default product.reducer
@@ -119,52 +130,60 @@ export const uploadThenAddThunk = (
   tableName: string,
   uploadType: 'data' | 'image',
   dataType: 'product' | 'table',
-  fileType: 'link' | 'upload',
+  fileType: 'link' | 'upload' | 'airtable',
   addViews: string,
+  airtableName?: string,
+  baseId?: string,
+  apiKey?: string,
   publicLink?: string,
   file?: FormData
 ) => async (dispatch, getState) => {
   let fileParams
   try {
-    dispatch(uploadFileStart())
-    fileParams = await uploadFileAPI(uploadType, publicLink, file)
-    dispatch(uploadFileSuccess(fileParams))
+    if (fileType !== 'airtable') {
+      dispatch(uploadFileStart())
+      fileParams = await uploadFileAPI(uploadType, publicLink, file)
+      dispatch(uploadFileSuccess(fileParams))
+    }
+    const dataSource = {
+      ...(fileType !== 'airtable' && {
+        csv_data_source: {
+          filename: fileParams?.filename,
+          file_link: fileParams?.public_link,
+        },
+      }),
+      ...(fileType === 'airtable' && {
+        airtable_data_source: {
+          base_id: baseId,
+          table_name: airtableName,
+          api_key: apiKey,
+        },
+      }),
+    }
 
     if (dataType === 'product') {
       dispatch(createProductStart())
       const sessionId = localStorage.getItem('user') || ''
-      const dataSource = {
-        csv_data_source: {
-          filename: fileParams.filename,
-          file_link: fileParams.public_link,
-        },
-      }
       const product = await createProductAPI(
         sessionId,
         productName,
         tableName,
         addViews,
-        fileParams.filename,
-        fileParams.public_link,
+        fileParams?.filename,
+        fileParams?.public_link,
         dataSource
       )
       dispatch(createProductSuccess(product))
     } else if (dataType === 'table') {
       dispatch(createTableStart())
       const sessionId = localStorage.getItem('user') || ''
-      const dataSource = {
-        csv_data_source: {
-          filename: fileParams.filename,
-          file_link: fileParams.public_link,
-        },
-      }
       const table = await createTableAPI(
         sessionId,
         productName,
         tableName,
         addViews,
-        fileParams.filename,
-        fileParams.public_link,
+        fileParams?.filename,
+        fileParams?.public_link,
         dataSource
       )
       dispatch(createTableSuccess(table))
@@ -212,5 +231,36 @@ export const publishUnpublish = (
     dispatch(publishUnpublishSuccess(product))
   } catch (err) {
     dispatch(publishUnpublishFailure(err.toString()))
+  }
+}
+
+export const postProductMetadata = (
+  productMetadata: ProductMetadata
+): AppThunk => async (dispatch) => {
+  try {
+    dispatch(createProductStart())
+    const sessionId = localStorage.getItem('user') || ''
+    const response = await upsertProductMetadataAPI(
+      sessionId,
+      productMetadata
+    )
+    dispatch(upsertProductSuccess(response))
+  } catch (err) {
+    dispatch(createProductFailure(err.toString()))
+  }
+}
+
+export const uploadHeaderImage = (
+  uploadType: 'image',
+  publicLink?: string,
+  file?: FormData,
+): AppThunk => async (dispatch) => {
+  let fileParams
+  try {
+    dispatch(uploadFileStart())
+    fileParams = await uploadFileAPI(uploadType, publicLink, file)
+    dispatch(uploadFileSuccess(fileParams))
+  } catch (err) {
+    dispatch(uploadFileFailure(err.toString()))
   }
 }

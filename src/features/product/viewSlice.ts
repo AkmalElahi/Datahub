@@ -1,8 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { ViewConstructor, ViewMetadata } from '../../gen/api/api'
-import { View, getViewAPI, upsertViewMetadataAPI } from '../../api/swaggerAPI'
+import {
+  View,
+  getViewAPI,
+  upsertViewMetadataAPI,
+  addViewAPI
+} from '../../api/swaggerAPI'
 import { AppThunk } from '../../app/store'
+import {
+  updateProductMetadata,
+} from "./productSlice";
 
 interface ViewState {
   viewsByName: Record<string, ViewConstructor>
@@ -13,14 +21,13 @@ interface ViewState {
 
 const viewsInitialState: ViewState = {
   viewsByName: {},
-  draftMetadata: { metadata: {}, edited: false },
+  draftMetadata: { metadata: {} },
   isLoading: false,
   error: null,
 }
 
 export interface DraftMetadata {
   metadata: ViewMetadata
-  edited: boolean
 }
 
 function startLoading(state: ViewState) {
@@ -44,7 +51,7 @@ const views = createSlice({
       state.error = null
       state.viewsByName[view.view_metadata?.name || 'none'] = view
       if (view.view_metadata)
-        state.draftMetadata = { metadata: view.view_metadata, edited: false }
+        state.draftMetadata = { metadata: view.view_metadata }
     },
     upsertViewMetadataSuccess(
       state,
@@ -62,7 +69,6 @@ const views = createSlice({
         if (typeof payload === 'string') {
           state.draftMetadata = {
             metadata: state.viewsByName[payload || 'none']?.view_metadata || {},
-            edited: false,
           }
         } else {
           state.draftMetadata = payload
@@ -86,6 +92,29 @@ export const {
 
 export default views.reducer
 
+export const addView = (
+    name: string,
+    productName: string,
+    tableName: string,
+    viewType: 'table' | 'card',
+): AppThunk => async (dispatch) => {
+  try {
+    dispatch(getViewStart())
+    const sessionId = localStorage.getItem('user') || ''
+    let viewMetadata = {} as ViewMetadata
+    viewMetadata.name = name
+    viewMetadata.product_name = productName
+    viewMetadata.table_name = tableName
+    viewMetadata.view_type = viewType
+    const viewConstructorResponse = await addViewAPI(sessionId, viewMetadata)
+    dispatch(getViewSuccess(viewConstructorResponse))
+    if (viewConstructorResponse.view.product_full_metadata)
+      dispatch(updateProductMetadata(viewConstructorResponse.view.product_full_metadata))
+  } catch (err) {
+    dispatch(getViewFailure(err.toString()))
+  }
+}
+
 export const fetchView = (
   productName: string,
   tableName: string
@@ -108,7 +137,7 @@ export const postViewMetadata = (
     const sessionId = localStorage.getItem('user') || ''
     const metadata = await upsertViewMetadataAPI(sessionId, fullMetadata)
     dispatch(
-      draftMetadata({ metadata: metadata.view_metadata || {}, edited: false })
+      draftMetadata({ metadata: metadata.view_metadata || {} })
     )
     dispatch(upsertViewMetadataSuccess(metadata))
   } catch (err) {

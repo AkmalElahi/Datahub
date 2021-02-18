@@ -133,6 +133,10 @@ const RightColumn = styled.div`
   justify-content: flex-start;
   flex: 2;
 `
+const AirTableRadioLabel = styled(Label)`
+  display: block;
+  margin: 1.5rem 0;
+`
 
 interface Props {
   close: any
@@ -191,9 +195,9 @@ export const DataSourcePopup = ({
     control: control2,
     register: register2,
     errors: errors2,
+    watch,
     handleSubmit: handleSubmit2,
   } = useForm<FormData>()
-
   const onSubmitSource = async (data) => {
     let result = await dispatch(
       uploadThenAddThunk(
@@ -203,12 +207,17 @@ export const DataSourcePopup = ({
         dataType,
         data.fileRadio,
         data.addViews ? 'true' : 'false',
-        data.fileRadio === 'link' ? data.newLink : undefined,
-        data.fileRadio === 'upload' ? data.file : undefined
+        data.airtableName,
+        data.baseId,
+        data.apiKey,
+        data.newLink,
+        data.file
       )
     )
-    close()
-    if (!productName) navigate('/constructor/' + data.productName)
+    if (!ProductError) {
+      close()
+      if (!productName) navigate('/constructor/' + data.productName)
+    }
   }
   if (ProductError) {
     renderedError = (
@@ -224,7 +233,7 @@ export const DataSourcePopup = ({
       <button className="close" onClick={close}>
         &times;
       </button>
-      <div className="header">Add Data Source</div>
+      <div className="header">Add Data</div>
       <form key={1} onSubmit={handleSubmit2(onSubmitSource)}>
         <div className="content">
           <TextInputGroup>
@@ -266,6 +275,21 @@ export const DataSourcePopup = ({
               <Dropzone onChange={(e) => onChange(e.target.files?.[0])} />
             )}
           />
+          <AirTableRadioLabel>
+            <input
+              type="radio"
+              name="fileRadio"
+              value="airtable"
+              ref={register2}
+            />
+            Airtable
+          </AirTableRadioLabel>
+          <NewLabel>Table Name</NewLabel>
+          <Input type="text" name="airtableName" ref={register2} />
+          <NewLabel>Base ID</NewLabel>
+          <Input type="text" name="baseId" ref={register2} />
+          <NewLabel>API Key</NewLabel>
+          <Input type="text" name="apiKey" ref={register2} />
         </div>
 
         {renderedError}

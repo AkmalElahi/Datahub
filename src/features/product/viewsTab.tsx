@@ -7,10 +7,9 @@ import { RootState } from '../../app/rootReducer'
 
 import { ViewHeader } from './viewHeader'
 import { ViewMetadataSection } from './viewMetadata'
-import { ColumnTypes } from './columnTypes'
 import { CardView } from '../../components/CardView'
 import { TableView } from '../../components/TableView'
-import { fetchView, postViewMetadata } from './viewSlice'
+import { fetchView } from './viewSlice'
 
 const ContentBox = styled.div`
   background: #ffffff;
@@ -23,6 +22,11 @@ type FormData = {
   title: string
   subtitle: string
   description: string
+  title_column: string
+  subtitle_column: string
+  description_column: string
+  image_url_column: string
+  top_level_nav: boolean
 }
 
 interface Props {
@@ -32,7 +36,13 @@ interface Props {
 
 export const ViewsTab = ({ productName, viewName }: Props) => {
   const dispatch = useDispatch()
-  const { register, errors, handleSubmit } = useForm<FormData>()
+  const { register, reset, errors, handleSubmit } = useForm<FormData>()
+
+  const { product, error: productError } = useSelector(
+      (state: RootState) => state.product
+  )
+  let currentProduct = product
+
   const {
     viewsByName,
     draftMetadata,
@@ -86,9 +96,18 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
       <ViewMetadataSection
         metadata={draftMetadata.metadata}
         possibleViews={currentView.view_possible_for_view}
+        product_full_metadata={currentView.product_full_metadata}
+        reset={reset}
         register={register}
       />
     )
+
+  let productTitle = ''
+  if (currentView?.view_metadata?.card_view) {
+    productTitle = currentView.view_metadata?.card_view.title || ''
+  } else if (currentView?.view_metadata?.table_view) {
+    productTitle = currentView.view_metadata?.table_view?.title || ''
+  }
 
   return (
     <React.Fragment>
@@ -97,13 +116,17 @@ export const ViewsTab = ({ productName, viewName }: Props) => {
           viewType={
             currentView.view_metadata?.card_view ? 'Card View' : 'Table View'
           }
-          productTitle={currentView.view_metadata?.product_name || ''}
+          productTitle={productTitle}
+          productFullMetadata={currentProduct.product_full_metadata || {}}
           draftMetadata={draftMetadata}
           handleSubmit={handleSubmit}
         />
       )}
       <ContentBox>{renderedMetadata}</ContentBox>
-      <ContentBox>{renderedTable}</ContentBox>
+      <ContentBox>
+        <h2>Preview</h2>
+        {renderedTable}
+      </ContentBox>
     </React.Fragment>
   )
 }
