@@ -172,6 +172,7 @@ export const ViewMetadataSection = ({
           <Label>Title Column</Label>
           <Dropdown
               name="title_column"
+              key={metadata?.card_view.title_column}
               defaultValue={metadata?.card_view.title_column || ''}
               ref={register}
           >
@@ -184,6 +185,7 @@ export const ViewMetadataSection = ({
           <Label>Subtitle Column</Label>
           <Dropdown
               name="subtitle_column"
+              key={metadata?.card_view.subtitle_column}
               defaultValue={metadata?.card_view.subtitle_column || ''}
               ref={register}
           >
@@ -196,6 +198,7 @@ export const ViewMetadataSection = ({
           <Label>Description Column</Label>
           <Dropdown
               name="description_column"
+              key={metadata?.card_view.description_column}
               defaultValue={metadata?.card_view.description_column || ''}
               ref={register}
           >
@@ -208,6 +211,7 @@ export const ViewMetadataSection = ({
           <Label>Image Column</Label>
           <Dropdown
               name="image_url_column"
+              key={metadata?.card_view.image_url_column}
               defaultValue={metadata?.card_view.image_url_column || ''}
               ref={register}
           >
